@@ -1,2 +1,65 @@
 # cheap_pie
 a python tool for chip validation
+
+"Cheap Pie" is a python tool for chip validation.
+The name is a translitteration of "chip py" for obvious reasons.
+
+Given an input description file for the chip, it provides a register-level and 
+bitfield-level read/write access, through a generic transport layer.
+
+Currently the implemented description input mode is an .xml that is bundled with 
+with the NXP QN9080 SDK
+https://www.nxp.com/products/wireless/bluetooth-low-energy/qn908x-ultra-low-power-bluetooth-low-energy-system-on-chip-solution:QN9080
+but it should be relatively easy to add different chip description formats.
+
+Currently the supported transport layer is Jlink, but it should be really easy
+to add support for different transport layers, like for instance Total Phase
+Cheetah.
+ https://www.totalphase.com/catalog/product/view/id/3/s/cheetah-spi/?GA_network=g&GA_device=c&GA_campaign=169793414&GA_adgroup=38297664135&GA_target=&GA_placement=&GA_creative=259919292215&GA_extension=&GA_keyword=cheetah%20spi&GA_loc_physical_ms=9054949&GA_landingpage=https://www.totalphase.com/catalog/product/view/id/3/s/cheetah-spi/&ga_keyword_match=e&ga_ad_position=1t1&gclid=Cj0KCQjwpsLkBRDpARIsAKoYI8y4QJe48cAGH2vPK769Js7LbnM2VjUSXz2slVFTQByO-I23_DKdVqsaAhsBEALw_wcB
+
+In conjunction with pyVISA (https://pyvisa.readthedocs.io/en/master/), used for 
+instument control, it provides a simple and fully python-contained environment
+for silicon validation.
+
+Cheap Pie is modeled after an original Octave/Matalb implementation that cannot
+be shared due to licensing reasons. The original code was converted to python
+using SMOP ( https://github.com/ripple-neuro/smop ).
+
+author: Marco Merlin
+email: marcomerli@gmail.com
+
+Tested on PythonXY (python 2.7.10)
+
+# Example:
+
+		%run cheap_pie
+		inval = "0xFFFFFFFF"
+        hal.ADC_ANA_CTRL.setreg(inval)
+        retval = hex(hal.ADC_ANA_CTRL.getreg())
+        assert(literal_eval(inval) == literal_eval(retval))
+
+        # decimal assignement        
+        inval = 2
+        hal.ADC_ANA_CTRL.setreg(inval)
+        retval = hal.ADC_ANA_CTRL.getreg()        
+        assert(inval == retval)
+        
+        hal.ADC_ANA_CTRL.display()
+                
+        print('Test bitfield methods...')
+        
+        hal.ADC_ANA_CTRL.bitfields.ADC_BM.display()
+        hal.ADC_ANA_CTRL.bitfields.ADC_BM.display(2)
+        hal.ADC_ANA_CTRL.bitfields.ADC_BM.setbit(inval)
+        retval = hal.ADC_ANA_CTRL.bitfields.ADC_BM.getbit()
+        assert(inval == retval)
+
+# Dependencies:
+	untangle 1.1.1 --> pip install untangle
+	
+Jlink transport based on Nordic Semiconductor python nrfjprog
+	https://github.com/NordicSemiconductor/pynrfjprog
+
+Banner created with pyfiglet
+https://www.devdungeon.com/content/create-ascii-art-text-banners-python#install_pyfiglet
+
