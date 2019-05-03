@@ -44,11 +44,14 @@ system_root = os.getcwd()
 sys.path.append(os.path.abspath(system_root + '\\jlink\\'))
 
 ## transport hif interface %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-print('Initialising Host Interface...');
+print('Initialising Host Interface...')
 
 # init jlink transport
-from jlink.cp_jlink_transport import cp_jlink
-hif = cp_jlink(device = 'QN9080C' )
+if (True): # disable jlink for testing
+    from jlink.cp_jlink_transport import cp_jlink
+    hif = cp_jlink(device = 'QN9080C' )
+else:
+    hif = None
 
 ## init chip ##################################################################
 print('Initialising Hardware Abstraction Layer...')
