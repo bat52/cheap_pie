@@ -22,7 +22,7 @@ class cp_bitfield:
     # Address (Duplicate information)
     addr = 0
     
-     # reg name
+    # reg name
     regname = ""
     
     # field name
@@ -31,7 +31,13 @@ class cp_bitfield:
     # host interface handler
     hif = None
     
-    def __init__(self, regfield="",regaddr=0, regname="",width="1", bit_offset="0",comments="",hif=None):
+    # read/write
+    rw  = "rw"
+
+    # reset value
+    reset = 0
+
+    def __init__(self, regfield="",regaddr=0, regname="",width="1", bit_offset="0",comments="",hif=None, rw = "rw", reset=0):
 
         if isinstance(width,str):
             width= literal_eval(width)
@@ -60,6 +66,8 @@ class cp_bitfield:
         self.regname = regname
         self.fieldname = regfield
         self.hif = hif
+        self.rw = rw
+        self.reset = reset
         
     def display(self,regval=None):
         """ displays value of a bitfield from a register value         
