@@ -1,3 +1,5 @@
+#!/bin/python3
+
 # -*- coding: utf-8 -*-
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -11,7 +13,6 @@ from ast import literal_eval
 import unittest
 
 class CheapPieMethods(unittest.TestCase):
-
     def test_paths(self):        
         print('Configuring paths...')
 
@@ -23,10 +24,11 @@ class CheapPieMethods(unittest.TestCase):
 
     def test_transport(self):
         self.test_paths()
-        print('Initialising Host Interface...');
+        print('Initialising Host Interface...')
 
         # init jlink transport
-        from jlink.cp_jlink_transport import cp_jlink
+        # from jlink.cp_jlink_transport import cp_jlink
+        from cp_jlink_transport import cp_jlink
         # cannot run transport tests without chip connected to pc
         hif = cp_jlink('NONE')
         return hif
@@ -60,6 +62,15 @@ class CheapPieMethods(unittest.TestCase):
         hal.ADC_ANA_CTRL.bitfields.ADC_BM.setbit(inval)
         retval = hal.ADC_ANA_CTRL.bitfields.ADC_BM.getbit()
         assert(inval == retval)
+
+    def test_hal2doc(self):
+        from xmlreg2struct import xmlreg2struct
+        from hal2doc import hal2doc
+        hal = xmlreg2struct(fname="./devices/QN908XC.xml")
+        
+        # convert to .docx
+        hal2doc(hal)
+        pass
 
 if __name__ == '__main__':
     unittest.main()
