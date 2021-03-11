@@ -15,8 +15,10 @@ class cp_register:
     comments = ''
     # host interface handler
     hif = None
+    addr_offset = 0
+    addr_base   = 0
     
-    def __init__(self, regname, regaddr, comments, hif):
+    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0):
         # address
         self.addr = regaddr        
         
@@ -32,6 +34,12 @@ class cp_register:
         
         # host interface handler
         self.hif = hif    
+
+        # address offset
+        self.addr_offset = addr_offset
+
+        # address base
+        self.addr_base = addr_base        
 
     def getreg(self):
         """ function getreg(self,regval)
