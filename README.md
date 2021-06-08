@@ -30,11 +30,6 @@ Email: marcomerli@gmail.com
 
 Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 
-# Dependencies
-        pip3 install untangle
-        pip3 install pylink-square
-        pip3 install python-docx
-
 # Example:
 
         %run cheap_pie
@@ -60,7 +55,9 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         assert(inval == retval)
 
 # Dependencies:
-	untangle 1.1.1 --> pip install untangle
+	pip3 install untangle
+        pip3 install pylink-square
+        pip3 install python-docx
 
 # See Also
 regtool from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
