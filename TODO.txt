@@ -1,8 +1,4 @@
 TODO
-- upgrade to pynrfjprog https://pypi.org/project/pynrfjprog/
-    https://github.com/NordicSemiconductor/pynrfjprog/blob/master/pynrfjprog/examples/memory_read_write.py
-- upgrade to python3
-    - Jlink still based on python2.7
 - consider using bunch ( https://pypi.org/project/bunch/ ) instead of namedtuple as parser output
     - maybe useful to enable autocompletion
         class MyBunch(Bunch):

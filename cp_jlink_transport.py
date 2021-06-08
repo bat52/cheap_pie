@@ -3,7 +3,7 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-from jlink import JLink
+import pylink
 from ast import literal_eval
 
 class cp_jlink(object):
@@ -12,10 +12,19 @@ class cp_jlink(object):
     mem = dict()
     
     def __init__(self,device = 'QN9080C'):
-        if device is 'NONE':
+        if device is None:
             self.jl = None
         else: 
-            self.jl = JLink(device)
+            self.jl = pylink.JLink()
+            self.jl.exec_command('ProjectFile = JLinkSettings.ini')
+            self.jl.open()
+            self.jl.set_speed(10)
+            self.jl.set_tif(pylink.enums.JLinkInterfaces.SWD)
+            self.jl.connect(device)
+            assert(self.jl.connected()==True)
+
+    def __del__(self):
+        self.jl.close()
         
     def hifread(self, addr = "0x40000888"):
         # print self
@@ -25,7 +34,7 @@ class cp_jlink(object):
             addr = int(literal_eval(addr))
             
         if not self.jl is None:
-            r,b = self.jl.read_mem_U32(addr,1)
+            r = self.jl.memory_read32(addr,1)
             ret = r[0]
         else:
             ret = self.mem[hex(addr)]
@@ -42,7 +51,7 @@ class cp_jlink(object):
             val = int ( literal_eval(val) )
         
         if not self.jl is None:
-            self.jl.write_U32( addr, val )
+            self.jl.memory_write32( addr, [val] )
         else:
             # print hex(addr)
             self.mem[hex(addr)] = val
