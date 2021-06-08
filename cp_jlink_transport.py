@@ -24,7 +24,8 @@ class cp_jlink(object):
             assert(self.jl.connected()==True)
 
     def __del__(self):
-        self.jl.close()
+        if not (self.jl is None):
+            self.jl.close()
         
     def hifread(self, addr = "0x40000888"):
         # print self

@@ -28,7 +28,12 @@ using SMOP ( https://github.com/ripple-neuro/smop ).
 Author: Marco Merlin
 Email: marcomerli@gmail.com
 
-Tested on PythonXY (python 2.7.10)
+Tested on ipython3 (python 3.8.5) on ubuntu 20.04
+
+# Dependencies
+        pip3 install untangle
+        pip3 install pylink-square
+        pip3 install python-docx
 
 # Example:
 

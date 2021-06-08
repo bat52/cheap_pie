@@ -20,7 +20,7 @@ class CheapPieMethods(unittest.TestCase):
         import sys
         global system_root
         system_root = os.getcwd()
-        sys.path.append(os.path.abspath(system_root + '\\jlink\\'))
+        # sys.path.append(os.path.abspath(system_root + '\\jlink\\'))
 
     def test_transport(self):
         self.test_paths()
@@ -30,7 +30,7 @@ class CheapPieMethods(unittest.TestCase):
         # from jlink.cp_jlink_transport import cp_jlink
         from cp_jlink_transport import cp_jlink
         # cannot run transport tests without chip connected to pc
-        hif = cp_jlink('NONE')
+        hif = cp_jlink(None)
         return hif
 
     def test_hal(self):
