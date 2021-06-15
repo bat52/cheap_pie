@@ -64,9 +64,6 @@ regtool from opentitan project seems similar, using JSON to represent chip/IP st
 ( https://docs.opentitan.org/doc/rm/register_tool/ ).
 	
 # Others	
-Jlink transport based on Nordic Semiconductor python nrfjprog
-( https://github.com/NordicSemiconductor/pynrfjprog ).
-
 Banner created with pyfiglet
 ( https://www.devdungeon.com/content/create-ascii-art-text-banners-python#install_pyfiglet ).
 
