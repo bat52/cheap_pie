@@ -55,8 +55,11 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         assert(inval == retval)
 
 # Dependencies:
+	# for XML parsing
 	pip3 install untangle
+	# for JLINK
         pip3 install pylink-square
+	# for exporting XML info into a human-readable document
         pip3 install python-docx
 
 # See Also
