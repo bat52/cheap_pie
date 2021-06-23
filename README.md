@@ -21,7 +21,7 @@ In conjunction with pyVISA (https://pyvisa.readthedocs.io/en/master/), used for
 instument control, it provides a simple and fully python-contained environment
 for silicon validation.
 
-Cheap Pie is modeled after an original Octave/Matalb implementation that cannot
+Cheap Pie is modeled after an original Octave/Matlab implementation that cannot
 be shared due to licensing reasons. The original code was converted to python
 using SMOP ( https://github.com/ripple-neuro/smop ).
 
