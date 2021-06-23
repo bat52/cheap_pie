@@ -21,7 +21,7 @@ In conjunction with pyVISA (https://pyvisa.readthedocs.io/en/master/), used for
 instument control, it provides a simple and fully python-contained environment
 for silicon validation.
 
-Cheap Pie is modeled after an original Octave/Matalb implementation that cannot
+Cheap Pie is modeled after an original Octave/Matlab implementation that cannot
 be shared due to licensing reasons. The original code was converted to python
 using SMOP ( https://github.com/ripple-neuro/smop ).
 
@@ -29,11 +29,6 @@ Author: Marco Merlin
 Email: marcomerli@gmail.com
 
 Tested on ipython3 (python 3.8.5) on ubuntu 20.04
-
-# Dependencies
-        pip3 install untangle
-        pip3 install pylink-square
-        pip3 install python-docx
 
 # Example:
 
@@ -60,16 +55,18 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         assert(inval == retval)
 
 # Dependencies:
-	untangle 1.1.1 --> pip install untangle
+	# for XML parsing
+	pip3 install untangle
+	# for JLINK
+        pip3 install pylink-square
+	# for exporting XML info into a human-readable document
+        pip3 install python-docx
 
 # See Also
 regtool from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
 ( https://docs.opentitan.org/doc/rm/register_tool/ ).
 	
 # Others	
-Jlink transport based on Nordic Semiconductor python nrfjprog
-( https://github.com/NordicSemiconductor/pynrfjprog ).
-
 Banner created with pyfiglet
 ( https://www.devdungeon.com/content/create-ascii-art-text-banners-python#install_pyfiglet ).
 

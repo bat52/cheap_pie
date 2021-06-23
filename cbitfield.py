@@ -136,7 +136,7 @@ class cp_bitfield:
 
         ## compute new register value ##################################################
         
-        shiftval= fieldval >> self.lsb
+        shiftval= fieldval << self.lsb
         maskinv= self.mask ^ literal_eval('0xFFFFFFFF')
         regmasked = regval & maskinv
         outregval = regmasked + shiftval
