@@ -85,7 +85,7 @@ class cp_bitfield:
             regval=literal_eval(regval)
         fieldval = (regval & self.mask ) >> (self.lsb)
         
-        outstr= self.regname  + ' @ ' + self.fieldname  + ' [' + str(self.width) + '] = 0x' + str(fieldval)
+        outstr= self.regname  + ' @ ' + self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)
         print(outstr)
         return outstr
     
@@ -108,7 +108,7 @@ class cp_bitfield:
 
         # fieldval=self.value(regval)
         # if cp_bitfield.getbit.nargout == 0:
-        outstr= self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = 0x' + str(fieldval)
+        outstr= self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
         print(outstr)
         
         return fieldval
@@ -140,12 +140,12 @@ class cp_bitfield:
         maskinv= self.mask ^ literal_eval('0xFFFFFFFF')
         regmasked = regval & maskinv
         outregval = regmasked + shiftval
-          
+    
         ## write back new register value ###############################################
         self.hif.hifwrite(self.addr,outregval)
         
         # if cp_bitfield.setbit.nargout == 0:
-        outstr=self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = 0x' + str(fieldval)
+        outstr=self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
         print(outstr)
         
         return fieldval

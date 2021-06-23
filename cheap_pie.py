@@ -52,7 +52,8 @@ if (True): # disable jlink for testing
     # hif = cp_jlink(device = 'QN9080C' )
     hif = cp_jlink(device = "CORTEX-M4" )
 else:
-    hif = None
+    from cp_dummy_transport import cp_dummy
+    hif = cp_dummy()
 
 ## init chip ##################################################################
 print('Initialising Hardware Abstraction Layer...')
