@@ -1,4 +1,4 @@
 %load_ext autoreload
 %autoreload 2
-%reset
+# %reset
 %run cheap_pie.py
