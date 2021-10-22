@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python3
 
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -20,8 +20,9 @@ from collections import namedtuple
 
 from cbitfield   import cp_bitfield
 from cp_register import cp_register
+import sys
     
-def xmlreg2struct(fname="./devices/QN908XC.xml",hif=None,*args,**kwargs):
+def xmlreg2struct(fname,hif=None):
     
     ## get full file name #####################################################
     #if logical_not(exist(fname,'file')):
@@ -88,19 +89,25 @@ def xmlreg2struct(fname="./devices/QN908XC.xml",hif=None,*args,**kwargs):
     # return outdict
     return namedtuple("HAL", outdict.keys())(*outdict.values()) 
     
-def name_subs(regname=None,*args,**kwargs):
+def name_subs(regname=None):
 
+    # print(regname)
     # regname=strrep(regname,'"','')
     regname=regname.replace('"','')
     regname=regname.replace('[','')
     regname=regname.replace(']','')
     regname=regname.replace('%','')
-    if regname[1].isdigit():
+    if regname[0].isdigit():
         regname= 'M' + regname
     
     return regname
     
 if __name__ == '__main__':
-    xmlreg2struct()
+    if len(sys.argv) > 1: 
+        fname=sys.argv[1]
+    else:
+        # fname="./devices/QN908XC.xml"
+        fname="./devices/MIMXRT1011.xml"
+    xmlreg2struct(fname)
     pass
     

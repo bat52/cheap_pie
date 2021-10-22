@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#
 # -*- coding: utf-8 -*-
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -60,6 +62,7 @@ print('Initialising Hardware Abstraction Layer...')
 
 from xmlreg2struct import xmlreg2struct
 hal = xmlreg2struct(fname="./devices/QN908XC.xml",hif=hif)
+# hal = xmlreg2struct(fname="./devices/MIMXRT1011.xml",hif=hif)
 
 ## welcome ####################################################################
 print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')
