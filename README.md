@@ -75,11 +75,11 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         pip3 install python-docx
 
 # See Also
+CMSIS-SVD python parser including many svd files compatible with cheap_pie
+https://github.com/posborne/cmsis-svd
+
 regtool from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
 https://docs.opentitan.org/doc/rm/register_tool/
-
-CMSIS-SVD python parser
-https://github.com/posborne/cmsis-svd
 
 RDL to IP-XACT
 https://github.com/SystemRDL/PeakRDL-ipxact
