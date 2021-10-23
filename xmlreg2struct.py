@@ -4,6 +4,9 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
+# parser build for CMSIS-SVD xml file format
+# https://www.keil.com/pack/doc/CMSIS/SVD/html/index.html
+#
 # simplified manual initialization
 # 
 # import untangle

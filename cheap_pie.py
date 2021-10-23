@@ -37,6 +37,8 @@ for line in logo:
     print(line)
 
 ## input parameters ###########################################################
+print('Parsing input arguments...')
+
 if 'p' not in locals():
     from cp_cli import cp_cli
     import sys
@@ -57,7 +59,6 @@ print('Initialising Host Interface...')
 if p.transport == 'jlink': # disable jlink for testing
     from cp_jlink_transport import cp_jlink
     # hif = cp_jlink(device = 'QN9080C' )
-    # hif = cp_jlink(device = "CORTEX-M4" )
     hif = cp_jlink(device = p.jdevice )
 elif p.transport == 'dummy':
     from cp_dummy_transport import cp_dummy
@@ -71,10 +72,9 @@ else:
 print('Initialising Hardware Abstraction Layer...')
 
 from xmlreg2struct import xmlreg2struct
-# hal = xmlreg2struct(fname="./devices/QN908XC.xml",hif=hif)
-# hal = xmlreg2struct(fname="./devices/MIMXRT1011.xml",hif=hif)
 fname = os.path.join(p.devicedir,p.regfname)
 print(fname)
+# parser build for CMSIS-SVD xml file format
 hal = xmlreg2struct(fname=fname,hif=hif)
 
 ## welcome ####################################################################
