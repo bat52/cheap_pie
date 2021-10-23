@@ -1,0 +1,32 @@
+RDL to IP-XACT
+https://github.com/SystemRDL/PeakRDL-ipxact
+
+RDL to verilog
+https://github.com/hughjackson/PeakRDL-verilog
+
+IP-XACT to C header, markdown
+https://github.com/olofk/ipyxact
+
+custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
+https://github.com/rggen/rggen
+
+ORDT (java exec)
+Input:
+    SystemRDL - a stardard register description format released by Accellera.org
+    JSpec - a register description format used within Juniper Networks
+Output: 
+    SystemVerilog/Verilog RTL code description of registers
+    UVM model of the registers
+    C++ and python models of the registers
+    XML and text file register descriptions
+    SystemRDL and JSpec (conversion)
+
+https://github.com/Juniper/open-register-design-tool
+
+Use ORDT and systemRDL tools to generate C/Verilog header files, register RTL, UVM register models, and docs using SystemRDL.
+https://github.com/zhajio1988/Open_RegModel
+
+opentitan regtool
+https://docs.opentitan.org/doc/rm/register_tool/
+https://github.com/lowRISC/opentitan/tree/master/util
+
