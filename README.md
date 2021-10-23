@@ -76,7 +76,22 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 
 # See Also
 regtool from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
-( https://docs.opentitan.org/doc/rm/register_tool/ ).
+https://docs.opentitan.org/doc/rm/register_tool/
+
+CMSIS-SVD python parser
+https://github.com/posborne/cmsis-svd
+
+RDL to IP-XACT
+https://github.com/SystemRDL/PeakRDL-ipxact
+
+RDL to verilog
+https://github.com/hughjackson/PeakRDL-verilog
+
+IP-XACT to C header, markdown
+https://github.com/olofk/ipyxact
+
+custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
+https://github.com/rggen/rggen
 	
 # Others	
 Banner created with pyfiglet
