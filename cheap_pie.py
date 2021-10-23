@@ -36,6 +36,12 @@ logo = (
 for line in logo:
     print(line)
 
+## input parameters ###########################################################
+if 'p' not in locals():
+    from cp_cli import cp_cli
+    import sys
+    p = cp_cli(sys.argv[1:])
+
 ## configure paths %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 print('Configuring paths...')
 
@@ -43,26 +49,33 @@ import os
 import sys
 global system_root
 system_root = os.getcwd()
-# sys.path.append(os.path.abspath(system_root + '\\jlink\\'))
 
 ## transport hif interface %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 print('Initialising Host Interface...')
 
 # init jlink transport
-if (True): # disable jlink for testing
+if p.transport == 'jlink': # disable jlink for testing
     from cp_jlink_transport import cp_jlink
     # hif = cp_jlink(device = 'QN9080C' )
-    hif = cp_jlink(device = "CORTEX-M4" )
-else:
+    # hif = cp_jlink(device = "CORTEX-M4" )
+    hif = cp_jlink(device = p.jdevice )
+elif p.transport == 'dummy':
     from cp_dummy_transport import cp_dummy
     hif = cp_dummy()
+else:
+    hif=None
+    # assert(False,'Invalid transport: %s' % p.transport)
+    assert(False)
 
 ## init chip ##################################################################
 print('Initialising Hardware Abstraction Layer...')
 
 from xmlreg2struct import xmlreg2struct
-hal = xmlreg2struct(fname="./devices/QN908XC.xml",hif=hif)
+# hal = xmlreg2struct(fname="./devices/QN908XC.xml",hif=hif)
 # hal = xmlreg2struct(fname="./devices/MIMXRT1011.xml",hif=hif)
+fname = os.path.join(p.devicedir,p.regfname)
+print(fname)
+hal = xmlreg2struct(fname=fname,hif=hif)
 
 ## welcome ####################################################################
 print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')
