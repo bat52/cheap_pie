@@ -30,7 +30,19 @@ Email: marcomerli@gmail.com
 
 Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 
-# Example:
+# Default configurations Examples:
+        # calls QN9080 device with dummy transport layer
+        ./cfgs/cp_qn9080_dummy.sh
+        # calls RT1010 device with jlink transport layer
+        ./cfgs/cp_rt1010_jlink.sh
+
+# CLI Example:
+        # calls with dummy transport layer 
+        # useful to explore device registers
+        # automatically calls ipython and cheap_pie initialization
+        ./cheap_pie.sh -t dummy
+
+# IPython Example:
 
         %run cheap_pie
         inval = "0xFFFFFFFF"
