@@ -71,11 +71,15 @@ else:
 ## init chip ##################################################################
 print('Initialising Hardware Abstraction Layer...')
 
-from svd_parse import svd_parse
 fname = os.path.join(p.devicedir,p.regfname)
 print(fname)
-# parser build for CMSIS-SVD xml file format
-hal = svd_parse(fname=fname,hif=hif)
+if p.format == 'svd':
+    # parser build for CMSIS-SVD xml file format
+    from svd_parse import svd_parse
+    hal = svd_parse(fname=fname,hif=hif)
+else:
+    from ipxact_parse import ipxact_parse
+    hal = ipxact_parse(fname=fname,hif=hif)
 
 ## welcome ####################################################################
 print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')

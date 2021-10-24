@@ -105,5 +105,10 @@ class CheapPieMethods(unittest.TestCase):
         hal2doc(hal)
         pass
 
+    def test_ipxact(self):
+        from ipxact_parse import ipxact_parse
+        hal = ipxact_parse(fname="./devices/my_subblock.xml")
+        hal.my_subblock_reg1.bitfields.f1.display() 
+
 if __name__ == '__main__':
     unittest.main()
