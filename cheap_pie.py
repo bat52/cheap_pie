@@ -77,9 +77,12 @@ if p.format == 'svd':
     # parser build for CMSIS-SVD xml file format
     from svd_parse import svd_parse
     hal = svd_parse(fname=fname,hif=hif)
-else:
+elif p.format == 'ipxact':
     from ipxact_parse import ipxact_parse
     hal = ipxact_parse(fname=fname,hif=hif)
+else:
+    print('Unsupported input format!')
+    assert(False)
 
 ## welcome ####################################################################
 print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')
