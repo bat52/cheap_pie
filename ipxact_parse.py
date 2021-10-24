@@ -93,8 +93,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1: 
         fname=sys.argv[1]
     else:
-        # fname="./devices/my_subblock.xml"
-        fname="./devices/sum_buffer.1.0.xml"
+        fname="./devices/my_subblock.xml"
     ipxact_parse(fname)
     pass
     
