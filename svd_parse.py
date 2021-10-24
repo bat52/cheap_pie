@@ -109,8 +109,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1: 
         fname=sys.argv[1]
     else:
-        # fname="./devices/QN908XC.xml"
-        fname="./devices/MIMXRT1011.xml"
+        fname="./devices/QN908XC.svd"
+        # fname="./devices/MIMXRT1011.svd"
     svd_parse(fname)
     pass
     
