@@ -46,8 +46,8 @@ class CheapPieMethods(unittest.TestCase):
 
     def _test_qn9080(self, hif):
         print('Initialising QN9080 Hardware Abstraction Layer...')
-        from xmlreg2struct import xmlreg2struct
-        hal = xmlreg2struct(fname="./devices/QN908XC.xml", hif = hif)
+        from svd_parse import svd_parse
+        hal = svd_parse(fname="./devices/QN908XC.svd", hif = hif)
 
         print('Test register methods...')     
         # hex assignement       
@@ -76,8 +76,8 @@ class CheapPieMethods(unittest.TestCase):
 
     def _test_rt1010(self, hif):
         print('Initialising RT1010 Hardware Abstraction Layer...')
-        from xmlreg2struct import xmlreg2struct
-        hal = xmlreg2struct(fname="./devices/MIMXRT1011.xml", hif = hif)
+        from svd_parse import svd_parse
+        hal = svd_parse(fname="./devices/MIMXRT1011.svd", hif = hif)
 
         print('Test register methods...')     
         # hex assignement       
@@ -97,9 +97,9 @@ class CheapPieMethods(unittest.TestCase):
             self._test_rt1010( hif )
 
     def test_hal2doc(self):
-        from xmlreg2struct import xmlreg2struct
+        from svd_parse import svd_parse
         from hal2doc import hal2doc
-        hal = xmlreg2struct(fname="./devices/QN908XC.xml")
+        hal = svd_parse(fname="./devices/QN908XC.svd")
         
         # convert to .docx
         hal2doc(hal)

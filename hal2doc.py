@@ -164,8 +164,8 @@ def hal2doc(hal,fname='hal.docx',template=None,tablestyle=None,nbits_addr=32):
     doc.save(fname)
 
 if __name__ == '__main__':
-    from xmlreg2struct import xmlreg2struct
-    hal = xmlreg2struct(fname="./devices/QN908XC.xml")        
+    from svd_parse import svd_parse
+    hal = svd_parse(fname="./devices/QN908XC.xml")        
     # convert to .docx
     hal2doc(hal)
     pass

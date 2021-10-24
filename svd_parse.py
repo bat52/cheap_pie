@@ -25,7 +25,7 @@ from cbitfield   import cp_bitfield
 from cp_register import cp_register
 import sys
     
-def xmlreg2struct(fname,hif=None):
+def svd_parse(fname,hif=None):
     
     ## get full file name #####################################################
     #if logical_not(exist(fname,'file')):
@@ -111,6 +111,6 @@ if __name__ == '__main__':
     else:
         # fname="./devices/QN908XC.xml"
         fname="./devices/MIMXRT1011.xml"
-    xmlreg2struct(fname)
+    svd_parse(fname)
     pass
     
