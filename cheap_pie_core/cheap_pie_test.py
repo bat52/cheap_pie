@@ -12,6 +12,10 @@ Created on Mon Mar 05 16:22:48 2018
 from ast import literal_eval
 import unittest
 
+import sys
+import os.path
+sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+
 class CheapPieMethods(unittest.TestCase):
     def test_paths(self):        
         print('Configuring paths...')
@@ -29,12 +33,12 @@ class CheapPieMethods(unittest.TestCase):
         hifs = []
 
         # dummy for mockup
-        from cp_dummy_transport import cp_dummy
+        from transport.cp_dummy_transport import cp_dummy
         # cannot run transport tests without chip connected to pc
         hifs.append( cp_dummy() )
 
         # jlink
-        from cp_jlink_transport import cp_jlink
+        from transport.cp_jlink_transport import cp_jlink
         # cannot run transport tests without chip connected to pc
         hifs.append( cp_jlink(None) )
 
@@ -44,10 +48,11 @@ class CheapPieMethods(unittest.TestCase):
 
         return hifs
 
-    def _test_qn9080(self, hif):
+    def _test_qn9080(self, hif, hal=None):
         print('Initialising QN9080 Hardware Abstraction Layer...')
-        from svd_parse import svd_parse
-        hal = svd_parse(fname="./devices/QN908XC.svd", hif = hif)
+        if hal is None:
+            from parsers.svd_parse import svd_parse
+            hal = svd_parse(fname="./devices/QN908XC.svd", hif = hif)
 
         print('Test register methods...')     
         # hex assignement       
@@ -76,7 +81,7 @@ class CheapPieMethods(unittest.TestCase):
 
     def _test_rt1010(self, hif):
         print('Initialising RT1010 Hardware Abstraction Layer...')
-        from svd_parse import svd_parse
+        from parsers.svd_parse import svd_parse
         hal = svd_parse(fname="./devices/MIMXRT1011.svd", hif = hif)
 
         print('Test register methods...')     
@@ -88,7 +93,7 @@ class CheapPieMethods(unittest.TestCase):
         hal.ADC1_CAL.bitfields.CAL_CODE.display()
         
         print('Test RT1010 Done')
-
+    
     def test_hal(self):
         hifs = self.test_transport()        
         for hif in hifs:
@@ -96,9 +101,20 @@ class CheapPieMethods(unittest.TestCase):
             self._test_qn9080( hif )            
             self._test_rt1010( hif )
 
+    def test_parse_repo(self):
+        print('Testing QN9080 with repo parser...')
+
+        hif = self.test_transport()[0]  
+        from parsers.svd_parse_repo import svd_parse
+        hal = svd_parse(fname="./devices/QN908XC.svd",hif = hif)
+        self._test_qn9080( hif , hal = hal )
+        
+        print('Testing K20 with repo parser...')
+        hal = svd_parse(fname='MK20D7.svd',vendor='Freescale',hif = hif)
+
     def test_hal2doc(self):
-        from svd_parse import svd_parse
-        from hal2doc import hal2doc
+        from parsers.svd_parse import svd_parse
+        from tools.hal2doc import hal2doc
         hal = svd_parse(fname="./devices/QN908XC.svd")
         
         # convert to .docx
@@ -106,7 +122,7 @@ class CheapPieMethods(unittest.TestCase):
         pass
 
     def test_ipxact(self):
-        from ipxact_parse import ipxact_parse
+        from parsers.ipxact_parse import ipxact_parse
         hal = ipxact_parse(fname="./devices/my_subblock.xml")
         hal.my_subblock_reg1.bitfields.f1.display() 
 

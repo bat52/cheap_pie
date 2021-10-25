@@ -57,11 +57,11 @@ print('Initialising Host Interface...')
 
 # init jlink transport
 if p.transport == 'jlink': # disable jlink for testing
-    from cp_jlink_transport import cp_jlink
+    from transport.cp_jlink_transport import cp_jlink
     # hif = cp_jlink(device = 'QN9080C' )
     hif = cp_jlink(device = p.jdevice )
 elif p.transport == 'dummy':
-    from cp_dummy_transport import cp_dummy
+    from transport.cp_dummy_transport import cp_dummy
     hif = cp_dummy()
 else:
     hif=None
@@ -71,14 +71,19 @@ else:
 ## init chip ##################################################################
 print('Initialising Hardware Abstraction Layer...')
 
-fname = os.path.join(p.devicedir,p.regfname)
-print(fname)
+if p.vendor is None:
+    fname = os.path.join(p.devicedir,p.regfname)
+    print(fname)
+else:
+    # if vendor is indicated, use file from repository
+    fname = p.regfname
+
 if p.format == 'svd':
     # parser build for CMSIS-SVD xml file format
-    from svd_parse import svd_parse
-    hal = svd_parse(fname=fname,hif=hif)
+    from parsers.svd_parse_repo import svd_parse
+    hal = svd_parse(fname=fname,hif=hif,vendor=p.vendor)
 elif p.format == 'ipxact':
-    from ipxact_parse import ipxact_parse
+    from parsers.ipxact_parse import ipxact_parse
     hal = ipxact_parse(fname=fname,hif=hif)
 else:
     print('Unsupported input format!')

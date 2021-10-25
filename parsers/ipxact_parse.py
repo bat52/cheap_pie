@@ -9,9 +9,13 @@ from ast import literal_eval
 import string as str
 from collections import namedtuple
 
-from cbitfield   import cp_bitfield
-from cp_register import cp_register
 import sys
+import os.path
+sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+
+from cheap_pie_core.cbitfield   import cp_bitfield
+from cheap_pie_core.cp_register import cp_register
+from parsers.name_subs import name_subs
     
 def ipxact_parse(fname,hif=None):
        
@@ -25,7 +29,7 @@ def ipxact_parse(fname,hif=None):
     # print(periph)
     
     base_addr_str=periph.ipxact_baseAddress.cdata.replace("'h",'0x')
-    print(base_addr_str)
+    # print(base_addr_str)
     base_address=literal_eval(base_addr_str)
 
     if hasattr(periph,'ipxact_register'):
@@ -76,24 +80,11 @@ def ipxact_parse(fname,hif=None):
     # return outdict
     return namedtuple("HAL", outdict.keys())(*outdict.values()) 
     
-def name_subs(regname=None):
-
-    # print(regname)
-    # regname=strrep(regname,'"','')
-    regname=regname.replace('"','')
-    regname=regname.replace('[','')
-    regname=regname.replace(']','')
-    regname=regname.replace('%','')
-    if regname[0].isdigit():
-        regname= 'M' + regname
-    
-    return regname
-    
 if __name__ == '__main__':
     if len(sys.argv) > 1: 
         fname=sys.argv[1]
     else:
         fname="./devices/my_subblock.xml"
-    ipxact_parse(fname)
+    print(ipxact_parse(fname))
     pass
     

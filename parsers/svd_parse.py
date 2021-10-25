@@ -21,24 +21,23 @@ from ast import literal_eval
 import string as str
 from collections import namedtuple
 
-from cbitfield   import cp_bitfield
-from cp_register import cp_register
 import sys
-    
-def svd_parse(fname,hif=None):
-    
-    ## get full file name #####################################################
-    #if logical_not(exist(fname,'file')):
-    #    fname,fpath=uigetfile('*.xml',nargout=2)
-    #    fname=fullfile(fpath,fname)
-    
-    ## read input file ########################################################
-    csv = untangle.parse(fname)
+import os.path
+sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
+from cheap_pie_core.cbitfield   import cp_bitfield
+from cheap_pie_core.cp_register import cp_register
+from parsers.name_subs import name_subs
+    
+def svd_parse(fname,vendor=None,hif=None):
+        
+    ## read input file ########################################################
+    svd = untangle.parse(fname)
+    
     ## loop over lines ########################################################
     outdict = dict()
 
-    for periph in csv.device.peripherals.peripheral:
+    for periph in svd.device.peripherals.peripheral:
         # print(periph.name.cdata)
         
         base_addr_str=periph.baseAddress.cdata
@@ -91,26 +90,13 @@ def svd_parse(fname,hif=None):
     # convert output dictionary into structure
     # return outdict
     return namedtuple("HAL", outdict.keys())(*outdict.values()) 
-    
-def name_subs(regname=None):
-
-    # print(regname)
-    # regname=strrep(regname,'"','')
-    regname=regname.replace('"','')
-    regname=regname.replace('[','')
-    regname=regname.replace(']','')
-    regname=regname.replace('%','')
-    if regname[0].isdigit():
-        regname= 'M' + regname
-    
-    return regname
-    
+        
 if __name__ == '__main__':
     if len(sys.argv) > 1: 
         fname=sys.argv[1]
     else:
         fname="./devices/QN908XC.svd"
         # fname="./devices/MIMXRT1011.svd"
-    svd_parse(fname)
+    print(svd_parse(fname))
     pass
     
