@@ -7,7 +7,7 @@ https://github.com/SystemRDL/PeakRDL-ipxact
 RDL to verilog
 https://github.com/hughjackson/PeakRDL-verilog
 
-IP-XACT to C header, markdown
+SPIRIT IP-XACT to C header, markdown
 https://github.com/olofk/ipyxact
 
 custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
