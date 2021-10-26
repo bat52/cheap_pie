@@ -57,10 +57,12 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         retval = hal.ADC_ANA_CTRL.getreg()        
         assert(inval == retval)
         
+        hal.ADC_ANA_CTRL
         hal.ADC_ANA_CTRL.display()
                 
         print('Test bitfield methods...')
         
+        hal.ADC_ANA_CTRL.bitfields.ADC_BM
         hal.ADC_ANA_CTRL.bitfields.ADC_BM.display()
         hal.ADC_ANA_CTRL.bitfields.ADC_BM.display(2)
         hal.ADC_ANA_CTRL.bitfields.ADC_BM.setbit(inval)

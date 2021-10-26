@@ -69,7 +69,7 @@ class cp_bitfield:
         self.rw = rw
         self.reset = reset
         
-    def display(self,regval=None):
+    def __repr__(self,regval=None):
         """ displays value of a bitfield from a register value         
         input : regval value of the full register either in decimal or
         hexadecimal """
@@ -86,9 +86,14 @@ class cp_bitfield:
         fieldval = (regval & self.mask ) >> (self.lsb)
         
         outstr= self.regname  + ' @ ' + self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)
-        print(outstr)
+        # print(outstr)
         return outstr
     
+    def display(self,regval=None):
+        r = self.__repr__(regval=regval)
+        print(r)
+        return r
+
     def getbit(self,regval=None,*args,**kwargs):
         """ function display(self,regval)        
         # displays value of a bitfield from a register value        

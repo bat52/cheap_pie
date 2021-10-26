@@ -85,13 +85,23 @@ class cp_register:
         
         return ret
         
-    def display(self,regval = "0" ):
+    def __repr__(self,regval = "0" ):
         # read register value
         regval = self.getreg()
 
+        r = []
         # 
         for field in self.bitfields :
-            field.display(regval)
+            # field.display(regval)
+            r.append(field.__repr__(regval))
+        
+        jr = "\n".join(r)
+        return jr
+
+    def display(self,regval = "0" ):
+        r = self.__repr__(regval=regval)
+        print(r)
+        return r    
         
     def addfield(self, field):
         # assert isinstance(field,cp_bitfield)
