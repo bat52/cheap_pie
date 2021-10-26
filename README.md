@@ -1,7 +1,7 @@
 # cheap_pie
 A python tool for chip validation
 
-"Cheap Pie" is a python tool for chip validation.
+"Cheap Pie" is a python tool for register-based chip validation.
 The name is a translitteration of "chip py" for obvious reasons.
 
 Given an input description file for the chip, it provides a register-level and 
@@ -30,20 +30,6 @@ Email: marcomerli@gmail.com
 
 Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 
-# Default configurations Examples:
-        # calls QN9080 device with dummy transport layer
-        ./cfgs/cp_qn9080_dummy.sh
-        # calls RT1010 device with jlink transport layer
-        ./cfgs/cp_rt1010_jlink.sh
-        # calls K20 device with dummy transport layer
-        ./cfgs/cp_k20_dummy.sh
-
-# CLI Example:
-        # calls with dummy transport layer 
-        # useful to explore device registers
-        # automatically calls ipython and cheap_pie initialization
-        ./cheap_pie.sh -t dummy
-
 # IPython Example:
         %run cheap_pie
         inval = "0xFFFFFFFF"
@@ -69,8 +55,22 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         retval = hal.ADC_ANA_CTRL.bitfields.ADC_BM.getbit()
         assert(inval == retval)
 
+# CLI Example:
+        # calls with dummy transport layer 
+        # useful to explore device registers
+        # automatically calls ipython and cheap_pie initialization
+        ./cheap_pie.sh -t dummy
+
+# Default configurations Examples:
+        # calls QN9080 device with dummy transport layer
+        ./cfgs/cp_qn9080_dummy.sh
+        # calls RT1010 device with jlink transport layer
+        ./cfgs/cp_rt1010_jlink.sh
+        # calls K20 device with dummy transport layer
+        ./cfgs/cp_k20_dummy.sh
+
 # Dependencies:
-        # CMSIS-SVD python parser including many svd files
+        # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
         pip3 install cmsis-svd
 	# for XML parsing (used by legacy svd parser and IP-XACT parser)
 	pip3 install untangle
