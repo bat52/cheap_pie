@@ -113,12 +113,25 @@ class CheapPieMethods(unittest.TestCase):
         hal = svd_parse(fname='MK20D7.svd',vendor='Freescale',hif = hif)
 
     def test_hal2doc(self):
+        print('Testing hal2doc...')
+
         from parsers.svd_parse import svd_parse
         from tools.hal2doc import hal2doc
         hal = svd_parse(fname="./devices/QN908XC.svd")
         
         # convert to .docx
         hal2doc(hal)
+        pass
+
+    def test_search_bitfield(self):
+        print('Testing search_bitfield...')
+
+        from parsers.svd_parse import svd_parse
+        from tools.search_bitfield import search_bitfield
+        hal = svd_parse(fname="./devices/QN908XC.svd")
+
+        search_bitfield(hal,'ADC_BM')
+        
         pass
 
     def test_ipxact(self):
