@@ -1,4 +1,5 @@
 TODO
+- create iterator in register to easily access bitfields
 - add CMSIS-DAP support (and others) through pyOCD transport
 - add SPIRIT IP-XACT parser through ipyxact https://github.com/olofk/ipyxact
 - port to micropython ?
