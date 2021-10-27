@@ -16,53 +16,70 @@ sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 from cheap_pie_core.cbitfield   import cp_bitfield
 from cheap_pie_core.cp_register import cp_register
 from parsers.name_subs import name_subs
+
+def ipxact_remove_prefix(ipx):
+    replist = ['ipxact_','spirit_']
     
+    if hasattr(ipx,'children'):
+        for e in ipx.children:
+            # remove all suffixes
+            for r in replist:
+                e._name = e._name.replace(r,'')
+            # remove recursively
+            ipxact_remove_prefix(e)
+
+    return ipx
+    pass
+
 def ipxact_parse(fname,hif=None):
        
     ## read input file ########################################################
     csv = untangle.parse(fname)
+
+    ## remove ipxact/spirit prefixes ##########################################
+    csv = ipxact_remove_prefix(csv)
     
     ## loop over lines ########################################################
     outdict = dict()
 
-    periph = csv.ipxact_component.ipxact_memoryMaps.ipxact_memoryMap.ipxact_addressBlock
+    periph = csv.component.memoryMaps.memoryMap.addressBlock
     # print(periph)
     
-    base_addr_str=periph.ipxact_baseAddress.cdata.replace("'h",'0x')
+    base_addr_str=periph.baseAddress.cdata.replace("'h",'0x')
     # print(base_addr_str)
     base_address=literal_eval(base_addr_str)
 
-    if hasattr(periph,'ipxact_register'):
-        for reg in periph.ipxact_register:                
-            if hasattr( reg.ipxact_name, 'cdata'):
+    if hasattr(periph,'register'):
+        for reg in periph.register:                
+            if hasattr( reg.name, 'cdata'):
                 # close old register, before opening a new one
                 if 'regname' in locals():
                     struct_register.dictfield2struct()
                     outdict[regname]=struct_register
 
                 # new register
-                periph_name=periph.ipxact_name.cdata
-                rname=reg.ipxact_name.cdata
+                periph_name=periph.name.cdata
+                rname=reg.name.cdata
                 regname = "%s_%s" % ( periph_name,rname )
                 regname=name_subs(regname)
 
-                addr_str=reg.ipxact_addressOffset.cdata.replace("'h",'0x')
+                addr_str=reg.addressOffset.cdata.replace("'h",'0x')
                 regaddr=literal_eval(addr_str) + base_address
                 comments=""
                 # print(comments)
                 struct_register=cp_register(regname,regaddr,comments,hif)
 
                 # for field_idx in range(nfields):
-                if hasattr(reg,'ipxact_field'):
-                    for field in reg.ipxact_field :
-                        regfield=field.ipxact_name.cdata
+                if hasattr(reg,'field'):
+                    for field in reg.field :
+                        regfield=field.name.cdata
 
                         if not(field is None):
                             # print regfield
                             regfield=name_subs(regfield)
 
-                            csvWidth=field.ipxact_bitWidth.cdata
-                            bitoffset=field.ipxact_bitOffset.cdata
+                            csvWidth=field.bitWidth.cdata
+                            bitoffset=field.bitOffset.cdata
                             comments="" # field.description.cdata
                             # print(comments)
                             
@@ -80,15 +97,18 @@ def ipxact_parse(fname,hif=None):
     # return outdict
     return namedtuple("HAL", outdict.keys())(*outdict.values()) 
 
-def test_ipxact_parse(argv=[]):
-    if len(argv) > 1: 
-        fname=argv[1]
-    else:
-        fname="./devices/my_subblock.xml"
-    return ipxact_parse(fname)
+def test_ipxact_parse():
+    ipxact_parse("./devices/my_subblock.xml")
+    ipxact_parse("./devices/leon2_creg.xml")
+    ipxact_parse("./devices/generic_example.xml")
     pass
     
-if __name__ == '__main__':    
-    print(ipxact_parse(sys.argv))
+if __name__ == '__main__':
+    if len(sys.argv) > 1: 
+        fname=sys.argv[1]
+    else:
+        fname="./devices/my_subblock.xml"
+    print(fname)    
+    print(ipxact_parse(fname))
     pass
     
