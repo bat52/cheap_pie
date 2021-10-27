@@ -77,6 +77,8 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 # Dependencies:
         # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
         pip3 install cmsis-svd
+        # SPIRIT IP-XACT parser through ipyxact https://github.com/olofk/ipyxact
+        pip3 install ipyxact
 	# for XML parsing (used by legacy svd parser and IP-XACT parser)
 	pip3 install untangle
 	# for JLINK

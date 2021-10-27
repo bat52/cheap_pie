@@ -86,6 +86,9 @@ class CheapPieMethods(unittest.TestCase):
         from parsers.ipxact_parse import test_ipxact_parse
         test_ipxact_parse()
 
+        from parsers.ipyxact_parse import test_ipyxact_parse
+        test_ipyxact_parse()
+
     def test_tools(self):
         from tools.hal2doc import test_hal2doc
         test_hal2doc()

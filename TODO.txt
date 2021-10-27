@@ -13,6 +13,5 @@ TODO
                     s.add(key)
                 return s
 
-deprecated by SPIRIT support through ipxact_parse:
-    - add SPIRIT IP-XACT parser through ipyxact https://github.com/olofk/ipyxact
+deprecated by SPIRIT and IP-XACT support through dedicated parser:
     - create IP-XACT to SVD conversion, based on kactus2 converter XSLT rules https://github.com/kactus2/k2xml_converter
