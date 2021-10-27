@@ -55,6 +55,11 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         retval = hal.ADC_ANA_CTRL.bitfields.ADC_BM.getbit()
         assert(inval == retval)
 
+        # subscriptable register access
+        hal[0]
+        # subscriptable bitfield access
+        hal[0][0]
+
 # CLI Example:
         # calls with dummy transport layer 
         # useful to explore device registers

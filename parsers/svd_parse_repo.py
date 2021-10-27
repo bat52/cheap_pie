@@ -91,12 +91,17 @@ def svd_parse(fname,vendor=None,hif=None):
     # convert output dictionary into structure
     # return outdict
     return namedtuple("HAL", outdict.keys())(*outdict.values())
+
+def test_svd_parse_repo():
+    print('Testing QN9080 with repo parser...')
+
+    from parsers.svd_parse_repo import svd_parse
+    hal = svd_parse(fname="./devices/MIMXRT1011.svd")
+        
+    print('Testing K20 with repo parser...')
+    hal = svd_parse(fname='MK20D7.svd',vendor='Freescale')
     
 if __name__ == '__main__':
-    if len(sys.argv) > 1: 
-        fname=sys.argv[1]
-    else:
-        fname="./devices/QN908XC.svd"     
-    print(svd_parse(fname))
+    test_svd_parse_repo()
     pass
     

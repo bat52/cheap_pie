@@ -125,7 +125,16 @@ class cp_register:
     def __contains__(self, key):
         if self.bitfields is None:
             raise TypeError('not indexable')
-        return any(item.name == key for item in self.bitfields)
+        return any(item.fieldname == key for item in self.bitfields)
 
     def __len__(self):
-        return len(self.bitfields.keys())
+        return len(self.bitfields)
+
+    def __iter__(self):
+        return self.bitfields.__iter__()
+    
+    def __next__(self):
+        return self.bitfields.next()
+    
+    def __getitem__(self, idx):
+        return self.bitfields[idx]

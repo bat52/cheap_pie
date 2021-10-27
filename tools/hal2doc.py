@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -9,10 +9,11 @@ from docx import Document
 from operator import attrgetter
 # from cbitfield import cp_bitfield
 
-try:
-    from cbitfield import cp_bitfield
-except:
-    from cheap_pie.cbitfield import cp_bitfield
+import sys
+import os.path
+sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+
+from cheap_pie_core.cbitfield import cp_bitfield
 
 def reg_add_reserved_bitfields(fields,regwidth=32):
     next_lsb = 0
@@ -163,9 +164,14 @@ def hal2doc(hal,fname='hal.docx',template=None,tablestyle=None,nbits_addr=32):
     # save document
     doc.save(fname)
 
-if __name__ == '__main__':
-    from svd_parse import svd_parse
-    hal = svd_parse(fname="./devices/QN908XC.xml")        
+def test_hal2doc():
+    print('Testing hal2doc...')
+    from parsers.svd_parse import svd_parse
+    # from parsers.svd_parse_repo import svd_parse
+    hal = svd_parse(fname="./devices/QN908XC.svd")        
     # convert to .docx
     hal2doc(hal)
+
+if __name__ == '__main__':
+    test_hal2doc()
     pass

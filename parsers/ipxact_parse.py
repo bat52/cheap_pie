@@ -79,12 +79,16 @@ def ipxact_parse(fname,hif=None):
     # convert output dictionary into structure
     # return outdict
     return namedtuple("HAL", outdict.keys())(*outdict.values()) 
-    
-if __name__ == '__main__':
-    if len(sys.argv) > 1: 
-        fname=sys.argv[1]
+
+def test_ipxact_parse(argv=[]):
+    if len(argv) > 1: 
+        fname=argv[1]
     else:
         fname="./devices/my_subblock.xml"
-    print(ipxact_parse(fname))
+    return ipxact_parse(fname)
+    pass
+    
+if __name__ == '__main__':    
+    print(ipxact_parse(sys.argv))
     pass
     

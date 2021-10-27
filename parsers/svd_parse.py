@@ -90,13 +90,17 @@ def svd_parse(fname,vendor=None,hif=None):
     # convert output dictionary into structure
     # return outdict
     return namedtuple("HAL", outdict.keys())(*outdict.values()) 
-        
-if __name__ == '__main__':
-    if len(sys.argv) > 1: 
-        fname=sys.argv[1]
+
+def test_svd_parse(argv=[]):
+    if len(argv) > 1: 
+        fname=argv[1]
     else:
         fname="./devices/QN908XC.svd"
         # fname="./devices/MIMXRT1011.svd"
-    print(svd_parse(fname))
+    return svd_parse(fname)
+    pass
+        
+if __name__ == '__main__':    
+    print(svd_parse(sys.argv))
     pass
     

@@ -5,12 +5,6 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-"""
-Created on Wed Jan 17 18:03:31 2018
-
-@author: Marco Merlin
-"""
-
 # Ipython autoreload
 # %load_ext autoreload
 # %autoreload 2
@@ -40,7 +34,7 @@ for line in logo:
 print('Parsing input arguments...')
 
 if 'p' not in locals():
-    from cp_cli import cp_cli
+    from cheap_pie_core.cp_cli import cp_cli
     import sys
     p = cp_cli(sys.argv[1:])
 
@@ -58,7 +52,6 @@ print('Initialising Host Interface...')
 # init jlink transport
 if p.transport == 'jlink': # disable jlink for testing
     from transport.cp_jlink_transport import cp_jlink
-    # hif = cp_jlink(device = 'QN9080C' )
     hif = cp_jlink(device = p.jdevice )
 elif p.transport == 'dummy':
     from transport.cp_dummy_transport import cp_dummy
@@ -88,6 +81,9 @@ elif p.format == 'ipxact':
 else:
     print('Unsupported input format!')
     assert(False)
+
+## tools ######################################################################
+import tools
 
 ## welcome ####################################################################
 print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')
