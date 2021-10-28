@@ -71,12 +71,19 @@ else:
     # if vendor is indicated, use file from repository
     fname = p.regfname
 
-if p.format == 'svd':
+if p.format == 'cmsis-svd':
+    # parser build for CMSIS-SVD xml file format
+    from parsers.svd_parse_repo import svd_parse
+    hal = svd_parse(fname=fname,hif=hif,vendor=p.vendor)
+elif p.format == 'svd':
     # parser build for CMSIS-SVD xml file format
     from parsers.svd_parse_repo import svd_parse
     hal = svd_parse(fname=fname,hif=hif,vendor=p.vendor)
 elif p.format == 'ipxact':
     from parsers.ipxact_parse import ipxact_parse
+    hal = ipxact_parse(fname=fname,hif=hif)
+elif p.format == 'ipyxact':
+    from parsers.ipyxact_parse import ipxact_parse
     hal = ipxact_parse(fname=fname,hif=hif)
 else:
     print('Unsupported input format!')
