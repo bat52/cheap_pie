@@ -13,9 +13,8 @@ Currently the implemented description input modes are:
 but it should be relatively easy to add different chip description formats.
 
 Currently the supported transport layer is Jlink, but it should be really easy
-to add support for different transport layers, like for instance Total Phase
-Cheetah 
-( https://www.totalphase.com/catalog/product/view/id/3/s/cheetah-spi/?GA_network=g&GA_device=c&GA_campaign=169793414&GA_adgroup=38297664135&GA_target=&GA_placement=&GA_creative=259919292215&GA_extension=&GA_keyword=cheetah%20spi&GA_loc_physical_ms=9054949&GA_landingpage=https://www.totalphase.com/catalog/product/view/id/3/s/cheetah-spi/&ga_keyword_match=e&ga_ad_position=1t1&gclid=Cj0KCQjwpsLkBRDpARIsAKoYI8y4QJe48cAGH2vPK769Js7LbnM2VjUSXz2slVFTQByO-I23_DKdVqsaAhsBEALw_wcB ), or any other.
+to add support for different transport layers, like for instance openSDA, 
+CMSIS-DAP, Total Phase Cheetah, GDB or any other.
 
 In conjunction with pyVISA (https://pyvisa.readthedocs.io/en/master/), used for 
 instument control, it provides a simple and fully python-contained environment
@@ -96,12 +95,9 @@ https://github.com/SystemRDL/PeakRDL-ipxact
 RDL to verilog
 https://github.com/hughjackson/PeakRDL-verilog
 
-IP-XACT to C header, markdown
-https://github.com/olofk/ipyxact
-
 custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
 https://github.com/rggen/rggen
 	
 # Others	
 Banner created with pyfiglet
-( https://www.devdungeon.com/content/create-ascii-art-text-banners-python#install_pyfiglet ).
+https://www.devdungeon.com/content/create-ascii-art-text-banners-python#install_pyfiglet
