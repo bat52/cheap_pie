@@ -12,6 +12,10 @@ Currently the implemented description input modes are:
 - IP-XACT ( https://www.accellera.org/downloads/standards/ip-xact )
 but it should be relatively easy to add different chip description formats.
 
+Although tested on few real chips (NXP QN9080, I.MX RT1010, K64F),
+cheap_pie parser already supports dozen of devices, listed in the CMSIS-SVD 
+repository https://github.com/posborne/cmsis-svd .
+
 Currently the supported transport layer is Jlink, but it should be really easy
 to add support for different transport layers, like for instance openSDA, 
 CMSIS-DAP, Total Phase Cheetah, GDB or any other.
@@ -50,9 +54,16 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         hal[0][0]
 
 # CLI Example:
-        # calls with dummy transport layer 
-        # useful to explore device registers
+        # load RT1010 from local svd file under ./devices/
         # automatically calls ipython and cheap_pie initialization
+        ./cheap_pie.sh -rf MIMXRT1011.svd -t jlink
+
+        # load K64 from CMSIS-SVD
+        # need to specify vendor for svd not in ./devices/
+        ./cheap_pie.sh -rf MK64F12.svd -ve Freescale -t jlink
+
+        # calls QN9080 with dummy transport layer 
+        # useful to explore device registers
         ./cheap_pie.sh -t dummy
 
 # Default configurations Examples:

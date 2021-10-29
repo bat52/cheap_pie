@@ -10,6 +10,9 @@ https://github.com/hughjackson/PeakRDL-verilog
 SPIRIT IP-XACT to C header, markdown
 https://github.com/olofk/ipyxact
 
+sifive SVD generator, input DTS
+https://github.com/sifive/cmsis-svd-generator
+
 custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
 https://github.com/rggen/rggen
 
