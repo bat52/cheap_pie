@@ -86,8 +86,10 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         pip3 install untangle
         # for JLINK
         pip3 install pylink-square
-        # pyOCD for CMSIS-DAP and JLINK support
+        # pyOCD for CMSIS-DAP and JLINK support (only tested in python-venv)
         pip3 install pyocd
+        # esptool for Espressif devices (not yet functional)
+        pip3 install esptool
         # for exporting XML info into a human-readable document
         pip3 install python-docx
 
