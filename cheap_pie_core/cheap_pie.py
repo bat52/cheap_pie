@@ -65,7 +65,7 @@ else:
 print('Initialising Hardware Abstraction Layer...')
 from parsers.cp_parsers_wrapper import cp_parsers_wrapper
 from cheap_pie_core.cp_hal import cp_hal
-hal = cp_hal( cp_parsers_wrapper( p ) )
+hal = cp_hal( cp_parsers_wrapper( p, hif=hif ) )
 
 ## welcome ####################################################################
 print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')
