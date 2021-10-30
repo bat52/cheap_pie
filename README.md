@@ -111,6 +111,21 @@ In conjunction with pyVISA (https://pyvisa.readthedocs.io/en/master/), used for
 instument control, it provides a simple and fully python-contained environment
 for silicon validation.
 
+C++ register/bitfields access (including generation from svd)
+https://github.com/thanks4opensource/regbits
+
+STM C++ regbits implementation
+https://github.com/thanks4opensource/regbits_stm
+
+a barebone embedded library generator
+https://modm.io/
+
+hardware descriptions for AVR and STM32 devices
+https://github.com/modm-io/modm-devices
+
+STM32 Peripheral Access Crates (from svd)
+https://github.com/stm32-rs/stm32-rs
+
 Banner created with pyfiglet
 https://www.devdungeon.com/content/create-ascii-art-text-banners-python#install_pyfiglet
 
