@@ -20,7 +20,7 @@ class cp_hal:
     """ Hardware abstraction layer class """
     def __init__(self,regs):
         self.regs = regs
-        self.hifs = regs[0].hif
+        self.hif = regs[0].hif
         pass
 
     def __len__(self):
