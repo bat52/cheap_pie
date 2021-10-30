@@ -30,10 +30,10 @@ class cp_esptool(object):
             addr = hex(addr)
             
         if not self.port is None:
-            #  ret = esptool.main( ['--port' , self.port , 'read_mem', addr]  )
+            #  ret = esptool.main( ['--port' , self.port , '--after no_reset', 'read_mem', addr]  )
             # dump value on file... horrible hack because no output available
             tmpfile = 'tmpdump'
-            ret = esptool.main( ['--port' , self.port , 'dump_mem', addr, '4', tmpfile]  )
+            ret = esptool.main( ['--port' , self.port , '--after', 'no_reset', 'dump_mem', addr, '4', tmpfile]  )
 
             if os.path.isfile(tmpfile):
                 f = open(tmpfile, "rb")
@@ -58,7 +58,7 @@ class cp_esptool(object):
         
         if not self.port is None:            
             # ret = esptool.main( ['--port' , self.port , 'write_mem', addr, val ,'0xFFFFFFFF'] )
-            ret = esptool.main( ['--port' , self.port , 'write_mem', addr, val ,'0x0'] )
+            ret = esptool.main( ['--port' , self.port , '--after', 'no_reset' ,'write_mem', addr, val ,'0x0'] )
             pass
         else:
             # print hex(addr)
