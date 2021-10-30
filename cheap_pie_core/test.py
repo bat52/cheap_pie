@@ -25,6 +25,10 @@ class CheapPieMethods(unittest.TestCase):
         from transport.cp_pyocd_transport import test_cp_pyocd
         test_cp_pyocd()
 
+        # esptool
+        from transport.cp_esptool_transport import test_cp_esptool
+        test_cp_esptool()
+
         pass
    
     def test_bitfield(self):

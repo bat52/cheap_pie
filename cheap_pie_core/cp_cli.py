@@ -16,7 +16,9 @@ def cp_cli(args=[]):
     parser.add_argument("-ve", "--vendor", help="device vendor. if specified parses svd file from github repository.", action='store', type = str, default=None)
     # transport options
     parser.add_argument("-d", "--device", help="jlink/ocd device name", action='store', type = str, default="CORTEX-M4")
-    parser.add_argument("-t" , "--transport", help="transport", action='store', type = str, default="dummy", choices=["jlink","dummy","ocd"])
+    parser.add_argument("-t" , "--transport", help="transport", action='store', type = str, default="dummy", choices=["jlink","dummy","ocd","esptool"])
+    parser.add_argument("-p", "--port", help="esptool serial port", action='store', type = str, default="/dev/ttyUSB0")
+
 
     return parser.parse_args(args)
 

@@ -86,6 +86,8 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         pip3 install untangle
         # for JLINK
         pip3 install pylink-square
+        # pyOCD for CMSIS-DAP and JLINK support
+        pip3 install pyocd
         # for exporting XML info into a human-readable document
         pip3 install python-docx
 

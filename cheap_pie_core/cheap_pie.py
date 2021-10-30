@@ -59,6 +59,9 @@ elif p.transport == 'dummy':
 elif p.transport == 'ocd':
     from transport.cp_pyocd_transport import cp_pyocd
     hif = cp_pyocd(device = p.device )
+elif p.transport == 'esptool':
+    from transport.cp_esptool_transport import cp_esptool
+    hif = cp_esptool(port = p.port )    
 else:
     hif=None
     # assert(False,'Invalid transport: %s' % p.transport)
