@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#
 # -*- coding: utf-8 -*-
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -55,3 +57,15 @@ class cp_dummy(object):
         self.mem[hex_bw(addr)] = val
             
         return int( val )
+
+def test_cp_dummy():
+    t = cp_dummy()
+    addr = 4
+    val = 5
+    t.hifwrite(addr=addr,val=val)
+    assert( val==t.hifread(addr = addr) )
+    pass
+
+if __name__ == '__main__':
+    test_cp_dummy()
+    pass

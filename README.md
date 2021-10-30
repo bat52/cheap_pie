@@ -26,32 +26,35 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 # IPython Example:
         %run cheap_pie
         inval = "0xFFFFFFFF"
-        hal.ADC_ANA_CTRL.setreg(inval)
+        hal.regs.ADC_ANA_CTRL.setreg(inval)
         retval = hex(hal.ADC_ANA_CTRL.getreg())
         assert(literal_eval(inval) == literal_eval(retval))
 
         # decimal assignement        
         inval = 2
-        hal.ADC_ANA_CTRL.setreg(inval)
+        hal.regs.ADC_ANA_CTRL.setreg(inval)
         retval = hal.ADC_ANA_CTRL.getreg()        
         assert(inval == retval)
         
-        hal.ADC_ANA_CTRL
-        hal.ADC_ANA_CTRL.display()
+        hal.regs.ADC_ANA_CTRL
+        hal.regs.ADC_ANA_CTRL.display()
                 
         print('Test bitfield methods...')
         
-        hal.ADC_ANA_CTRL.bitfields.ADC_BM
-        hal.ADC_ANA_CTRL.bitfields.ADC_BM.display()
-        hal.ADC_ANA_CTRL.bitfields.ADC_BM.display(2)
-        hal.ADC_ANA_CTRL.bitfields.ADC_BM.setbit(inval)
-        retval = hal.ADC_ANA_CTRL.bitfields.ADC_BM.getbit()
+        hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM
+        hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.display()
+        hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.display(2)
+        hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.setbit(inval)
+        retval = hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.getbit()
         assert(inval == retval)
 
         # subscriptable register access
         hal[0]
         # subscriptable bitfield access
         hal[0][0]
+        # subscriptable as a dictionary
+        hal['SYSCON_RST_SW_SET']
+        hal['ADC_ANA_CTRL']['ADC_BM']
 
 # CLI Example:
         # load RT1010 from local svd file under ./devices/

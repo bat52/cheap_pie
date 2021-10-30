@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#
 # -*- coding: utf-8 -*-
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -66,3 +68,15 @@ class cp_jlink(object):
     def go(self):
         self.jl.go()
         return(0) """
+
+def test_cp_jlink():
+    t = cp_jlink(device = None)
+    addr = 4
+    val = 5
+    t.hifwrite(addr=addr,val=val)
+    val=t.hifread(addr = addr)
+    pass
+
+if __name__ == '__main__':
+    test_cp_jlink()
+    pass

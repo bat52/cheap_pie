@@ -63,34 +63,9 @@ else:
 
 ## init chip ##################################################################
 print('Initialising Hardware Abstraction Layer...')
-
-if p.vendor is None:
-    fname = os.path.join(p.devicedir,p.regfname)
-    print(fname)
-else:
-    # if vendor is indicated, use file from repository
-    fname = p.regfname
-
-if p.format == 'cmsis-svd':
-    # parser build for CMSIS-SVD xml file format
-    from parsers.svd_parse_repo import svd_parse
-    hal = svd_parse(fname=fname,hif=hif,vendor=p.vendor)
-elif p.format == 'svd':
-    # parser build for CMSIS-SVD xml file format
-    from parsers.svd_parse_repo import svd_parse
-    hal = svd_parse(fname=fname,hif=hif,vendor=p.vendor)
-elif p.format == 'ipxact':
-    from parsers.ipxact_parse import ipxact_parse
-    hal = ipxact_parse(fname=fname,hif=hif)
-elif p.format == 'ipyxact':
-    from parsers.ipyxact_parse import ipxact_parse
-    hal = ipxact_parse(fname=fname,hif=hif)
-else:
-    print('Unsupported input format!')
-    assert(False)
-
-## tools ######################################################################
-import tools
+from parsers.cp_parsers_wrapper import cp_parsers_wrapper
+from cheap_pie_core.cp_hal import cp_hal
+hal = cp_hal( cp_parsers_wrapper( p ) )
 
 ## welcome ####################################################################
 print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')

@@ -1,6 +1,4 @@
 TODO
-- create a cp_hal class that wraps registers and tools
-    - add dict-like register selection 
 - add CMSIS-DAP support (and others) through pyOCD transport https://github.com/pyocd/pyOCD
 - add espressif targets support through esptool transport https://github.com/espressif/esptool
 - use pyverilator to provide register-based interactive interface for verification https://github.com/csail-csg/pyverilator

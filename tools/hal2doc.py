@@ -166,9 +166,14 @@ def hal2doc(hal,fname='hal.docx',template=None,tablestyle=None,nbits_addr=32):
 
 def test_hal2doc():
     print('Testing hal2doc...')
-    from parsers.svd_parse import svd_parse
-    # from parsers.svd_parse_repo import svd_parse
-    hal = svd_parse(fname="./devices/QN908XC.svd")        
+    if False:
+        from parsers.svd_parse import svd_parse
+        # from parsers.svd_parse_repo import svd_parse
+        hal = svd_parse(fname="./devices/QN908XC.svd")
+    else:
+        from parsers.ipxact_parse import ipxact_parse
+        # from parsers.svd_parse_repo import svd_parse
+        hal = ipxact_parse(fname="./devices/my_subblock.xml")
     # convert to .docx
     hal2doc(hal)
 

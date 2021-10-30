@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+#
 # -*- coding: utf-8 -*-
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -10,8 +12,8 @@ class cp_register:
     """ A chip register class """
     addr = 0    
     regname = ''
-    bitfields = None
-    dictfields = None
+    bitfields = []
+    dictfields = dict()
     comments = ''
     # host interface handler
     hif = None
@@ -84,6 +86,11 @@ class cp_register:
         #structfun(@(x) x.display(regval),self.fields,'UniformOutput',false);                
         
         return ret
+
+    def help(self):
+        """ function ret = help(self)        
+        # displays register comments """    
+        print(self.comments)
         
     def __repr__(self,regval = "0" ):
         # read register value
@@ -137,4 +144,57 @@ class cp_register:
         return self.bitfields.next()
     
     def __getitem__(self, idx):
+        if isinstance(idx,int):
+            return self.bitfields[idx]
+        elif isinstance(idx,str):
+            return self.bitfields._asdict()[idx]
+        else:
+            print('Unsupported indexing!')
+            assert(False)
+
         return self.bitfields[idx]
+
+def test_cp_register():
+    import sys
+    import os.path
+    sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+    from transport.cp_dummy_transport import cp_dummy
+    from cheap_pie_core.cbitfield import cp_bitfield
+
+    r = cp_register( 
+        regname='regname',
+        regaddr=10,
+        comments='comments',
+        hif = cp_dummy(),
+        addr_offset=10,
+        addr_base=10
+    )
+
+    # test value
+    val = 15
+    r.setreg(val)
+    assert(val==r.getreg())
+    r.display()
+    r.help()
+
+    # test bitfield
+    f = cp_bitfield(
+        regfield = 'fname',
+        regaddr = 10,
+        regname = 'rname',
+        width = '2',
+        bit_offset = '2',
+        comments = 'comment',
+        hif = cp_dummy()
+    )
+
+    r.addfield(f)
+    r.dictfield2struct()
+    r.get_bitfields()
+
+    r[0]
+    r['fname']
+
+if __name__ == '__main__':
+    test_cp_register()
+    pass
