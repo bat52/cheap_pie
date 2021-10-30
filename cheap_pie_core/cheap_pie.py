@@ -52,10 +52,13 @@ print('Initialising Host Interface...')
 # init jlink transport
 if p.transport == 'jlink': # disable jlink for testing
     from transport.cp_jlink_transport import cp_jlink
-    hif = cp_jlink(device = p.jdevice )
+    hif = cp_jlink(device = p.device )
 elif p.transport == 'dummy':
     from transport.cp_dummy_transport import cp_dummy
     hif = cp_dummy()
+elif p.transport == 'ocd':
+    from transport.cp_pyocd_transport import cp_pyocd
+    hif = cp_pyocd(device = p.device )
 else:
     hif=None
     # assert(False,'Invalid transport: %s' % p.transport)

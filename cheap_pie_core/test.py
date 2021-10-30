@@ -21,6 +21,10 @@ class CheapPieMethods(unittest.TestCase):
         from transport.cp_jlink_transport import test_cp_jlink
         test_cp_jlink()
 
+        # pyocd
+        from transport.cp_pyocd_transport import test_cp_pyocd
+        test_cp_pyocd()
+
         pass
    
     def test_bitfield(self):

@@ -4,3 +4,4 @@ hal.docx
 start.ipy
 devices/sum_buffer.1.0.xml
 output.xml
+pyocd-venv/*
