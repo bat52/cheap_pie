@@ -32,7 +32,8 @@ class cp_pyocd(object):
             addr = int(literal_eval(addr))
             
         if not self.ocd is None:
-            ret = self.ocd.board.target.dp.read_reg(addr)
+            # ret = self.ocd.board.target.dp.read_reg(addr)
+            ret = self.ocd.board.target.read32(addr)
             pass
         else:
             ret = self.mem[hex(addr)]
@@ -49,7 +50,8 @@ class cp_pyocd(object):
             val = int ( literal_eval(val) )
         
         if not self.ocd is None:
-            ret = self.ocd.board.target.dp.write_reg(addr,val)
+            # ret = self.ocd.board.target.dp.write_reg(addr,val)
+            ret = self.ocd.board.target.write32(addr,val)
             pass
         else:
             # print hex(addr)
