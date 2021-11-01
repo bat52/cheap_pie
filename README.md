@@ -1,7 +1,7 @@
 # cheap_pie
-A python tool for chip validation
+A python tool for register-based chip verification and validation
 
-"Cheap Pie" is a python tool for register-based chip validation.
+"Cheap Pie" is a python tool for register-based chip verification and validation.
 The name is a translitteration of "chip py" for obvious reasons.
 
 Given an input description file for the chip, it provides a register-level and 
@@ -10,15 +10,19 @@ bitfield-level read/write access, through a generic transport layer.
 Currently the implemented description input modes are:
 - CMSIS-SVD (https://www.keil.com/pack/doc/CMSIS/SVD/html/svd_Format_pg.html)
 - IP-XACT ( https://www.accellera.org/downloads/standards/ip-xact )
+- SystemRDL (https://www.accellera.org/activities/working-groups/systemrdl)
 but it should be relatively easy to add different chip description formats.
 
 Although tested on few real chips (NXP QN9080, I.MX RT1010, K64F),
 cheap_pie parser already supports dozen of devices, listed in the CMSIS-SVD 
 repository https://github.com/posborne/cmsis-svd .
 
-Currently the supported transport layer is Jlink, but it should be really easy
+Currently the supported transport layers are jlink and pyocd, but it should be really easy
 to add support for different transport layers, like for instance openSDA, 
 CMSIS-DAP, Total Phase Cheetah, GDB or any other.
+
+Experimental support for pyverilator transport allows to run interactive simulation
+of register blocks generated from SystemRDL source.
 
 Author: Marco Merlin
 Tested on ipython3 (python 3.8.5) on ubuntu 20.04
@@ -77,7 +81,12 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         # calls K20 device with dummy transport layer
         ./cfgs/cp_k20_dummy.sh
 
-# Dependencies:
+# Verilator interactive simulation Examples:
+        ./tools/rdl2verilog.py -f ./devices/rdl/basic.rdl
+        ./tools/rdl2any.py -f ./devices/rdl/basic.rdl -ofmt ipxact
+        ./cheap_pie.sh -dd  ./devices/rdl -rf basic.xml -fmt ipyxact -t verilator -topv ./devices/rdl/basic/basic_rf.sv
+
+# Dependencies for validation:
         # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
         pip3 install cmsis-svd
         # SPIRIT IP-XACT parser through ipyxact https://github.com/olofk/ipyxact
@@ -92,6 +101,18 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         pip3 install esptool
         # for exporting XML info into a human-readable document
         pip3 install python-docx
+        
+# Dependencies for verification:
+        # verilator
+        https://www.veripool.org/verilator/
+        # pyverilator (python verilator wrapper)
+        https://github.com/csail-csg/pyverilator
+        # SystemRDL to register-file verilog
+        https://github.com/hughjackson/PeakRDL-verilog
+        # SystemRDL to IP-XACT
+        https://github.com/SystemRDL/PeakRDL-ipxact
+        # gtkwave
+        http://gtkwave.sourceforge.net/
 
 # python transport wrappers
 - pyOCD sypports JLINK, CMSIS-DAP and GDB https://github.com/pyocd/pyOCD
@@ -100,12 +121,6 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 # Register description formats
 regtool from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
 https://docs.opentitan.org/doc/rm/register_tool/
-
-RDL to IP-XACT
-https://github.com/SystemRDL/PeakRDL-ipxact
-
-RDL to verilog
-https://github.com/hughjackson/PeakRDL-verilog
 
 custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
 https://github.com/rggen/rggen
