@@ -61,7 +61,10 @@ elif p.transport == 'ocd':
     hif = cp_pyocd(device = p.device )
 elif p.transport == 'esptool':
     from transport.cp_esptool_transport import cp_esptool
-    hif = cp_esptool(port = p.port )    
+    hif = cp_esptool(port = p.port )   
+elif p.transport == 'verilator':
+    from transport.cp_pyverilator_transport import cp_pyverilator_transport
+    hif = cp_pyverilator_transport( p.top_verilog )
 else:
     hif=None
     # assert(False,'Invalid transport: %s' % p.transport)

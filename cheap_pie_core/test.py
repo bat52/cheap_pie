@@ -29,6 +29,10 @@ class CheapPieMethods(unittest.TestCase):
         from transport.cp_esptool_transport import test_cp_esptool
         test_cp_esptool()
 
+        # pyverilator 
+        from transport.cp_pyverilator_transport import test_cp_pyverilator
+        test_cp_pyverilator()
+
         pass
    
     def test_bitfield(self):

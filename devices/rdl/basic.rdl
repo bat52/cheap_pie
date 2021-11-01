@@ -1,0 +1,11 @@
+
+addrmap basic #(longint unsigned PARAM = 0x10) {
+    default swmod;
+
+    reg {
+        default sw = rw;
+        default hw = w;
+        field {} basicfield[31:0];
+    } basicreg;
+
+};

@@ -6,3 +6,8 @@ devices/sum_buffer.1.0.xml
 output.xml
 pyocd-venv/*
 dump.txt
+devices/rdl/basic/*
+devices/rdl/basic.uvm
+devices/rdl/basic.xml
+obj_dir/*
+gtkwave.vcd
