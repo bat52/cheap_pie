@@ -18,13 +18,22 @@ class cp_pyverilator_transport():
     def __init__(self,fname):
 
         # rename to .v, if .sv
-        base,ext = os.path.splitext(fname)
-        if ext == '.sv':
-            ofname = base + '.v'
-            copyfile(fname, ofname )
-            fname = ofname
+        if not os.path.isfile(fname):
+            print('File %s does not exist!' % fname)
+            assert(False)
 
-        self.sim = pyverilator.PyVerilator.build(fname)
+        base,ext = os.path.splitext(fname)
+        # print(ext)
+
+        if ext == '.sv':
+            print('renaming input file to .v')
+            ofname = base + '.v'
+            copyfile(fname, ofname)
+        else:
+            ofname = fname
+
+        print(ofname)
+        self.sim = pyverilator.PyVerilator.build(ofname)
 
         # start gtkwave to view the waveforms as they are made
         self.sim.start_gtkwave()

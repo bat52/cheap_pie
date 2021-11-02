@@ -11,3 +11,5 @@ devices/rdl/basic.uvm
 devices/rdl/basic.xml
 obj_dir/*
 gtkwave.vcd
+devices/rdl/counter/*
+devices/rdl/counter.xml
