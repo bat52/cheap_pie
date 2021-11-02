@@ -124,7 +124,10 @@ https://docs.opentitan.org/doc/rm/register_tool/
 
 custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
 https://github.com/rggen/rggen
-	
+
+convert ipxact register file description into verilog register bank
+https://github.com/oddball/ipxact2systemverilog
+
 # Others	
 In conjunction with pyVISA (https://pyvisa.readthedocs.io/en/master/), used for 
 instument control, it provides a simple and fully python-contained environment
