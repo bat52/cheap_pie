@@ -31,6 +31,9 @@ def cp_parsers_wrapper(p,hif=None):
     elif p.format == 'ipyxact':
         from parsers.ipyxact_parse import ipxact_parse
         hal = ipxact_parse(fname=fname,hif=hif)
+    elif p.format == 'rdl':
+        from parsers.rdl_parse import rdl_parse
+        hal = rdl_parse(fname=fname,hif=hif)
     else:
         print('Unsupported input format!')
         assert(False)

@@ -12,7 +12,7 @@ def cp_cli(args=[]):
     # register format options
     parser.add_argument("-rf", "--regfname", help="register description file name", action='store', type = str, default="QN908XC.svd")
     parser.add_argument("-dd", "--devicedir", help="register description files folder", action='store', type = str, default="./devices")    
-    parser.add_argument("-fmt","--format", help="device description format", action='store', type = str, default="cmsis-svd", choices=["svd","cmsis-svd","ipxact","ipyxact"])
+    parser.add_argument("-fmt","--format", help="device description format", action='store', type = str, default="cmsis-svd", choices=["svd","cmsis-svd","ipxact","ipyxact","rdl"])
     parser.add_argument("-ve", "--vendor", help="device vendor. if specified parses svd file from github repository.", action='store', type = str, default=None)
     # transport options
     parser.add_argument("-d", "--device", help="jlink/ocd device name", action='store', type = str, default="CORTEX-M4")

@@ -1,15 +1,6 @@
 TODO
 - fix espressif targets support through esptool transport https://github.com/espressif/esptool
 - port to micropython ?
-- consider using bunch ( https://pypi.org/project/bunch/ ) instead of namedtuple as parser output
-    - maybe useful to enable autocompletion
-        class MyBunch(Bunch):
-            def __dir__(self):
-                # s = set(super.__dir__(self))
-                s = set(super().__dir__())
-                for key in self:
-                    s.add(key)
-                return s
 
 deprecated by SPIRIT and IP-XACT support through dedicated parser:
     - create IP-XACT to SVD conversion, based on kactus2 converter XSLT rules https://github.com/kactus2/k2xml_converter

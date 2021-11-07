@@ -61,7 +61,7 @@ class CheapPieMethods(unittest.TestCase):
         from parsers.ipyxact_parse import test_ipyxact_parse
         test_ipyxact_parse()
 
-        from parsers.rdl_parser import test_rdl_parse
+        from parsers.rdl_parse import test_rdl_parse
         test_rdl_parse()
 
     def test_parsers_wrapper(self):
