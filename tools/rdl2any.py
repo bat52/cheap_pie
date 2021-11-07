@@ -16,7 +16,7 @@ def cli(args):
 
     return parser.parse_args(args)
 
-def main(args=[]):
+def rdl2any(args=[]):
     p = cli(args)
     rdlc = RDLCompiler()
 
@@ -43,8 +43,8 @@ def main(args=[]):
     return outfname
 
 def test_rdl2any():
-    main(['-ofmt','ipxact'])
-    main(['-ofmt','uvm'])
+    rdl2any(['-ofmt','ipxact'])
+    rdl2any(['-ofmt','uvm'])
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    rdl2any(sys.argv[1:])

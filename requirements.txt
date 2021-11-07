@@ -1,0 +1,10 @@
+untangle
+cmsis-svd
+ipyxact
+pylink-square
+pyocd
+esptool        
+python-docx
+pyverilator
+peakrdl-verilog
+peakrdl-ipxact
