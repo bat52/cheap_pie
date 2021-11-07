@@ -83,7 +83,7 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 
 # Verilator interactive simulation Examples:
         ./tools/rdl2verilog.py -f ./devices/rdl/basic.rdl
-        ./cheap_pie.sh -dd  ./devices/rdl -rf basic.rdl -rdl ipyxact -t verilator -topv ./devices/rdl/basic/basic_rf.sv
+        ./cheap_pie.sh -dd  ./devices/rdl -rf basic.rdl -fmt rdl -t verilator -topv ./devices/rdl/basic/basic_rf.sv
 
 # Dependencies for validation:
         # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
