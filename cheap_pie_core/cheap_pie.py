@@ -16,19 +16,9 @@ import sys
 # clear all references
 sys.modules[__name__].__dict__.clear()
 
-## logo #######################################################################
-
-logo = (
-"     _____                                _____          ",
-"  __|___  |__  __   _  ______  ____    __|__   |__  ___  ",
-" |   ___|    ||  |_| ||   ___||    \  |     |     ||   | ",
-" |   |__     ||   _  ||   ___||     \ |    _|     ||___| ",
-" |______|  __||__| |_||______||__|\__\|___|     __||___| ",
-"    |_____|                              |_____|         ",                                                     
-"A python tool for chip validation by Marco Merlin\n"
-)
-for line in logo:
-    print(line)
+## banner #######################################################################
+from cheap_pie_core.cp_banner import cp_banner
+cp_banner()
 
 ## input parameters ###########################################################
 print('Parsing input arguments...')
