@@ -31,13 +31,13 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         %run cheap_pie
         inval = "0xFFFFFFFF"
         hal.regs.ADC_ANA_CTRL.setreg(inval)
-        retval = hex(hal.ADC_ANA_CTRL.getreg())
+        retval = hex(hal.regs.ADC_ANA_CTRL.getreg())
         assert(literal_eval(inval) == literal_eval(retval))
 
         # decimal assignement        
         inval = 2
         hal.regs.ADC_ANA_CTRL.setreg(inval)
-        retval = hal.ADC_ANA_CTRL.getreg()        
+        retval = hal.regs.ADC_ANA_CTRL.getreg()        
         assert(inval == retval)
         
         hal.regs.ADC_ANA_CTRL
