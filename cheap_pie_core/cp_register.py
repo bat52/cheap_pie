@@ -58,7 +58,7 @@ class cp_register:
         
         return regval
         
-    def setreg(self,regval = 0,*args,**kwargs):
+    def setreg(self,regval = 0, *args,**kwargs):
         """ function setreg(self,regval)
         %
         % Displays value of a register from a register value
@@ -74,7 +74,7 @@ class cp_register:
         
         # if isinstance(self.hif,cp_jlink):   
         if not (self.hif is None ):                    
-            ret = self.hif.hifwrite(self.addr,regval)
+            ret = self.hif.hifwrite(self.addr,regval, *args,**kwargs)
         else :
             ret = regval
         
@@ -205,6 +205,10 @@ def test_cp_register():
 
     r[0]
     r['fname']
+
+    # test assignement
+    r[0] = 1
+    r['fname'] = 2
 
 if __name__ == '__main__':
     test_cp_register()

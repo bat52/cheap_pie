@@ -111,6 +111,10 @@ def test_cp_hal():
     hal[0][0]
     hal['ADC_ANA_CTRL']
 
+    # test assignement
+    hal['ADC_ANA_CTRL'] = 1
+    hal['ADC_ANA_CTRL']['ADC_BM'] = 2
+
     # test search
     r = hal.search_register('ADC_ANA_CTRL')
     f = hal.search_bitfield('ADC_BM')

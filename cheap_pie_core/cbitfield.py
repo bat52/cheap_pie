@@ -149,7 +149,7 @@ class cp_bitfield:
         outregval = regmasked + shiftval
     
         ## write back new register value ###############################################
-        self.hif.hifwrite(self.addr,outregval)
+        self.hif.hifwrite(self.addr,outregval,*args,**kwargs)
         
         # if cp_bitfield.setbit.nargout == 0:
         outstr=self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
