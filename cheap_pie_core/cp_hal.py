@@ -40,6 +40,15 @@ class cp_hal:
         else:
             print('Unsupported indexing!')
             assert(False)
+    
+    def __setitem__(self, idx, value):
+        if isinstance(idx,int):
+            return self.regs[idx].setreg(value)
+        elif isinstance(idx,str):
+            return self.regs._asdict()[idx].setreg(value)
+        else:
+            print('Unsupported indexing!')
+            assert(False)
 
     def search_bitfield(self,field):
         return tools.search.bitfield(self.regs,field)

@@ -28,7 +28,6 @@ class cp_register:
         self.regname = regname
         
         # fields
-        # self.bitfields = []
         self.dictfields = dict()
         
         # Comments
@@ -152,7 +151,19 @@ class cp_register:
             print('Unsupported indexing!')
             assert(False)
 
-        return self.bitfields[idx]
+        return self.bitfields[idx]        
+    
+    def __setitem__(self, idx, value):
+        if isinstance(idx,int):
+            return self.bitfields[idx].setbit(value)
+        elif isinstance(idx,str):
+            return self.bitfields._asdict()[idx].setbit(value)
+        else:
+            print('Unsupported indexing!')
+            assert(False)
+
+        return self.bitfields[idx] 
+
 
 def test_cp_register():
     import sys
