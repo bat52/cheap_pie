@@ -150,8 +150,7 @@ class cp_register:
         else:
             print('Unsupported indexing!')
             assert(False)
-
-        return self.bitfields[idx]        
+        pass    
     
     def __setitem__(self, idx, value):
         if isinstance(idx,int):
@@ -161,9 +160,10 @@ class cp_register:
         else:
             print('Unsupported indexing!')
             assert(False)
+        pass
 
-        return self.bitfields[idx] 
-
+    def __index__(self):
+        return int(self.getreg())
 
 def test_cp_register():
     import sys
@@ -203,12 +203,16 @@ def test_cp_register():
     r.dictfield2struct()
     r.get_bitfields()
 
+    # item access
     r[0]
     r['fname']
 
-    # test assignement
+    # item assignement
     r[0] = 1
     r['fname'] = 2
+
+    # integer representation
+    print(hex(r))
 
 if __name__ == '__main__':
     test_cp_register()

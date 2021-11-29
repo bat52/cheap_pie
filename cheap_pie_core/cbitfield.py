@@ -180,6 +180,9 @@ class cp_bitfield:
         
         ret = (regval & self.mask ) >> (self.lsb)
         return ret
+
+    def __index__(self):
+        return int(self.getbit())
     
 def test_cp_bitfield():
     import sys
@@ -204,6 +207,9 @@ def test_cp_bitfield():
     f.display()
     f.display(2)
     f.help()
+
+    # decimal representation
+    print(hex(f))
 
 if __name__ == '__main__':
     test_cp_bitfield()    
