@@ -5,8 +5,8 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-# from cbitfield import cp_bitfield
 from collections import namedtuple
+from ast import literal_eval
 
 class cp_register:
     """ A chip register class """
@@ -66,9 +66,13 @@ class cp_register:
         % input : regval value of the full register either in decimal or
         % hexadecimal """        
         
-        # convert to number if in hexa format
-        #if ischar(regval)
-        #    regval = hex2dec(regval);        
+        ## handle string input as binary #################################################
+        if isinstance(regval, str):
+            regval = literal_eval(regval)        
+
+        ## handle negative values ########################################################
+        if regval < 0:
+            regval = abs(regval) ^ literal_eval('0xFFFFFFFF') + 1        
         
         #% write %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
@@ -188,6 +192,9 @@ def test_cp_register():
     r.display()
     r.help()
 
+    # negative assignement
+    r.setreg(-1)
+
     # test bitfield
     f = cp_bitfield(
         regfield = 'fname',
@@ -209,7 +216,7 @@ def test_cp_register():
 
     # item assignement
     r[0] = 1
-    r['fname'] = 2
+    r['fname'] = 2    
 
     # integer representation
     print(hex(r))

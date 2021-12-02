@@ -141,6 +141,10 @@ class cp_bitfield:
         if isinstance(fieldval, str):
             fieldval = literal_eval(fieldval)
 
+        ## handle negative values ######################################################
+        if fieldval < 0:
+            fieldval = (abs(fieldval) ^ (self.mask >> self.lsb)) + 1            
+
         ## compute new register value ##################################################
         
         shiftval= fieldval << self.lsb
@@ -207,6 +211,9 @@ def test_cp_bitfield():
     f.display()
     f.display(2)
     f.help()
+
+    # negative assignement
+    f.setbit(-1)
 
     # decimal representation
     print(hex(f))
