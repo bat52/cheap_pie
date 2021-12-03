@@ -58,7 +58,7 @@ class cp_register:
         
         return regval
         
-    def setreg(self,regval = 0, *args,**kwargs):
+    def setreg(self,regval = 0, echo =False, *args,**kwargs):
         """ function setreg(self,regval)
         %
         % Displays value of a register from a register value
@@ -72,8 +72,8 @@ class cp_register:
 
         ## handle negative values ########################################################
         if regval < 0:
-            regval = abs(regval) ^ literal_eval('0xFFFFFFFF') + 1        
-        
+            regval = abs(regval) ^ literal_eval('0xFFFFFFFF') + 1
+
         #% write %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         # if isinstance(self.hif,cp_jlink):   
@@ -83,8 +83,8 @@ class cp_register:
             ret = regval
         
         #% only display output if no nargout %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        # if setreg.nargout == 0:
-        self.display(regval)
+        if echo:
+            self.display(regval)
         # fields = fieldnames(self.fields);
         #structfun(@(x) x.display(regval),self.fields,'UniformOutput',false);                
         

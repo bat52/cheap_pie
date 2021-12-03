@@ -96,7 +96,7 @@ class cp_bitfield:
         print(r)
         return r
 
-    def getbit(self,regval=None,*args,**kwargs):
+    def getbit(self,regval=None,echo=False,*args,**kwargs):
         """ function display(self,regval)        
         # displays value of a bitfield from a register value        
         # input : regval value of the full register either in decimal or
@@ -114,13 +114,13 @@ class cp_bitfield:
         fieldval = (regval & self.mask ) >> (self.lsb)
 
         # fieldval=self.value(regval)
-        # if cp_bitfield.getbit.nargout == 0:
-        outstr= self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
-        print(outstr)
+        if echo:
+            outstr= self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
+            print(outstr)
         
         return fieldval
         
-    def setbit(self,fieldval=0,*args,**kwargs):
+    def setbit(self,fieldval=0,echo=False,*args,**kwargs):
         """ function display(self,regval)        
         # displays value of a bitfield from a register value
         
@@ -143,7 +143,7 @@ class cp_bitfield:
 
         ## handle negative values ######################################################
         if fieldval < 0:
-            fieldval = (abs(fieldval) ^ (self.mask >> self.lsb)) + 1            
+            fieldval = (abs(fieldval) ^ (self.mask >> self.lsb)) + 1
 
         ## compute new register value ##################################################
         
@@ -155,9 +155,9 @@ class cp_bitfield:
         ## write back new register value ###############################################
         self.hif.hifwrite(self.addr,outregval,*args,**kwargs)
         
-        # if cp_bitfield.setbit.nargout == 0:
-        outstr=self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
-        print(outstr)
+        if echo:
+            outstr=self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
+            print(outstr)
         
         return fieldval
         
