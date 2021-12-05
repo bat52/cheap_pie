@@ -70,15 +70,22 @@ class cp_register:
         if isinstance(regval, str):
             regval = literal_eval(regval)        
 
+        ## handle dict values ############################################################
+        elif isinstance(regval,dict):
+            rval = self.getreg()
+            for f,fval in regval.items():
+                rval = self[f].setbit(fval, regval=rval, writeback=False)
+            regval = rval
+
         ## handle negative values ########################################################
-        if regval < 0:
+        elif regval < 0:
             regval = abs(regval) ^ literal_eval('0xFFFFFFFF') + 1
 
         #% write %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         # if isinstance(self.hif,cp_jlink):   
         if not (self.hif is None ):                    
-            ret = self.hif.hifwrite(self.addr,regval, *args,**kwargs)
+            ret = self.hif.hifwrite(self.addr, regval, *args,**kwargs)
         else :
             ret = regval
         
@@ -196,7 +203,7 @@ def test_cp_register():
     r.setreg(-1)
 
     # test bitfield
-    f = cp_bitfield(
+    f1 = cp_bitfield(
         regfield = 'fname',
         regaddr = 10,
         regname = 'rname',
@@ -205,8 +212,18 @@ def test_cp_register():
         comments = 'comment',
         hif = cp_dummy()
     )
+    f2 = cp_bitfield(
+        regfield = 'fname2',
+        regaddr = 10,
+        regname = 'rname',
+        width = '2',
+        bit_offset = '4',
+        comments = 'comment2',
+        hif = cp_dummy()
+    )
 
-    r.addfield(f)
+    r.addfield(f1)
+    r.addfield(f2)
     r.dictfield2struct()
     r.get_bitfields()
 
@@ -220,6 +237,10 @@ def test_cp_register():
 
     # integer representation
     print(hex(r))
+
+    # dict-based assignement
+    d = {'fname': 1, 'fname2': 2}
+    r.setreg(d)
 
 if __name__ == '__main__':
     test_cp_register()

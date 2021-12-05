@@ -1,5 +1,4 @@
 TODO
-- dict-based register assignement to set many bitfields in a single write
 - fix espressif targets support through esptool transport https://github.com/espressif/esptool
 - port to micropython ?
 

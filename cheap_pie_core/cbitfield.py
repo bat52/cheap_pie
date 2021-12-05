@@ -120,7 +120,7 @@ class cp_bitfield:
         
         return fieldval
         
-    def setbit(self,fieldval=0,echo=False,*args,**kwargs):
+    def setbit(self,fieldval=0,echo=False, writeback=True, regval=None,*args,**kwargs):
         """ function display(self,regval)        
         # displays value of a bitfield from a register value
         
@@ -128,14 +128,12 @@ class cp_bitfield:
                 # hexadecimal """
     
         ## read input register value ###################################################
-        if not (self.hif is None):
+        if not (self.hif is None) and regval is None:
             hexval=self.hif.hifread(self.addr)
             if isinstance(hexval, str):
                 regval=literal_eval(hexval)
             else:
                 regval = hexval
-        else:
-            regval=0
         
         ## handle char input as binary #################################################
         if isinstance(fieldval, str):
@@ -153,13 +151,14 @@ class cp_bitfield:
         outregval = regmasked + shiftval
     
         ## write back new register value ###############################################
-        self.hif.hifwrite(self.addr,outregval,*args,**kwargs)
+        if writeback:
+            self.hif.hifwrite(self.addr,outregval,*args,**kwargs)
         
         if echo:
             outstr=self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
             print(outstr)
         
-        return fieldval
+        return outregval
         
     #@function
     def help(self):
@@ -217,6 +216,12 @@ def test_cp_bitfield():
 
     # decimal representation
     print(hex(f))
+
+    # options
+    f.setbit(val,echo=True)
+    f.setbit(val,writeback=False)
+    rv = f.setbit(1,regval=1)
+    assert(rv==5)
 
 if __name__ == '__main__':
     test_cp_bitfield()    

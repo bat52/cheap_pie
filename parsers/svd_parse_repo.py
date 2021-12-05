@@ -96,7 +96,8 @@ def test_svd_parse_repo():
     print('Testing QN9080 with repo parser...')
 
     from parsers.svd_parse_repo import svd_parse
-    hal = svd_parse(fname="./devices/MIMXRT1011.svd")
+    # hal = svd_parse(fname="./devices/MIMXRT1011.svd")
+    hal = svd_parse(fname="./devices/QN908XC.svd")
         
     print('Testing K20 with repo parser...')
     hal = svd_parse(fname='MK20D7.svd',vendor='Freescale')
