@@ -91,9 +91,7 @@ class cp_register:
         
         #% only display output if no nargout %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         if echo:
-            self.display(regval)
-        # fields = fieldnames(self.fields);
-        #structfun(@(x) x.display(regval),self.fields,'UniformOutput',false);                
+            self.display(regval)          
         
         return ret
 
@@ -102,20 +100,22 @@ class cp_register:
         # displays register comments """    
         print(self.comments)
         
-    def __repr__(self,regval = "0" ):
-        # read register value
-        regval = self.getreg()
+    def __repr__(self,regval = None ):
+        if regval is None:
+            # read register value
+            regval = self.getreg()
 
-        r = []
-        # 
-        for field in self.bitfields :
-            # field.display(regval)
-            r.append(field.__repr__(regval))
-        
-        jr = "\n".join(r)
-        return jr
+        if len(self.bitfields) > 0:
+            r = []        
+            for field in self.bitfields :
+                # field.display(regval)
+                r.append(field.__repr__(regval))        
+            outstr = "\n".join(r)
+        else: 
+            outstr = self.regname + ' = ' + hex(regval)
+        return outstr
 
-    def display(self,regval = "0" ):
+    def display(self, regval = None ):
         r = self.__repr__(regval=regval)
         print(r)
         return r    
@@ -226,6 +226,8 @@ def test_cp_register():
     r.addfield(f2)
     r.dictfield2struct()
     r.get_bitfields()
+    # display with bitfields
+    r.display()
 
     # item access
     r[0]

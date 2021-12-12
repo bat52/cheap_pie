@@ -114,6 +114,8 @@ def test_cp_hal():
     # test assignement
     hal['ADC_ANA_CTRL'] = 1
     hal['ADC_ANA_CTRL']['ADC_BM'] = 2
+    # dict-based assignement in single register write
+    hal['ADC_ANA_CTRL'] = {'DITHER_EN': 1, 'CHOP_EN': 1, 'INV_CLK': 1}
 
     # test search
     r = hal.search_register('ADC_ANA_CTRL')
