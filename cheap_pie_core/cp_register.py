@@ -148,7 +148,9 @@ class cp_register:
         return len(self.bitfields)
 
     def __iter__(self):
-        return self.bitfields.__iter__()
+        # return self.bitfields.__iter__()
+        for field in self.bitfields:
+            yield (field.fieldname, field.getbit())
     
     def __next__(self):
         return self.bitfields.next()
@@ -243,6 +245,10 @@ def test_cp_register():
     # dict-based assignement
     d = {'fname': 1, 'fname2': 2}
     r.setreg(d)
+
+    # dict-based readback
+    dr = dict(r)
+    assert(d == dr)
 
 if __name__ == '__main__':
     test_cp_register()
