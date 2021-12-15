@@ -102,7 +102,7 @@ class cp_bitfield:
         # input : regval value of the full register either in decimal or
                 # hexadecimal"""
         
-        if len(args) < 2:
+        if regval is None:
             if not (self.hif is None):
                 regval=self.hif.hifread(self.addr)
             else:

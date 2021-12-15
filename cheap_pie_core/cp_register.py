@@ -42,7 +42,7 @@ class cp_register:
         # address base
         self.addr_base = addr_base        
 
-    def getreg(self):
+    def getreg(self, asdict=False):
         """ function getreg(self,regval)
         %
         % Displays value of a register from a register value
@@ -54,9 +54,16 @@ class cp_register:
         if not (self.hif is None ):
             regval = self.hif.hifread(self.addr)
         else :
-            regval = 0            
+            regval = 0
+
+        if asdict:
+            retval = dict()
+            for field in self.bitfields:
+                retval[field.fieldname] = field.getbit(regval)
+        else: 
+            retval = regval
         
-        return regval
+        return retval
         
     def setreg(self,regval = 0, echo =False, *args,**kwargs):
         """ function setreg(self,regval)
@@ -148,9 +155,9 @@ class cp_register:
         return len(self.bitfields)
 
     def __iter__(self):
-        # return self.bitfields.__iter__()
-        for field in self.bitfields:
-            yield (field.fieldname, field.getbit())
+        return self.bitfields.__iter__()
+        # for field in self.bitfields:
+        #    yield (field.fieldname, field.getbit())
     
     def __next__(self):
         return self.bitfields.next()
@@ -247,7 +254,7 @@ def test_cp_register():
     r.setreg(d)
 
     # dict-based readback
-    dr = dict(r)
+    dr = r.getreg(asdict=True)
     assert(d == dr)
 
 if __name__ == '__main__':
