@@ -1,3 +1,4 @@
+# python pip
 untangle
 cmsis-svd
 ipyxact
@@ -6,5 +7,8 @@ pyocd
 esptool        
 python-docx
 pyverilator
-peakrdl-verilog
 peakrdl-ipxact
+peakrdl-verilog
+peakrdl-uvm
+# ubuntu packages
+python3-tk
