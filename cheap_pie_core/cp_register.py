@@ -135,7 +135,8 @@ class cp_register:
         # eval(cmdstr)
         
     def dictfield2struct(self):
-        self.bitfields = namedtuple(self.regname, self.dictfields.keys())(*self.dictfields.values())
+        if len(self.dictfields) > 0:
+            self.bitfields = namedtuple(self.regname, self.dictfields.keys())(*self.dictfields.values())
         
     def get_bitfields(self, name=None):
         """
