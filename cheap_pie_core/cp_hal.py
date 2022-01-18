@@ -56,6 +56,9 @@ class cp_hal:
 
     def search_register(self,reg):
         return tools.search.register(self.regs,reg)
+    
+    def search_address(self,address,*args,**kwargs):
+        return tools.search.address(self.regs,address)
 
     def to_docx(self,*args):
         hal2doc(self.regs,*args)
@@ -120,6 +123,8 @@ def test_cp_hal():
     # test search
     r = hal.search_register('ADC_ANA_CTRL')
     f = hal.search_bitfield('ADC_BM')
+    r = hal.search_address('0x4000702c')
+    r = hal.search_address('0x4000702c',mask='0x80000000')
 
     # test conversion to doc
     # hal.to_docx()

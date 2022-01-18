@@ -4,6 +4,8 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
+from ast import literal_eval
+
 def register(hal,regname):
     retval = []    
     for reg in hal: # loop over all registers
@@ -22,6 +24,20 @@ def bitfield(hal,bitfield):
                 retval.append(field)
     return retval
 
+def address(hal, address, mask='0xFFFFFFFF'):     
+    # convert address into integer, if needed    
+    if isinstance(mask,str):
+        mask    = int( literal_eval(mask) )
+    if isinstance(address,str):
+        address = int( literal_eval(address) )
+    
+    retval = []    
+    for reg in hal: # loop over all registers
+        # print reg.regname
+        if reg.addr == address:
+            print( reg.regname + " : " + hex(reg.addr) )
+            return reg.regname
+
 def test_search():
     print('Testing search...')
     from parsers.svd_parse_repo import svd_parse
@@ -29,8 +45,12 @@ def test_search():
     print('## ADC registers:')
     ret = register(hal,'ADC')
     print('##  ADC_BM bitfields:')
-    ret = bitfield(hal,'ADC_BM')
-    
+    ret = bitfield(hal,'ADC_BM')    
+    print('## 0x4000702c register name:')
+    ret = address(hal,'0x4000702c')
+    print('## 0x4000702c register name:')
+    ret = address(hal,'0x4000702c',mask='0x80000000')
+
 if __name__ == '__main__':
     import sys
     import os.path

@@ -9,7 +9,7 @@ import os
 def cli(args=[]):
     parser = argparse.ArgumentParser(description='rdl2verilog pyverilator ')
     # register format options
-    parser.add_argument("-f", "--fname", help="register file description .v", action='store', type = str, default="./devices/rdl/basic/basic_rf.sv")
+    parser.add_argument("-f", "--fname", help="register file description .v", action='store', type = str, default="./devices/verilog/basic_rf.v")
     return parser.parse_args(args)
 
 class cp_pyverilator_transport():
