@@ -70,6 +70,10 @@ class cp_bitfield:
         self.hif = hif
         self.rw = rw
         self.reset = reset
+
+    def _strval(self,fieldval):
+        msb = str( self.lsb + self.width )
+        return self.regname + '[' + msb + ':' + str(self.lsb) + ']' + ' @ ' + self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)        
         
     def __repr__(self,regval=None):
         """ displays value of a bitfield from a register value         
@@ -87,7 +91,7 @@ class cp_bitfield:
             regval=literal_eval(regval)
         fieldval = (regval & self.mask ) >> (self.lsb)
         
-        outstr= self.regname  + ' @ ' + self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)
+        outstr= self._strval(fieldval)
         # print(outstr)
         return outstr
     
@@ -115,7 +119,7 @@ class cp_bitfield:
 
         # fieldval=self.value(regval)
         if echo:
-            outstr= self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
+            outstr= self._strval(fieldval)
             print(outstr)
         
         return fieldval
@@ -155,7 +159,7 @@ class cp_bitfield:
             self.hif.hifwrite(self.addr,outregval,*args,**kwargs)
         
         if echo:
-            outstr=self.regname + ' @ ' + self.fieldname + ' [' + str(self.width) + '] = ' + hex(fieldval)
+            outstr=self._strval(fieldval)
             print(outstr)
         
         return outregval
