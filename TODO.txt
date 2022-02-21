@@ -1,5 +1,4 @@
 TODO
-- add generic bit/byte get/set methods to cp_register
 - fix espressif targets support through esptool transport https://github.com/espressif/esptool
 - port to micropython ?
 

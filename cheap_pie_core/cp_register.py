@@ -8,6 +8,11 @@
 from collections import namedtuple
 from ast import literal_eval
 
+try:
+    from cheap_pie_core.cbitfield import cp_bitfield
+except:
+    from cbitfield import cp_bitfield    
+
 class cp_register:
     """ A chip register class """
     addr = 0    
@@ -63,7 +68,7 @@ class cp_register:
         else: 
             retval = regval
         
-        return retval
+        return retval    
         
     def setreg(self,regval = 0, echo =False, *args,**kwargs):
         """ function setreg(self,regval)
@@ -101,6 +106,22 @@ class cp_register:
             self.display(regval)          
         
         return ret
+
+    def getbit(self, bit_offset=0, width=1):                
+        b = cp_bitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)        
+        return b.getbit()
+
+    def setbit(self, bitval=0, bit_offset=0, width=1):                
+        b = cp_bitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)        
+        return b.setbit(bitval)
+
+    def getbyte(self, byte_offset=0):
+        b = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)        
+        return b.getbit()
+
+    def setbyte(self, byteval=0, byte_offset=0):
+        b = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)        
+        return b.setbit(byteval)
 
     def help(self):
         """ function ret = help(self)        
@@ -192,6 +213,7 @@ def test_cp_register():
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
     from transport.cp_dummy_transport import cp_dummy
     from cheap_pie_core.cbitfield import cp_bitfield
+    from random import randint
 
     r = cp_register( 
         regname='regname',
@@ -245,7 +267,19 @@ def test_cp_register():
 
     # item assignement
     r[0] = 1
-    r['fname'] = 2    
+    r['fname'] = 2
+
+    # bit access
+    for offset in range(32):
+        for bitval in range(2):
+            r.setbit(bitval, bit_offset=offset)    
+            assert( r.getbit(bit_offset=offset) == bitval ) 
+    
+    # byte access
+    for offset in range(4):
+        byteval = randint(0,255)
+        r.setbyte(byteval, byte_offset=offset)    
+        assert( r.getbyte(byte_offset=offset) == byteval ) 
 
     # integer representation
     print(hex(r))

@@ -78,7 +78,7 @@ class cp_bitfield:
         else:
             outstr = self.regname + '[' + str(self.lsb) + ']' + ' @ ' + self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)  
             
-    return outstr            
+        return outstr            
         
     def __repr__(self,regval=None):
         """ displays value of a bitfield from a register value         
