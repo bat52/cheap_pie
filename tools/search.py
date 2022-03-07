@@ -34,7 +34,7 @@ def address(hal, address, mask='0xFFFFFFFF'):
     retval = []    
     for reg in hal: # loop over all registers
         # print reg.regname
-        if reg.addr == address:
+        if (reg.addr & mask) == (address & mask):
             print( reg.regname + " : " + hex(reg.addr) )
             return reg.regname
 
@@ -42,14 +42,26 @@ def test_search():
     print('Testing search...')
     from parsers.svd_parse_repo import svd_parse
     hal = svd_parse(fname="./devices/QN908XC.svd", hif=None)
-    print('## ADC registers:')
-    ret = register(hal,'ADC')
+
+    print('## ADC registers:')    
+    ret = register(hal,'ADC')    
+    assert(len(ret) > 0)
+
     print('##  ADC_BM bitfields:')
-    ret = bitfield(hal,'ADC_BM')    
+    ret = bitfield(hal,'ADC_BM')
+    assert(len(ret) > 0)
+
     print('## 0x4000702c register name:')
     ret = address(hal,'0x4000702c')
-    print('## 0x4000702c register name:')
-    ret = address(hal,'0x4000702c',mask='0x80000000')
+    assert(len(ret) > 0)
+    
+    print('## 0xF000702c register name:')
+    ret = address(hal,'0xF000702c',mask='0x0FFFFFFF')
+    assert(len(ret) > 0)
+
+    ret = address(hal,'0xF000702c')
+    assert( ret is None )
+
 
 if __name__ == '__main__':
     import sys
