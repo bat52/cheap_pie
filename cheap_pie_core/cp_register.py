@@ -47,7 +47,7 @@ class cp_register:
         # address base
         self.addr_base = addr_base        
 
-    def getreg(self, asdict=False):
+    def getreg(self, asdict=False, as_signed=False):
         """ function getreg(self,regval)
         %
         % Displays value of a register from a register value
@@ -62,10 +62,15 @@ class cp_register:
             regval = 0
 
         if asdict:
+            # dictionary
             retval = dict()
             for field in self.bitfields:
                 retval[field.fieldname] = field.getbit(regval)
+        elif as_signed:
+            # signed integer
+            retval = -(regval & literal_eval('0x80000000')) + (regval & literal_eval('0x7FFFFFFF'))
         else: 
+            # unsigned integer (default)
             retval = regval
         
         return retval    
@@ -91,7 +96,8 @@ class cp_register:
 
         ## handle negative values ########################################################
         elif regval < 0:
-            regval = abs(regval) ^ literal_eval('0xFFFFFFFF') + 1
+            regval = (abs(regval) ^ literal_eval('0xFFFFFFFF')) + 1
+            # print('regval write: 0x%x' % regval)
 
         #% write %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
@@ -232,7 +238,11 @@ def test_cp_register():
     r.help()
 
     # negative assignement
-    r.setreg(-1)
+    negval = -1
+    r.setreg(negval)
+    retval = r.getreg(as_signed=True)
+    print(retval)
+    assert(retval==negval)
 
     # test bitfield
     f1 = cp_bitfield(
