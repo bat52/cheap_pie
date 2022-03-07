@@ -1,5 +1,4 @@
 TODO
-- add option to read bitfield/register as signed
 - fix espressif targets support through esptool transport https://github.com/espressif/esptool
 - port to micropython ?
 
