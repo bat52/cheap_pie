@@ -50,12 +50,12 @@ class cp_hal:
             print('Unsupported indexing!')
             assert(False)
 
-    def search_bitfield(self,field):
-        return tools.search.bitfield(self.regs,field)
+    def search_bitfield(self,field,case_sensitive=False):
+        return tools.search.bitfield(self.regs,field,case_sensitive=case_sensitive)
         pass
 
-    def search_register(self,reg):
-        return tools.search.register(self.regs,reg)
+    def search_register(self,reg,case_sensitive=False):
+        return tools.search.register(self.regs,reg,case_sensitive=case_sensitive)
     
     def search_address(self,address,*args,**kwargs):
         return tools.search.address(self.regs,address,*args,**kwargs)

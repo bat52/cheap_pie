@@ -6,20 +6,27 @@
 
 from ast import literal_eval
 
-def register(hal,regname):
+def str_in_str(str1,str2,case_sensitive=True):
+    if case_sensitive:
+        return (str1 in str2)
+    else:
+        return (str1.upper() in str2.upper())
+    pass
+
+def register(hal,regname,case_sensitive=True):
     retval = []    
     for reg in hal: # loop over all registers
-        if regname in reg.regname:
+        if str_in_str(regname,reg.regname,case_sensitive):
             print( reg.regname )
             retval.append(reg.regname)
     return retval    
 
-def bitfield(hal,bitfield):
+def bitfield(hal,bitfield,case_sensitive=True):
     retval = []    
     for reg in hal: # loop over all registers
         # print reg.regname        
         for field in reg.bitfields:
-            if bitfield in field.fieldname:
+            if str_in_str(bitfield,field.fieldname,case_sensitive):
                 print( reg.regname + " @ " + field.fieldname )
                 retval.append(field)
     return retval
