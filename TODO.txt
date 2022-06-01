@@ -1,5 +1,5 @@
 TODO
-- add option to read bitfield/register as signed
+- implement hal2rdl conversion
 - fix espressif targets support through esptool transport https://github.com/espressif/esptool
 - port to micropython ?
 

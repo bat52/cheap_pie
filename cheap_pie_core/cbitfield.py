@@ -105,8 +105,8 @@ class cp_bitfield:
         print(r)
         return r
 
-    def getbit(self,regval=None,echo=False,*args,**kwargs):
-        """ function display(self,regval)        
+    def getbit(self,regval=None,echo=False,as_signed=False,*args,**kwargs):
+        """ function display(self,regval=None,echo=False,as_signed=False)        
         # displays value of a bitfield from a register value        
         # input : regval value of the full register either in decimal or
                 # hexadecimal"""
@@ -121,6 +121,12 @@ class cp_bitfield:
         if isinstance(regval, str):
             regval=literal_eval(regval)
         fieldval = (regval & self.mask ) >> (self.lsb)
+
+        # get bitfield as signed value
+        if as_signed:
+            fieldsign = -(fieldval & (1 << (self.width - 1)))
+            fieldmod = (fieldval & (self.mask>>(self.lsb+1)))
+            fieldval = fieldsign + fieldmod
 
         # fieldval=self.value(regval)
         if echo:
@@ -220,8 +226,11 @@ def test_cp_bitfield():
     f.display(2)
     f.help()
 
-    # negative assignement
-    f.setbit(-1)
+    # signed assignement
+    negval = -1
+    f.setbit(negval)
+    retval = f.getbit(as_signed=True)
+    assert(negval==retval)
 
     # decimal representation
     print(hex(f))
