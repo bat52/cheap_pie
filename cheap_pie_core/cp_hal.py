@@ -86,9 +86,6 @@ class cp_hal:
         f1 = hkl.load(f1name)        
         f2 = hkl.load(f2name)
 
-        # print(f1)
-        f2['RWNXFEDSSSCCKCNTL'] = 9
-
         # create a header with filenames        
         outstrlist = []        
         for r,v in f1.items():
