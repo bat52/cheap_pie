@@ -7,6 +7,7 @@
 
 import sys
 import os.path
+import hickle as hkl
 
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
@@ -50,6 +51,8 @@ class cp_hal:
             print('Unsupported indexing!')
             assert(False)
 
+## search methods ###########################################################
+
     def search_bitfield(self,field,case_sensitive=False):
         return tools.search.bitfield(self.regs,field,case_sensitive=case_sensitive)
         pass
@@ -65,6 +68,54 @@ class cp_hal:
 
     pass
 
+## dump methods #############################################################
+    def regs2dict(self):
+        outdict = {}
+        for r,v in self.regs._asdict().items():
+            outdict[r] = v.getreg()
+        return outdict
+
+    def dump(self,fname='dump.hkl'):
+        rd = self.regs2dict()
+        hkl.dump(rd, fname, compression='gzip')
+        pass
+
+    def dump_diff(self,f1name='dump.hkl',f2name='dump2.hkl',width = 60):
+        fmtstr = '%%%ds |%%%ds' % (width,width)
+
+        f1 = hkl.load(f1name)        
+        f2 = hkl.load(f2name)
+
+        # print(f1)
+        f2['RWNXFEDSSSCCKCNTL'] = 9
+
+        # create a header with filenames        
+        outstrlist = []        
+        for r,v in f1.items():
+            if not(f2[r] == v):
+                # print(r)
+                f1regstr = self[r].__repr__(v).split('\n')
+                f2regstr = self[r].__repr__(f2[r]).split('\n')
+                
+                for idx in range(len(f1regstr)):
+                    if not(f1regstr[idx]==f2regstr[idx]):
+                        linestr = fmtstr % (f1regstr[idx],f2regstr[idx])
+                        outstrlist.append(linestr)
+                        # print(linestr)
+                    pass
+                
+        # print output
+        if len(outstrlist) > 0:
+            headerstr = fmtstr % (f1name,f2name)
+            outstrlist.insert(0,headerstr)
+            for line in outstrlist:
+                print(line)
+        else:
+            print('No differences found!!!')
+
+        pass
+
+    pass
 
 def test_to_docx():
     from parsers.cp_parsers_wrapper import cp_parsers_wrapper
@@ -135,6 +186,15 @@ def test_cp_hal():
     # test conversion to doc
     # hal.to_docx()
     test_to_docx()
+
+    # test dump
+    d1 = 'dump1.hkl'
+    d2 = 'dump2.hkl'
+    hal.dump(d1)
+    hal['ADC_ANA_CTRL']['ADC_BM'] = 3    
+    hal.dump(d2)
+    hal.dump_diff(d1,d2)
+
     pass
         
 if __name__ == '__main__':    

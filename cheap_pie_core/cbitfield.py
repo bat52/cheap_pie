@@ -71,14 +71,18 @@ class cp_bitfield:
         self.rw = rw
         self.reset = reset
 
-    def _strval(self,fieldval):
+    def _strval(self,fieldval,width=25):        
+        
+        bitstr = self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)        
+
         if self.width > 1:
             msb = str( self.lsb + self.width - 1)
-            outstr = self.regname + '[' + msb + ':' + str(self.lsb) + ']' + ' @ ' + self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)        
+            regstr = self.regname + '[' + msb + ':' + str(self.lsb) + ']'
         else:
-            outstr = self.regname + '[' + str(self.lsb) + ']' + ' @ ' + self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)  
-            
-        return outstr            
+            regstr = self.regname + '[' + str(self.lsb) + ']'
+
+        fmtstr = '%%%ds @ %%%ds' % (width,width)                
+        return fmtstr % (regstr,bitstr)            
         
     def __repr__(self,regval=None):
         """ displays value of a bitfield from a register value         
