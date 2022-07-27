@@ -106,6 +106,8 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         pip3 install esptool
         # for exporting XML info into a human-readable document
         pip3 install python-docx
+        # for dumping registers
+        pip3 install hickle
         
 # Dependencies for verification:
         # verilator
