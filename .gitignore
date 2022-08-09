@@ -13,3 +13,5 @@ obj_dir/*
 gtkwave.vcd
 devices/rdl/counter/*
 devices/rdl/counter.xml
+dump1.hkl
+dump2.hkl

@@ -60,8 +60,8 @@ class cp_hal:
     def search_register(self,reg,case_sensitive=False):
         return tools.search.register(self.regs,reg,case_sensitive=case_sensitive)
     
-    def search_address(self,address,*args,**kwargs):
-        return tools.search.address(self.regs,address,*args,**kwargs)
+    def search_address(self,address,mask='0xFFFFFFFF'):
+        return tools.search.address(self.regs,address,mask=mask)  
 
     def to_docx(self,*args):
         hal2doc(self.regs,*args)
