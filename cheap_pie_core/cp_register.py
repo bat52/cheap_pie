@@ -129,10 +129,17 @@ class cp_register:
         b = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)        
         return b.setbit(byteval)
 
-    def help(self):
+    def help(self,width=25):
         """ function ret = help(self)        
         # displays register comments """    
         print(self.comments)
+        
+        fmtstr = '%%%ds: %%s' % width
+        for field in self.bitfields:
+            print( fmtstr % (field.fieldname,''))
+
+            for line in textwrap.wrap(field.comments):
+                print( fmtstr % ('',line))
         
     def __repr__(self,regval = None ):
         if regval is None:
