@@ -5,6 +5,7 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
+import textwrap
 from collections import namedtuple
 from ast import literal_eval
 
@@ -277,6 +278,7 @@ def test_cp_register():
     r.get_bitfields()
     # display with bitfields
     r.display()
+    r.help()
 
     # item access
     r[0]
