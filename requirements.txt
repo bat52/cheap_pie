@@ -8,7 +8,6 @@ esptool
 python-docx
 pyverilator
 peakrdl-ipxact
-peakrdl-verilog
+# peakrdl-verilog #only install from github
 peakrdl-uvm
-# ubuntu packages
-python3-tk
+hickle
