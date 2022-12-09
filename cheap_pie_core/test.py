@@ -64,11 +64,8 @@ class CheapPieMethods(unittest.TestCase):
         from parsers.ipyxact_parse import test_ipyxact_parse
         test_ipyxact_parse()
 
-        if False:
-            from parsers.rdl_parse import test_rdl_parse
-            test_rdl_parse()
-        else:
-            print('Warning: disabled test of rdl_parse because peakrdl-python cannot currently be installed with pip.')
+        from parsers.rdl_parse import test_rdl_parse
+        test_rdl_parse()
 
     def test_parsers_wrapper(self):
         from parsers.cp_parsers_wrapper import test_cp_parsers_wrapper
