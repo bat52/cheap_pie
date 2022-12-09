@@ -15,3 +15,11 @@ devices/rdl/counter/*
 devices/rdl/counter.xml
 dump1.hkl
 dump2.hkl
+dist/cheap_pie-0.1.2.tar.gz
+src/cheap_pie.egg-info/dependency_links.txt
+src/cheap_pie.egg-info/PKG-INFO
+src/cheap_pie.egg-info/requires.txt
+src/cheap_pie.egg-info/SOURCES.txt
+src/cheap_pie.egg-info/top_level.txt
+src/cheap_pie/devices/rdl/basic.xml
+src/cheap_pie/devices/rdl/counter.xml

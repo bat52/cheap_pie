@@ -91,6 +91,8 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         ./tools/rdl2verilog.py -f ./devices/rdl/basic.rdl
         ./cheap_pie.sh -dd  ./devices/rdl -rf basic.rdl -fmt rdl -t verilator -topv ./devices/rdl/basic/basic_rf.sv
 
+# Install
+        pip3 install cheap_pie
 # Dependencies for validation:
         # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
         pip3 install cmsis-svd
