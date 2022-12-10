@@ -4,8 +4,8 @@ import sys
 import os
 from systemrdl import RDLCompiler, RDLCompileError
 from peakrdl.verilog import VerilogExporter
-from peakrdl.ipxact import IPXACTExporter
-from peakrdl.uvm import UVMExporter
+from peakrdl_ipxact import IPXACTExporter
+from peakrdl_uvm import UVMExporter
 import argparse
 
 def cli(args):
