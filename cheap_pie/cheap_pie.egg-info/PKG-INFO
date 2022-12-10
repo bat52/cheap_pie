@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: cheap-pie
+Version: 0.1.7
+Summary: A python tool for silicon validation.
+Home-page: https://github.com/bat52/cheap_pie
+Author: Marco Merlin
+Author-email: marcomerli@gmail.com
+License: Apache 2.0
+Keywords: python silicon validation
+Platform: UNKNOWN
+License-File: LICENSE
+
+UNKNOWN
+
