@@ -5,14 +5,12 @@ with open("README.md", "r") as fh:
 
 setup(
     name='cheap_pie',
-    version='0.1.7',
+    version='0.1.15',
     license='Apache 2.0',
     author="Marco Merlin",
     author_email='marcomerli@gmail.com',
-    packages=find_packages('cheap_pie'),
-    package_dir={'': 'cheap_pie'},
-    # packages=['src/cheap_pie'],
-    include_package_data=True,
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
     description="A python tool for silicon validation.",
     url='https://github.com/bat52/cheap_pie',
     keywords='python silicon validation',
