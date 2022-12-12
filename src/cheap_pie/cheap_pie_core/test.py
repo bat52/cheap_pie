@@ -29,12 +29,9 @@ class CheapPieMethods(unittest.TestCase):
         from transport.cp_esptool_transport import test_cp_esptool
         test_cp_esptool()
 
-        if False:
-            # pyverilator 
-            from transport.cp_pyverilator_transport import test_cp_pyverilator
-            test_cp_pyverilator()
-        else:
-            print('Warning: pyverilator not working anymore after updating to ubuntu 22.04.')
+        # pyverilator 
+        from transport.cp_pyverilator_transport import test_cp_pyverilator
+        test_cp_pyverilator()
 
         pass
    

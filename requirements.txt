@@ -11,3 +11,4 @@ peakrdl-ipxact
 peakrdl-verilog #only install from github
 peakrdl-uvm
 hickle
+packaging # for verilator version check

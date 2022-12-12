@@ -27,5 +27,6 @@ setup(
           'peakrdl-uvm',
           'peakrdl-verilog',
           'hickle',
+          'packaging'
       ],
 )
