@@ -2,11 +2,19 @@
 
 import sys
 import os
-from systemrdl import RDLCompiler, RDLCompileError
-from peakrdl.verilog import VerilogExporter
-from peakrdl_ipxact import IPXACTExporter
-from peakrdl_uvm import UVMExporter
 import argparse
+
+from systemrdl import RDLCompiler, RDLCompileError
+# from peakrdl.verilog import VerilogExporter
+
+try:
+    # newer version
+    from peakrdl_ipxact import IPXACTExporter
+    from peakrdl_uvm import UVMExporter
+except:
+    # older version
+    from peakrdl.ipxact import IPXACTExporter
+    from peakrdl.uvm import UVMExporter
 
 def cli(args):
     parser = argparse.ArgumentParser(description='rdl2any')
