@@ -132,14 +132,38 @@ class cp_pyverilator_transport():
         # print(hex(outval))
         return outval
 
+def verilator_version():
+    import subprocess
+    result = subprocess.run(['verilator', '--version'], stdout=subprocess.PIPE)
+    ver = result.stdout.split()[1]
+    return ver.decode("utf-8") 
+
+def verilator_version_ok():
+    # check Verilated::flushCall() exist
+    # https://github.com/chipsalliance/chisel3/issues/1565
+    from packaging import version
+    ver = verilator_version()
+    # print(ver)
+    if ( version.parse(ver) < version.parse("4.036") or
+         version.parse(ver) > version.parse("4.102")):
+        return True
+    else:
+        return False
+
 def test_cp_pyverilator(args = []):
-    p = cli()
-    hif = cp_pyverilator_transport(p.fname)
-    
-    val = literal_eval('0x5A5A5A5A')
-    hif.hifwrite(val = val)
-    print( hex(hif.hifread()) )
-    assert( hif.hifread() == val )
+
+    if verilator_version_ok():
+        p = cli(args)
+        hif = cp_pyverilator_transport(p.fname)
+        
+        val = literal_eval('0x5A5A5A5A')
+        hif.hifwrite(val = val)
+        print( hex(hif.hifread()) )
+        assert( hif.hifread() == val )
+
+    else:
+        print('Warning: pyverilator not working anymore with verilator versions between 4.036 and 4.102.')
+        print('https://github.com/chipsalliance/chisel3/issues/1565')
 
 if __name__ == '__main__':
     test_cp_pyverilator(sys.argv[1:])

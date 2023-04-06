@@ -16,3 +16,5 @@ dist/*
 src/cheap_pie.egg-info/*
 src/cheap_pie/devices/rdl/basic.xml
 src/cheap_pie/devices/rdl/counter.xml
+src/cheap_pie/obj_dir/*
+src/cheap_pie/devices/rdl/*.xml
