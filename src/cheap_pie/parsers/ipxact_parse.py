@@ -31,7 +31,7 @@ def ipxact_remove_prefix(ipx):
     return ipx
     pass
 
-def ipxact_parse(fname,hif=None):
+def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
        
     ## read input file ########################################################
     csv = untangle.parse(fname)
@@ -64,7 +64,7 @@ def ipxact_parse(fname,hif=None):
                 regname=name_subs(regname)
 
                 addr_str=reg.addressOffset.cdata.replace("'h",'0x')
-                regaddr=literal_eval(addr_str) + base_address
+                regaddr=literal_eval(addr_str) + base_address + literal_eval(base_address_offset)
                 comments=""
                 # print(comments)
                 struct_register=cp_register(regname,regaddr,comments,hif)

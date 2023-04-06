@@ -29,7 +29,7 @@ from cheap_pie_core.cbitfield   import cp_bitfield
 from cheap_pie_core.cp_register import cp_register
 from parsers.name_subs import name_subs
     
-def svd_parse(fname,vendor=None,hif=None):
+def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"):
         
     ## read input file ########################################################
     svd = untangle.parse(fname)
@@ -58,7 +58,7 @@ def svd_parse(fname,vendor=None,hif=None):
                     regname=name_subs(regname)
 
                     addr_str=reg.addressOffset.cdata
-                    regaddr=literal_eval(addr_str) + base_address
+                    regaddr=literal_eval(addr_str) + base_address + literal_eval(base_address_offset)
                     comments=reg.description.cdata
                     # print(comments)
                     struct_register=cp_register(regname,regaddr,comments,hif)

@@ -18,7 +18,7 @@ from cheap_pie_core.cbitfield   import cp_bitfield
 from cheap_pie_core.cp_register import cp_register
 from parsers.name_subs import name_subs
 
-def ipxact_parse(fname,hif=None):
+def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
        
     ## read input file ########################################################
     xml = Component()
@@ -31,9 +31,7 @@ def ipxact_parse(fname,hif=None):
         for periph in m.addressBlock:
             # print(periph)
         
-            # base_addr_str=periph.baseAddress # .cdata.replace("'h",'0x')
-            # print(base_addr_str)
-            base_address=periph.baseAddress # literal_eval(base_addr_str)
+            base_address=periph.baseAddress
 
             if hasattr(periph,'register'):
                 for reg in periph.register:                
@@ -48,9 +46,7 @@ def ipxact_parse(fname,hif=None):
                     regname = "%s_%s" % ( periph_name,rname )
                     regname=name_subs(regname)
 
-                    # addr_str=reg.addressOffset.cdata.replace("'h",'0x')
-                    # regaddr=literal_eval(addr_str) + base_address
-                    regaddr=reg.addressOffset + base_address
+                    regaddr=reg.addressOffset + base_address + literal_eval(base_address_offset)
                     comments=reg.description
                     # print(comments)
                     struct_register=cp_register(regname,regaddr,comments,hif)
