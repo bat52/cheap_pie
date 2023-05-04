@@ -252,6 +252,7 @@ def test_cp_bitfield():
     # test assertion
     try:
         f.setbit(7)
+        assert False, 'Assertion was not raised!!!'
     except ValueError as error:
         print('Assertion raised correctly: <%s>' % error)
 
