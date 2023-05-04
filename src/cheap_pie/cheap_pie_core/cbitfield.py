@@ -167,7 +167,11 @@ class cp_bitfield:
         shiftval= fieldval << self.lsb
         maskinv= self.mask ^ literal_eval('0xFFFFFFFF')
         regmasked = regval & maskinv
-        outregval = regmasked + shiftval
+        outregval = regmasked + (shiftval & self.mask)
+
+        # check new value in range
+        if (shiftval & self.mask) < shiftval:
+            raise ValueError(f'Bitifield value f{fieldval} out of range!')
     
         ## write back new register value ###############################################
         if writeback:
@@ -244,6 +248,12 @@ def test_cp_bitfield():
     f.setbit(val,writeback=False)
     rv = f.setbit(1,regval=1)
     assert(rv==5)
+
+    # test assertion
+    try:
+        f.setbit(7)
+    except ValueError as error:
+        print('Assertion raised correctly: <%s>' % error)
 
 if __name__ == '__main__':
     test_cp_bitfield()    
