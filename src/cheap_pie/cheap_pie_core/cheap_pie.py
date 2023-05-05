@@ -15,15 +15,18 @@ import os
 import sys
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
+from parsers.cp_parsers_wrapper import cp_parsers_wrapper
 from cheap_pie_core.cp_banner import cp_banner
 from cheap_pie_core.cp_cli import cp_cli
-from parsers.cp_parsers_wrapper import cp_parsers_wrapper
 from cheap_pie_core.cp_hal import cp_hal
 
 def main(argv=[]):
+    """
+    Main cheap_pie function
+    """
     ## banner #######################################################################
     cp_banner()
-    
+    #
     ## input parameters ###########################################################
     print('Parsing input arguments...')
     p = cp_cli(argv)
@@ -43,14 +46,13 @@ def main(argv=[]):
         hif = cp_pyocd(device = p.device )
     elif p.transport == 'esptool':
         from transport.cp_esptool_transport import cp_esptool
-        hif = cp_esptool(port = p.port )   
+        hif = cp_esptool(port = p.port )
     elif p.transport == 'verilator':
         from transport.cp_pyverilator_transport import cp_pyverilator_transport
         hif = cp_pyverilator_transport( p.top_verilog )
     else:
         hif=None
-        # assert(False,'Invalid transport: %s' % p.transport)
-        assert(False)
+        assert False, f'Invalid transport: {p.transport}'
 
     ## init chip ##################################################################
     print('Initialising Hardware Abstraction Layer...')
@@ -61,9 +63,5 @@ def main(argv=[]):
 
     return hal
 
-if __name__ == '__main__':    
-    # global system_root
-    # system_root = os.getcwd()
-
+if __name__ == '__main__':
     hal = main(sys.argv[1:])
-    pass

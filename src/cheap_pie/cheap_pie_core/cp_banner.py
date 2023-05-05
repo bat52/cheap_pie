@@ -1,10 +1,15 @@
 #!/usr/bin/python3
-#
+"""
+Just a nice looking banner for cheap_pie
+"""
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
 def cp_banner():
+    """
+    Just a nice looking banner for cheap_pie
+    """
     logo = (
     "        _..._                                                                     ",
     "    .-'_..._''.                                                                   ",
@@ -16,7 +21,7 @@ def cp_banner():
     ". '             | |/.'''. \|    .-------------'/ |   \ |    |      \      /    .  ",
     " \ '.          .|  /    | | \    '-.____...---.`` __ | |    |     |\`'-.-'   .'   ",
     "  '. `._____.-'/| |     | |  `.             .'  .'.''| |    |     | '-....-'`     ",
-    "    `-.______ / | |     | |    `''-...... -'   / /   | |_  .'     '.              ", 
+    "    `-.______ / | |     | |    `''-...... -'   / /   | |_  .'     '.              ",
     "             `  | '.    | '.                   \ \._,\ '/'-----------'            ",
     "                '---'   '---'                   `--'  ``                          ",
     "                            ___                                                   ",
@@ -38,9 +43,10 @@ def cp_banner():
         print(line)
 
 def test_banner():
+    """
+    Test function for cheap_pie banner
+    """
     return cp_banner()
-    pass
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     cp_banner()
-    pass    

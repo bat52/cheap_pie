@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-import pyverilator
+import os
 import argparse
 import sys
 from ast import literal_eval
 from shutil import copyfile
-import os
+
+import pyverilator
 
 def cli(args=[]):
     parser = argparse.ArgumentParser(description='rdl2verilog pyverilator ')
