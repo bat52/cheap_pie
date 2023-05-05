@@ -11,6 +11,7 @@ Currently the implemented description input modes are:
 - CMSIS-SVD (https://www.keil.com/pack/doc/CMSIS/SVD/html/svd_Format_pg.html)
 - IP-XACT ( https://www.accellera.org/downloads/standards/ip-xact )
 - SystemRDL (https://www.accellera.org/activities/working-groups/systemrdl)
+
 but it should be relatively easy to add different chip description formats.
 
 Although tested on few real chips (NXP QN9080, I.MX RT1010, K64F),
@@ -66,6 +67,32 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         # dict-based assignement in single register write
         hal['ADC_ANA_CTRL'] = {'DITHER_EN': 1, 'CHOP_EN': 1, 'INV_CLK': 1}
 
+        # help
+        hal.regs.ADC_ANA_CTRL.help()
+        ADC core and reference setting regsiter
+                   ADC_BM: 
+                         : ADC bias current selection.
+                ADC_ORDER: 
+                         : 1 to enable SD ADC 2 order mode selection
+                DITHER_EN: 
+                         : 1 to enable SD ADC PN Sequence in chopper mode
+                  CHOP_EN: 
+                         : 1 to enable SD ADC chopper
+                  INV_CLK: 
+                         : 1 to invert SD ADC Output Clock
+                  VREF_BM: 
+                         : SD ADC Reference Driver bias current selection.
+               VREF_BM_X3: 
+                         : SD ADC Reference Driver bias current triple.
+               VINN_IN_BM: 
+                         : PGA VlNN Input Driver bias current selection.
+              VINN_OUT_BM: 
+                         : PGA VlNN Output Driver bias current selection.
+           VINN_OUT_BM_X3: 
+                         : PGA VlNN Output Driver bias current triple.
+              ADC_BM_DIV2: 
+                         : SD ADC bias current half.
+
 # CLI Example:
         # load RT1010 from local svd file under ./devices/
         # automatically calls ipython and cheap_pie initialization
@@ -92,7 +119,10 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         ./cheap_pie.sh -dd  ./devices/rdl -rf basic.rdl -fmt rdl -t verilator -topv ./devices/rdl/basic/basic_rf.sv
 
 # Install
+## From pypi
         pip3 install cheap_pie
+## From github
+        pip3 install git+https://github.com/bat52/cheap_pie.git@master
 # Dependencies for validation:
         # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
         pip3 install cmsis-svd
