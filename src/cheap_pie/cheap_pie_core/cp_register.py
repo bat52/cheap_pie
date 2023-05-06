@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Register Class Module for Cheap Pie
+"""
 #
 # -*- coding: utf-8 -*-
 ## this file is part of cheap_pie, a python tool for chip validation
@@ -12,41 +15,43 @@ from ast import literal_eval
 try:
     from cheap_pie_core.cbitfield import cp_bitfield
 except:
-    from cbitfield import cp_bitfield    
+    from cbitfield import cp_bitfield
 
 class cp_register:
-    """ A chip register class """
-    addr = 0    
+    """
+    Register Class for Cheap Pie
+    """
+    addr = 0
     regname = ''
     bitfields = []
-    dictfields = dict()
+    dictfields = {}
     comments = ''
     # host interface handler
     hif = None
     addr_offset = 0
     addr_base   = 0
-    
+    #
     def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0):
         # address
-        self.addr = regaddr        
-        
+        self.addr = regaddr
+
         # name
         self.regname = regname
-        
+
         # fields
-        self.dictfields = dict()
-        
+        self.dictfields = {}
+
         # Comments
         self.comments = comments
-        
+
         # host interface handler
-        self.hif = hif    
+        self.hif = hif
 
         # address offset
         self.addr_offset = addr_offset
 
         # address base
-        self.addr_base = addr_base        
+        self.addr_base = addr_base
 
     def getreg(self, asdict=False, as_signed=False):
         """ function getreg(self,regval)
@@ -55,44 +60,43 @@ class cp_register:
         %
         % input : regval value of the full register either in decimal or
         % hexadecimal """
-        
-        # if isinstance(self.hif,cp_jlink):
-        if not (self.hif is None ):
+
+        if not self.hif is None:
             regval = self.hif.hifread(self.addr)
         else :
             regval = 0
 
         if asdict:
             # dictionary
-            retval = dict()
+            retval = {}
             for field in self.bitfields:
                 retval[field.fieldname] = field.getbit(regval)
         elif as_signed:
             # signed integer
             retval = -(regval & literal_eval('0x80000000')) + (regval & literal_eval('0x7FFFFFFF'))
-        else: 
+        else:
             # unsigned integer (default)
             retval = regval
-        
-        return retval    
-        
+
+        return retval
+
     def setreg(self,regval = 0, echo =False, *args,**kwargs):
         """ function setreg(self,regval)
         %
         % Displays value of a register from a register value
         %
         % input : regval value of the full register either in decimal or
-        % hexadecimal """        
-        
+        % hexadecimal """
+
         ## handle string input as binary #################################################
         if isinstance(regval, str):
-            regval = literal_eval(regval)        
+            regval = literal_eval(regval)
 
         ## handle dict values ############################################################
         elif isinstance(regval,dict):
             rval = self.getreg()
-            for f,fval in regval.items():
-                rval = self[f].setbit(fval, regval=rval, writeback=False)
+            for field,fval in regval.items():
+                rval = self[field].setbit(fval, regval=rval, writeback=False)
             regval = rval
 
         ## handle negative values ########################################################
@@ -101,86 +105,88 @@ class cp_register:
             # print('regval write: 0x%x' % regval)
 
         #% write %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
-        # if isinstance(self.hif,cp_jlink):   
-        if not (self.hif is None ):                    
+
+        if not self.hif is None:
             ret = self.hif.hifwrite(self.addr, regval, *args,**kwargs)
         else :
             ret = regval
-        
+
         #% only display output if no nargout %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         if echo:
-            self.display(regval)          
-        
+            self.display(regval)
+
         return ret
 
-    def getbit(self, bit_offset=0, width=1):                
-        b = cp_bitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)        
-        return b.getbit()
+    def getbit(self, bit_offset=0, width=1):
+        """ Get a custom bitfield within a register """
+        bitfield = cp_bitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)
+        return bitfield.getbit()
 
-    def setbit(self, bitval=0, bit_offset=0, width=1):                
-        b = cp_bitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)        
-        return b.setbit(bitval)
+    def setbit(self, bitval=0, bit_offset=0, width=1):
+        """ Set a custom bitfield within a register """
+        bitfield = cp_bitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)
+        return bitfield.setbit(bitval)
 
     def getbyte(self, byte_offset=0):
-        b = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)        
-        return b.getbit()
+        """ Get a custom byte within a register """
+        byte = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)
+        return byte.getbit()
 
     def setbyte(self, byteval=0, byte_offset=0):
-        b = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)        
-        return b.setbit(byteval)
+        """ Set a custom byte within a register """
+        byte = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)
+        return byte.setbit(byteval)
 
     def help(self,width=25):
         """ function ret = help(self)        
-        # displays register comments """    
+        # displays register comments """
         print(self.comments)
-        
+
         fmtstr = '%%%ds: %%s' % width
         for field in self.bitfields:
             print( fmtstr % (field.fieldname,''))
 
             for line in textwrap.wrap(field.comments):
                 print( fmtstr % ('',line))
-        
+
     def __repr__(self,regval = None ):
         if regval is None:
             # read register value
             regval = self.getreg()
 
         if len(self.bitfields) > 0:
-            r = []        
+            reg = []
             for field in self.bitfields :
                 # field.display(regval)
-                r.append(field.__repr__(regval))        
-            outstr = "\n".join(r)
-        else: 
+                reg.append(field.__repr__(regval))
+            outstr = "\n".join(reg)
+        else:
             outstr = self.regname + ' = ' + hex(regval)
         return outstr
 
     def display(self, regval = None ):
-        r = self.__repr__(regval=regval)
-        print(r)
-        return r    
-        
+        """ Show a register """
+        print(self)
+        return self
+
     def addfield(self, field):
-        # assert isinstance(field,cp_bitfield)
-        # self.bitfields.append(field)
+        """ Add a field to a register """
         self.dictfields[field.fieldname] = field
-        # cmdstr = "self." + field.fieldname + " = field "
-        # eval(cmdstr)
-        
+
     def dictfield2struct(self):
+        """ Convert the list of bitfields into a namedtuple """
         if len(self.dictfields) > 0:
-            self.bitfields = namedtuple(self.regname, self.dictfields.keys())(*self.dictfields.values())
-        
+            self.bitfields = namedtuple(self.regname,
+                                        self.dictfields.keys())(*self.dictfields.values())
+
     def get_bitfields(self, name=None):
         """
         Find a child element by name
         """
         if name:
             return [e for e in self.bitfields if e._name == name]
-        else:
-            return self.bitfields
+
+        return self.bitfields
 
     def __contains__(self, key):
         if self.bitfields is None:
@@ -192,36 +198,31 @@ class cp_register:
 
     def __iter__(self):
         return self.bitfields.__iter__()
-        # for field in self.bitfields:
-        #    yield (field.fieldname, field.getbit())
-    
+
     def __next__(self):
         return self.bitfields.next()
-    
+
     def __getitem__(self, idx):
         if isinstance(idx,int):
             return self.bitfields[idx]
         elif isinstance(idx,str):
             return self.bitfields._asdict()[idx]
         else:
-            print('Unsupported indexing!')
-            assert(False)
-        pass    
-    
+            assert False, 'Unsupported indexing!'
+
     def __setitem__(self, idx, value):
         if isinstance(idx,int):
             return self.bitfields[idx].setbit(value)
         elif isinstance(idx,str):
             return self.bitfields._asdict()[idx].setbit(value)
         else:
-            print('Unsupported indexing!')
-            assert(False)
-        pass
+            assert False, 'Unsupported indexing!'
 
     def __index__(self):
         return int(self.getreg())
 
 def test_cp_register():
+    """ Cheap Pie test for cp_register class """
     import sys
     import os.path
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
@@ -229,7 +230,7 @@ def test_cp_register():
     from cheap_pie_core.cbitfield import cp_bitfield
     from random import randint
 
-    r = cp_register( 
+    reg = cp_register(
         regname='regname',
         regaddr=10,
         comments='comments',
@@ -240,20 +241,20 @@ def test_cp_register():
 
     # test value
     val = 15
-    r.setreg(val)
-    assert(val==r.getreg())
-    r.display()
-    r.help()
+    reg.setreg(val)
+    assert val==reg.getreg()
+    reg.display()
+    reg.help()
 
     # negative assignement
     negval = -1
-    r.setreg(negval)
-    retval = r.getreg(as_signed=True)
+    reg.setreg(negval)
+    retval = reg.getreg(as_signed=True)
     print(retval)
-    assert(retval==negval)
+    assert retval==negval
 
     # test bitfield
-    f1 = cp_bitfield(
+    field1 = cp_bitfield(
         regfield = 'fname',
         regaddr = 10,
         regname = 'rname',
@@ -262,7 +263,7 @@ def test_cp_register():
         comments = 'comment',
         hif = cp_dummy()
     )
-    f2 = cp_bitfield(
+    field2 = cp_bitfield(
         regfield = 'fname2',
         regaddr = 10,
         regname = 'rname',
@@ -272,45 +273,44 @@ def test_cp_register():
         hif = cp_dummy()
     )
 
-    r.addfield(f1)
-    r.addfield(f2)
-    r.dictfield2struct()
-    r.get_bitfields()
+    reg.addfield(field1)
+    reg.addfield(field2)
+    reg.dictfield2struct()
+    reg.get_bitfields()
     # display with bitfields
-    r.display()
-    r.help()
+    reg.display()
+    reg.help()
 
     # item access
-    r[0]
-    r['fname']
+    reg[0]
+    reg['fname']
 
     # item assignement
-    r[0] = 1
-    r['fname'] = 2
+    reg[0] = 1
+    reg['fname'] = 2
 
     # bit access
     for offset in range(32):
         for bitval in range(2):
-            r.setbit(bitval, bit_offset=offset)    
-            assert( r.getbit(bit_offset=offset) == bitval ) 
-    
+            reg.setbit(bitval, bit_offset=offset)
+            assert reg.getbit(bit_offset=offset) == bitval
+
     # byte access
     for offset in range(4):
         byteval = randint(0,255)
-        r.setbyte(byteval, byte_offset=offset)    
-        assert( r.getbyte(byte_offset=offset) == byteval ) 
+        reg.setbyte(byteval, byte_offset=offset)
+        assert reg.getbyte(byte_offset=offset) == byteval
 
     # integer representation
-    print(hex(r))
+    print(hex(reg))
 
     # dict-based assignement
-    d = {'fname': 1, 'fname2': 2}
-    r.setreg(d)
+    dreg = {'fname': 1, 'fname2': 2}
+    reg.setreg(dreg)
 
     # dict-based readback
-    dr = r.getreg(asdict=True)
-    assert(d == dr)
+    dregb = reg.getreg(asdict=True)
+    assert dreg == dregb
 
 if __name__ == '__main__':
     test_cp_register()
-    pass

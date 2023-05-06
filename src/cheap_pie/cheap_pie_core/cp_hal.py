@@ -24,7 +24,7 @@ class cp_hal:
     """
     regs = []
     hif = None
-    """ Hardware abstraction layer class """
+
     def __init__(self,regs):
         self.regs = regs
         self.hif = regs[0].hif
@@ -34,25 +34,23 @@ class cp_hal:
 
     def __iter__(self):
         return self.regs.__iter__()
-    #
+
     def __next__(self):
         return self.regs.next()
-    #
+
     def __getitem__(self, idx):
         if isinstance(idx,int):
             return self.regs[idx]
         elif isinstance(idx,str):
             return self.regs._asdict()[idx]
-        else:
-            assert False,'Unsupported indexing!'
-    #
+        assert False,'Unsupported indexing!'
+
     def __setitem__(self, idx, value):
         if isinstance(idx,int):
             return self.regs[idx].setreg(value)
         elif isinstance(idx,str):
             return self.regs._asdict()[idx].setreg(value)
-        else:
-            assert False, 'Unsupported indexing!'
+        assert False, 'Unsupported indexing!'
 
 ## search methods ###########################################################
 
@@ -67,7 +65,7 @@ class cp_hal:
         Search registers which name contains a specified string
         """
         return tools.search.register(self.regs,reg,case_sensitive=case_sensitive)
-    #
+
     def search_address(self,address,mask='0xFFFFFFFF'):
         """
         Search register matching a specified address
@@ -82,17 +80,24 @@ class cp_hal:
 
 ## dump methods #############################################################
     def regs2dict(self):
+        """
+        Converts an hal structure into a dictionary in the form:
+        dictval = {
+            'reg1': val1,
+            'reg2': val2,
+        }
+        """
         outdict = {}
-        for r,v in self.regs._asdict().items():
-            outdict[r] = v.getreg()
+        for reg,val in self.regs._asdict().items():
+            outdict[reg] = val.getreg()
         return outdict
 
     def dump(self,fname='dump.hkl'):
         """
         Dump the value of all registers in a .hkl file.
         """
-        rd = self.regs2dict()
-        hkl.dump(rd, fname, compression='gzip')
+        regs_dict = self.regs2dict()
+        hkl.dump(regs_dict, fname, compression='gzip')
 
     def dump_diff(self,f1name='dump.hkl',f2name='dump2.hkl',width = 60):
         """
@@ -100,21 +105,21 @@ class cp_hal:
         """
         fmtstr = '%%%ds |%%%ds' % (width,width)
 
-        f1 = hkl.load(f1name)
-        f2 = hkl.load(f2name)
+        field1 = hkl.load(f1name)
+        field2 = hkl.load(f2name)
 
         # create a header with filenames
         outstrlist = []
-        for r,v in f1.items():
-            if not f2[r] == v:
-                f1regstr = self[r].__repr__(v).split('\n')
-                f2regstr = self[r].__repr__(f2[r]).split('\n')
-                #
+        for reg,val in field1.items():
+            if not field2[reg] == val:
+                f1regstr = self[reg].__repr__(val).split('\n')
+                f2regstr = self[reg].__repr__(field2[reg]).split('\n')
+
                 for idx in range(len(f1regstr)):
                     if not f1regstr[idx]==f2regstr[idx]:
                         linestr = fmtstr % (f1regstr[idx],f2regstr[idx])
                         outstrlist.append(linestr)
-        #
+
         # print output
         if len(outstrlist) > 0:
             headerstr = fmtstr % (f1name,f2name)
@@ -130,9 +135,9 @@ def test_to_docx():
     """
     from parsers.cp_parsers_wrapper import cp_parsers_wrapper
     from cheap_pie_core.cp_cli import cp_cli
-    #
-    p = cp_cli(['-t','dummy','-rf','my_subblock.xml','-fmt','ipxact'])
-    hal = cp_hal(cp_parsers_wrapper(p))
+
+    prms = cp_cli(['-t','dummy','-rf','my_subblock.xml','-fmt','ipxact'])
+    hal = cp_hal(cp_parsers_wrapper(prms))
 
     hal.to_docx()
 
@@ -144,8 +149,8 @@ def test_cp_hal():
     from cheap_pie_core.cp_cli import cp_cli
     from ast import literal_eval
 
-    p = cp_cli(['-t','dummy'])
-    hal = cp_hal(cp_parsers_wrapper(p,cp_dummy()))
+    prms = cp_cli(['-t','dummy'])
+    hal = cp_hal(cp_parsers_wrapper(prms,cp_dummy()))
 
     print('Test register methods...')
     # hex assignement
@@ -183,28 +188,27 @@ def test_cp_hal():
     hal['ADC_ANA_CTRL'] = {'DITHER_EN': 1, 'CHOP_EN': 1, 'INV_CLK': 1}
 
     # test search
-    r = hal.search_register('ADC_ANA_CTRL')
-    assert len(r)>0
-    f = hal.search_bitfield('ADC_BM')
-    assert len(r)>0
-    r = hal.search_address('0x4000702c')
-    assert len(r)>0
-    r = hal.search_address('0xF000702c',mask='0x0FFFFFFF')
-    assert len(r)>0
-    r = hal.search_address('0xF000702c')
-    assert r is None
+    reg = hal.search_register('ADC_ANA_CTRL')
+    assert len(reg)>0
+    field = hal.search_bitfield('ADC_BM')
+    assert len(field)>0
+    reg = hal.search_address('0x4000702c')
+    assert len(reg)>0
+    reg = hal.search_address('0xF000702c',mask='0x0FFFFFFF')
+    assert len(reg)>0
+    reg = hal.search_address('0xF000702c')
+    assert reg is None
 
     # test conversion to doc
-    # hal.to_docx()
     test_to_docx()
 
     # test dump
-    d1 = 'dump1.hkl'
-    d2 = 'dump2.hkl'
-    hal.dump(d1)
+    dump1 = 'dump1.hkl'
+    dump2 = 'dump2.hkl'
+    hal.dump(dump1)
     hal['ADC_ANA_CTRL']['ADC_BM'] = 3
-    hal.dump(d2)
-    hal.dump_diff(d1,d2)
+    hal.dump(dump2)
+    hal.dump_diff(dump1,dump2)
 
 if __name__ == '__main__':
     test_cp_hal()

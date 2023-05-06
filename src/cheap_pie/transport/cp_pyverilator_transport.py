@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Cheap Pie module for pyverilator transport
+"""
 import os
 import argparse
 import sys
@@ -8,20 +11,25 @@ from shutil import copyfile
 import pyverilator
 
 def cli(args=[]):
+    """ Command Line Interface for pyverilator transport class """
     parser = argparse.ArgumentParser(description='rdl2verilog pyverilator ')
     # register format options
-    parser.add_argument("-f", "--fname", help="register file description .v", action='store', type = str, default="./devices/verilog/basic_rf.v")
+    parser.add_argument("-f", "--fname",
+                        help="register file description .v", action='store',
+                        type = str, default="./devices/verilog/basic_rf.v")
     return parser.parse_args(args)
 
 class cp_pyverilator_transport():
+    """
+    Cheap Pie class for pyverilator transport
+    """
     sim = None
 
     def __init__(self,fname):
 
         # rename to .v, if .sv
         if not os.path.isfile(fname):
-            print('File %s does not exist!' % fname)
-            assert(False)
+            assert False, f'File {fname} does not exist!'
 
         base,ext = os.path.splitext(fname)
         # print(ext)
@@ -50,6 +58,7 @@ class cp_pyverilator_transport():
         self.reset_release()
 
     def reset_release(self):
+        """ Release Reset signal """
         # tick the automatically detected clock
         self.sim.clock.tick()
 
@@ -76,7 +85,7 @@ class cp_pyverilator_transport():
         # print('sim.io.out = ' + str(curr_out))
 
     def hifwrite(self, addr='0x00', val='0xB16B00B5', mask='0xFFFFFFFF'):
-
+        """ Write register """
         if isinstance(addr,str):
             addr = literal_eval(addr)
 
@@ -111,7 +120,7 @@ class cp_pyverilator_transport():
         # sim.clock.tick()
 
     def hifread(self,addr = '0x00'):
-
+        """ Read register """
         if isinstance(addr,str):
             addr = literal_eval(addr)
 
@@ -134,12 +143,14 @@ class cp_pyverilator_transport():
         return outval
 
 def verilator_version():
+    """ Return verilator version """
     import subprocess
     result = subprocess.run(['verilator', '--version'], stdout=subprocess.PIPE)
     ver = result.stdout.split()[1]
-    return ver.decode("utf-8") 
+    return ver.decode("utf-8")
 
 def verilator_version_ok():
+    """ True if the installed verilator version works as transport for cheap_pie """
     # check Verilated::flushCall() exist
     # https://github.com/chipsalliance/chisel3/issues/1565
     from packaging import version
@@ -152,18 +163,17 @@ def verilator_version_ok():
         return False
 
 def test_cp_pyverilator(args = []):
-
+    """ Test pyverilator transport """
     if verilator_version_ok():
-        p = cli(args)
-        hif = cp_pyverilator_transport(p.fname)
-        
+        prms = cli(args)
+        hif = cp_pyverilator_transport(prms.fname)
         val = literal_eval('0x5A5A5A5A')
         hif.hifwrite(val = val)
         print( hex(hif.hifread()) )
-        assert( hif.hifread() == val )
-
+        assert hif.hifread() == val
     else:
-        print('Warning: pyverilator not working anymore with verilator versions between 4.036 and 4.102.')
+        print('Warning: pyverilator not working anymore \
+              with verilator versions between 4.036 and 4.102.')
         print('https://github.com/chipsalliance/chisel3/issues/1565')
 
 if __name__ == '__main__':
