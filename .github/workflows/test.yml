@@ -1,4 +1,4 @@
-name: Pylint
+name: Test
 
 on: [push]
 
@@ -20,5 +20,5 @@ jobs:
         pip install -r requirements.txt
     - name: test
       run: |
-        cd ./src
+        cd ./src/cheap_pie
         python ./cheap_pie_core/test.py
