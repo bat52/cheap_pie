@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+""" Cheap Pie Test Module """
 # -*- coding: utf-8 -*-
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -11,8 +11,11 @@ import os.path
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
 class CheapPieMethods(unittest.TestCase):
+    """ Cheap Pie Test Class """
 
     def test_transport(self):
+        """ Cheap Pie Test Transport Method """
+
         # dummy for mockup
         from transport.cp_dummy_transport import test_cp_dummy
         test_cp_dummy()
@@ -29,26 +32,27 @@ class CheapPieMethods(unittest.TestCase):
         from transport.cp_esptool_transport import test_cp_esptool
         test_cp_esptool()
 
-        # pyverilator 
+        # pyverilator
         from transport.cp_pyverilator_transport import test_cp_pyverilator
         test_cp_pyverilator()
 
-        pass
-   
     def test_bitfield(self):
+        """ Test bitfield class """
         from cheap_pie_core.cbitfield import test_cp_bitfield
         test_cp_bitfield()
-    
+
     def test_register(self):
+        """ Test register class """
         from cheap_pie_core.cp_register import test_cp_register
         test_cp_register()
 
     def test_cp_hal(self):
+        """ Test hal class """
         from cheap_pie_core.cp_hal import test_cp_hal
         test_cp_hal()
-        pass   
 
     def test_parsers(self):
+        """ Test cheap pie parsers """
         from parsers.svd_parse import test_svd_parse
         test_svd_parse()
 
@@ -65,19 +69,20 @@ class CheapPieMethods(unittest.TestCase):
         test_rdl_parse()
 
     def test_parsers_wrapper(self):
+        """ Test parsers wrapper """
         from parsers.cp_parsers_wrapper import test_cp_parsers_wrapper
         test_cp_parsers_wrapper()
-        pass
 
     def test_tools(self):
+        """ Test cheap_pie tools """
         from tools.hal2doc import test_hal2doc
         test_hal2doc()
 
         from tools.search import test_search
         test_search()
-        pass
 
     def test_cheap_pie_main(self):
+        """ Test cheap pie main """
         from cheap_pie_core.cheap_pie import main
         main()
 

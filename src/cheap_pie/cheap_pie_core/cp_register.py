@@ -138,7 +138,7 @@ class cp_register:
         return byte.setbit(byteval)
 
     def help(self,width=25):
-        """ function ret = help(self)        
+        """ function ret = help(self)   
         # displays register comments """
         print(self.comments)
 
@@ -166,8 +166,9 @@ class cp_register:
 
     def display(self, regval = None ):
         """ Show a register """
-        print(self)
-        return self
+        outstr = self.__repr__(regval)
+        print(outstr)
+        return outstr
 
     def addfield(self, field):
         """ Add a field to a register """
@@ -205,18 +206,16 @@ class cp_register:
     def __getitem__(self, idx):
         if isinstance(idx,int):
             return self.bitfields[idx]
-        elif isinstance(idx,str):
+        if isinstance(idx,str):
             return self.bitfields._asdict()[idx]
-        else:
-            assert False, 'Unsupported indexing!'
+        assert False, 'Unsupported indexing!'
 
     def __setitem__(self, idx, value):
         if isinstance(idx,int):
             return self.bitfields[idx].setbit(value)
-        elif isinstance(idx,str):
+        if isinstance(idx,str):
             return self.bitfields._asdict()[idx].setbit(value)
-        else:
-            assert False, 'Unsupported indexing!'
+        assert False, 'Unsupported indexing!'
 
     def __index__(self):
         return int(self.getreg())

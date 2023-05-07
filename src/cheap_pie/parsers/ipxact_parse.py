@@ -1,13 +1,12 @@
 #!/usr/bin/python3
-
+""" Cheap Pie native module parser for IP-XACT """
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-import untangle # for parsing xml
 from ast import literal_eval
-import string as str
 from collections import namedtuple
+import untangle # for parsing xml
 
 import sys
 import os.path
@@ -18,39 +17,37 @@ from cheap_pie_core.cp_register import cp_register
 from parsers.name_subs import name_subs
 
 def ipxact_remove_prefix(ipx):
+    """ remove ipxact or spirit prefix"""
     replist = ['ipxact_','spirit_']
-    
+
     if hasattr(ipx,'children'):
-        for e in ipx.children:
+        for elm in ipx.children:
             # remove all suffixes
-            for r in replist:
-                e._name = e._name.replace(r,'')
+            for repl in replist:
+                elm._name = elm._name.replace(repl,'')
             # remove recursively
-            ipxact_remove_prefix(e)
+            ipxact_remove_prefix(elm)
 
     return ipx
     pass
 
 def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
-       
+    """ Cheap Pie native module parser for IP-XACT """
     ## read input file ########################################################
     csv = untangle.parse(fname)
 
     ## remove ipxact/spirit prefixes ##########################################
     csv = ipxact_remove_prefix(csv)
-    
+
     ## loop over lines ########################################################
-    outdict = dict()
+    outdict = {}
 
     periph = csv.component.memoryMaps.memoryMap.addressBlock
-    # print(periph)
-    
     base_addr_str=periph.baseAddress.cdata.replace("'h",'0x')
-    # print(base_addr_str)
     base_address=literal_eval(base_addr_str)
 
     if hasattr(periph,'register'):
-        for reg in periph.register:                
+        for reg in periph.register:
             if hasattr( reg.name, 'cdata'):
                 # close old register, before opening a new one
                 if 'regname' in locals():
@@ -60,7 +57,7 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                 # new register
                 periph_name=periph.name.cdata
                 rname=reg.name.cdata
-                regname = "%s_%s" % ( periph_name,rname )
+                regname = f'{periph_name}_{rname}'
                 regname=name_subs(regname)
 
                 addr_str=reg.addressOffset.cdata.replace("'h",'0x')
@@ -74,17 +71,18 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                     for field in reg.field :
                         regfield=field.name.cdata
 
-                        if not(field is None):
+                        if not field is None:
                             # print regfield
                             regfield=name_subs(regfield)
 
-                            csvWidth=field.bitWidth.cdata
+                            csv_width=field.bitWidth.cdata
                             bitoffset=field.bitOffset.cdata
                             comments="" # field.description.cdata
                             # print(comments)
-                            
+
                             # Create new field class
-                            class_regfield=cp_bitfield(regfield,regaddr,regname,csvWidth,bitoffset,comments,hif)
+                            class_regfield=cp_bitfield(
+                                regfield,regaddr,regname,csv_width,bitoffset,comments,hif)
                             struct_register.addfield(class_regfield)
 
         # create last register, if existing
@@ -92,23 +90,20 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
             # outstruct=addreg2struct(outstruct,regname,struct_register)
             struct_register.dictfield2struct()
             outdict[regname]=struct_register
-    
+
     # convert output dictionary into structure
-    # return outdict
-    return namedtuple("HAL", outdict.keys())(*outdict.values()) 
+    return namedtuple("HAL", outdict.keys())(*outdict.values())
 
 def test_ipxact_parse():
+    """ Test function for cheap pie native IP-XACT parser """
     ipxact_parse("./devices/my_subblock.xml")
     ipxact_parse("./devices/leon2_creg.xml")
     ipxact_parse("./devices/generic_example.xml")
-    pass
-    
+
 if __name__ == '__main__':
-    if len(sys.argv) > 1: 
+    if len(sys.argv) > 1:
         fname=sys.argv[1]
     else:
         fname="./devices/my_subblock.xml"
-    print(fname)    
+    print(fname)
     print(ipxact_parse(fname))
-    pass
-    

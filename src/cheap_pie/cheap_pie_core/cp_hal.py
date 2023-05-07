@@ -27,7 +27,10 @@ class cp_hal:
 
     def __init__(self,regs):
         self.regs = regs
-        self.hif = regs[0].hif
+        if len(regs) > 0:
+            self.hif = regs[0].hif
+        else:
+            print('# WARNING: no register defined!')
 
     def __len__(self):
         return len(self.regs)
