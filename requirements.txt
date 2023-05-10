@@ -3,7 +3,7 @@ untangle
 cmsis-svd
 ipyxact
 pylink-square
-pyocd
+# pyocd # requires cargo and rust toolchain
 esptool        
 python-docx
 pyverilator
