@@ -123,39 +123,52 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         pip3 install cheap_pie
 ## From github
         pip3 install git+https://github.com/bat52/cheap_pie.git@master
-# Dependencies for validation:
+
+# Dependencies for core (required):        
+        # for XML parsing (used by legacy svd parser and IP-XACT parser)
+        pip3 install untangle
+        # for exporting XML info into a human-readable document
+        pip3 install python-docx
+        # for dumping registers
+        pip3 install hickle
         # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
         pip3 install cmsis-svd
         # SPIRIT IP-XACT parser through ipyxact https://github.com/olofk/ipyxact
-        pip3 install ipyxact
-        # for XML parsing (used by legacy svd parser and IP-XACT parser)
-        pip3 install untangle
+        pip3 install ipyxact                
+        # SystemRDL to register-file verilog
+        https://github.com/hughjackson/PeakRDL-verilog
+        # SystemRDL to IP-XACT
+        https://github.com/SystemRDL/PeakRDL-ipxact
+# Dependencies for validation/transport layers (optional):        
         # for JLINK
         pip3 install pylink-square
         # pyOCD for CMSIS-DAP and JLINK support (only tested in python-venv)
         pip3 install pyocd
         # esptool for Espressif devices (not yet functional)
-        pip3 install esptool
-        # for exporting XML info into a human-readable document
-        pip3 install python-docx
-        # for dumping registers
-        pip3 install hickle
-        
-# Dependencies for verification:
+        pip3 install esptool        
+# Dependencies for verification (optional AND experimental):
         # verilator
         https://www.veripool.org/verilator/
         # pyverilator (python verilator wrapper)
-        https://github.com/csail-csg/pyverilator
-        # SystemRDL to register-file verilog
-        https://github.com/hughjackson/PeakRDL-verilog
-        # SystemRDL to IP-XACT
-        https://github.com/SystemRDL/PeakRDL-ipxact
+        https://github.com/csail-csg/pyverilator        
         # gtkwave
         http://gtkwave.sourceforge.net/
 
-# python transport wrappers
-- pyOCD sypports JLINK, CMSIS-DAP and GDB https://github.com/pyocd/pyOCD
-- esptool supports espressif targets https://github.com/espressif/esptool
+# Releasing
+
+Releases are published automatically when a tag is pushed to GitHub.
+
+.. code-block:: bash
+
+   # Set next version number
+   export RELEASE=x.x.x
+
+   # Create tags
+   git commit --allow-empty -m "Release $RELEASE"
+   git tag -a $RELEASE -m "Version $RELEASE"
+
+   # Push
+   git push upstream --tags
 
 # Register description formats
 regtool from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
