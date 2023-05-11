@@ -1,14 +1,16 @@
-# python pip
 untangle
+hickle
+python-docx
+# parsers
 cmsis-svd
 ipyxact
-pylink-square
-# pyocd # requires cargo and rust toolchain
-esptool        
-python-docx
-pyverilator
 peakrdl-ipxact
 peakrdl-verilog #only install from github
 peakrdl-uvm
-hickle
-packaging # for verilator version check
+# transport layers
+# pylink-square
+# pyocd # requires cargo and rust toolchain
+# esptool
+# pyverilator
+# other
+# packaging # for verilator version check

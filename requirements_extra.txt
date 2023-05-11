@@ -1,0 +1,7 @@
+# transport layers
+pylink-square
+pyocd # requires cargo and rust toolchain
+esptool
+pyverilator
+# other
+packaging # for verilator version check

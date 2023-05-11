@@ -25,8 +25,8 @@ class CheapPieMethods(unittest.TestCase):
         test_cp_jlink()
 
         # pyocd
-        # from transport.cp_pyocd_transport import test_cp_pyocd
-        # test_cp_pyocd()
+        from transport.cp_pyocd_transport import test_cp_pyocd
+        test_cp_pyocd()
 
         # esptool
         from transport.cp_esptool_transport import test_cp_esptool
