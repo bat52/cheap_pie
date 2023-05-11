@@ -8,15 +8,21 @@ Cheap Pie Hardware Abstraction Layer
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-import sys
-import os.path
 import hickle as hkl
 
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+try:
+    # cheap_pie installed with pip 
+    from cheap_pie.transport.cp_dummy_transport import cp_dummy
+    import cheap_pie.tools.search
+    from cheap_pie.tools.hal2doc import hal2doc
 
-from transport.cp_dummy_transport import cp_dummy
-import tools.search
-from tools.hal2doc import hal2doc
+except:
+    import sys
+    import os.path
+    sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+    from transport.cp_dummy_transport import cp_dummy
+    import tools.search
+    from tools.hal2doc import hal2doc
 
 class cp_hal:
     """

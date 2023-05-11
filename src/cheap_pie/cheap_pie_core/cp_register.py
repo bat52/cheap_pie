@@ -13,9 +13,13 @@ from collections import namedtuple
 from ast import literal_eval
 
 try:
-    from cheap_pie_core.cbitfield import cp_bitfield
+    # cheap_pie installed with pip 
+    from cheap_pie.cheap_pie_core.cbitfield import cp_bitfield
 except:
-    from cbitfield import cp_bitfield
+    try:
+        from cheap_pie_core.cbitfield import cp_bitfield
+    except:
+        from cbitfield import cp_bitfield
 
 class cp_register:
     """
