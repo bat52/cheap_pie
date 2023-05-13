@@ -22,11 +22,12 @@ def register(hal,regname,case_sensitive=True):
 def bitfield(hal,bitfield,case_sensitive=True):
     retval = []
     for reg in hal: # loop over all registers
-        # print reg.regname        
+        # print reg.regname
         for field in reg.bitfields:
             if str_in_str(bitfield,field.fieldname,case_sensitive):
-                print( reg.regname + " @ " + field.fieldname )
-                retval.append(field)
+                fieldstr = str(field)
+                print(fieldstr)
+                retval.append(fieldstr)
     return retval
 
 def address(hal, address, mask='0xFFFFFFFF'):

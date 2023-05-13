@@ -19,3 +19,5 @@ src/cheap_pie/devices/rdl/counter.xml
 src/cheap_pie/obj_dir/*
 src/cheap_pie/devices/rdl/*.xml
 *.log
+src/*.py
+src/*.xml

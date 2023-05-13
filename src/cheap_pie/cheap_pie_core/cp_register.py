@@ -21,7 +21,7 @@ except:
     except:
         from cbitfield import cp_bitfield
 
-class cp_register:
+class cp_register(object):
     """
     Register Class for Cheap Pie
     """
@@ -154,25 +154,26 @@ class cp_register:
                 print( fmtstr % ('',line))
 
     def __repr__(self,regval = None ):
-        if regval is None:
-            # read register value
-            regval = self.getreg()
-
         if len(self.bitfields) > 0:
             reg = []
             for field in self.bitfields :
                 # field.display(regval)
-                reg.append(field.__repr__(regval))
+                reg.append(field.__repr__(regval=regval))
             outstr = "\n".join(reg)
         else:
-            outstr = self.regname + ' = ' + hex(regval)
+            outstr = self.regname + ' = '
+            if not regval is None:
+                outstr += hex(regval)
         return outstr
 
     def display(self, regval = None ):
         """ Show a register """
+        if regval is None:
+            # read register value
+            regval = self.getreg()
         outstr = self.__repr__(regval)
         print(outstr)
-        return outstr
+        # return outstr
 
     def addfield(self, field):
         """ Add a field to a register """
@@ -242,21 +243,25 @@ def test_cp_register():
         addr_base=10
     )
 
-    # test value
+    print('# setreg, getreg')
     val = 15
     reg.setreg(val)
     assert val==reg.getreg()
+
+    print('# display')
     reg.display()
+
+    print('# help')
     reg.help()
 
-    # negative assignement
+    print('# negative assignement')
     negval = -1
     reg.setreg(negval)
     retval = reg.getreg(as_signed=True)
     print(retval)
     assert retval==negval
 
-    # test bitfield
+    print('# test bitfield')
     field1 = cp_bitfield(
         regfield = 'fname',
         regaddr = 10,
@@ -280,38 +285,40 @@ def test_cp_register():
     reg.addfield(field2)
     reg.dictfield2struct()
     reg.get_bitfields()
-    # display with bitfields
+
+    print('# reg display with bitfields')
     reg.display()
+    print('# reg help with bitfields')
     reg.help()
 
-    # item access
+    print('# reg item access')
     reg[0]
     reg['fname']
 
-    # item assignement
+    print('# item assignement')
     reg[0] = 1
     reg['fname'] = 2
 
-    # bit access
+    print('# reg bit access')
     for offset in range(32):
         for bitval in range(2):
             reg.setbit(bitval, bit_offset=offset)
             assert reg.getbit(bit_offset=offset) == bitval
 
-    # byte access
+    print('# reg byte access')
     for offset in range(4):
         byteval = randint(0,255)
         reg.setbyte(byteval, byte_offset=offset)
         assert reg.getbyte(byte_offset=offset) == byteval
 
-    # integer representation
+    print('# reg integer representation')
     print(hex(reg))
 
-    # dict-based assignement
+    print('# reg dict-based assignement')
     dreg = {'fname': 1, 'fname2': 2}
     reg.setreg(dreg)
 
-    # dict-based readback
+    print('# reg dict-based readback')
     dregb = reg.getreg(asdict=True)
     assert dreg == dregb
 

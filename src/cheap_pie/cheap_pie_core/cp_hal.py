@@ -24,7 +24,7 @@ except:
     import tools.search
     from tools.hal2doc import hal2doc
 
-class cp_hal:
+class cp_hal(object):
     """
     Cheap Pie Hardware Abstraction Layer
     """
@@ -60,6 +60,9 @@ class cp_hal:
         elif isinstance(idx,str):
             return self.regs._asdict()[idx].setreg(value)
         assert False, 'Unsupported indexing!'
+
+    def __repr__(self):
+        return 'CP_HAL: %d registers' % len(self.regs)
 
 ## search methods ###########################################################
 
@@ -121,7 +124,7 @@ class cp_hal:
         outstrlist = []
         for reg,val in field1.items():
             if not field2[reg] == val:
-                f1regstr = self[reg].__repr__(val).split('\n')
+                f1regstr = self[reg].__repr__(val        ).split('\n')
                 f2regstr = self[reg].__repr__(field2[reg]).split('\n')
 
                 for idx in range(len(f1regstr)):
@@ -137,6 +140,8 @@ class cp_hal:
                 print(line)
         else:
             print('No differences found!!!')
+
+        return outstrlist
 
 def test_to_docx():
     """
@@ -158,66 +163,121 @@ def test_cp_hal():
     from cheap_pie_core.cp_cli import cp_cli
     from ast import literal_eval
 
+    print('# hal initialize')
     prms = cp_cli(['-t','dummy'])
     hal = cp_hal(cp_parsers_wrapper(prms,cp_dummy()))
 
-    print('Test register methods...')
-    # hex assignement
+    print('# hal test register methods...')
+    print('# hal hex assignement')
     inval = "0xFFFFFFFF"
     hal.regs.ADC_ANA_CTRL.setreg(inval)
     retval = hex(hal.regs.ADC_ANA_CTRL.getreg())
-    # print('%s' % retval.encode('hex'))
     print(retval)
     assert literal_eval(inval) == literal_eval(retval)
 
-    # decimal assignement
+    print('# hal decimal assignement')
     inval = 2
     hal.regs.ADC_ANA_CTRL.setreg(inval)
     retval = hal.regs.ADC_ANA_CTRL.getreg()
     assert inval == retval
 
-    hal.regs.ADC_ANA_CTRL.display()
-    print('Test bitfield methods...')
+    print('# hal reg representation')
+    hal.regs.ADC_ANA_CTRL
 
+    print('# hal reg display')
+    hal.regs.ADC_ANA_CTRL.display()
+
+    print('# hal reg print')
+    print(hal.regs.ADC_ANA_CTRL)
+
+    print('# hal reg str')
+    print(str(hal.regs.ADC_ANA_CTRL))
+
+    print('# hal test bitfield methods...')
+    print('# hal bitfield display')
     hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.display()
+    print('# hal bitfield display with value')
     hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.display(2)
+    print('# hal bitfield setbit')
     hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.setbit(inval)
     retval = hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.getbit()
     assert inval == retval
 
-    # subscriptable interface
-    hal[0]
-    hal[0][0]
-    hal['ADC_ANA_CTRL']
+    print('# hal subscriptable interface...')
+    print('# hal[0]')
+    print(hal[0])
 
-    # test assignement
-    hal['ADC_ANA_CTRL'] = 1
-    hal['ADC_ANA_CTRL']['ADC_BM'] = 2
-    # dict-based assignement in single register write
-    hal['ADC_ANA_CTRL'] = {'DITHER_EN': 1, 'CHOP_EN': 1, 'INV_CLK': 1}
+    print('# hal[0][0]')
+    print(hal[0][0])
 
-    # test search
-    reg = hal.search_register('ADC_ANA_CTRL')
-    assert len(reg)>0
-    field = hal.search_bitfield('ADC_BM')
-    assert len(field)>0
-    reg = hal.search_address('0x4000702c')
-    assert len(reg)>0
-    reg = hal.search_address('0xF000702c',mask='0x0FFFFFFF')
-    assert len(reg)>0
-    reg = hal.search_address('0xF000702c')
+    print("# hal['ADC_ANA_CTRL']")
+    print(hal['ADC_ANA_CTRL'])
+
+    print('# hal dict-based reg assignement')
+    regval = 1
+    hal['ADC_ANA_CTRL'] = regval
+    assert hal.regs.ADC_ANA_CTRL.getreg() == regval
+
+    print('# hal dict-based bitfield assignement')
+    fieldval = 2
+    hal['ADC_ANA_CTRL']['ADC_BM'] = fieldval
+    assert hal.regs.ADC_ANA_CTRL.bitfields.ADC_BM.getbit() == fieldval
+
+    print('# hal dict-based assignement in single register write')
+    dither = 1
+    chop = 1
+    inv = 1
+    hal['ADC_ANA_CTRL'] = {'DITHER_EN': dither, 'CHOP_EN': chop, 'INV_CLK': inv}
+    assert hal.regs.ADC_ANA_CTRL.bitfields.DITHER_EN.getbit() == dither
+    assert hal.regs.ADC_ANA_CTRL.bitfields.CHOP_EN.getbit() == chop
+    assert hal.regs.ADC_ANA_CTRL.bitfields.INV_CLK.getbit() == inv
+
+    print('# hal search_register')
+    searchreg = 'ADC_ANA_CTRL'
+    reglist = hal.search_register(searchreg)
+    reg = reglist[0]
+    print(reg)
+    assert str(reg) == searchreg
+
+    print('# hal search_bitfield')
+    searchfield = 'ADC_BM'
+    fieldlist = hal.search_bitfield(searchfield)
+    print(fieldlist)
+    field = fieldlist[0]
+    print(field)
+    assert searchfield in field
+
+    print('# hal search_address')
+    searchaddr = '0x4000702c'
+    reg = hal.search_address(searchaddr)
+    print(f'# Register {reg}')
+    addr = hex(hal[reg].addr)
+    print(f'# Address: {addr}')
+    assert addr == searchaddr
+
+    print('# hal search_address with mask')
+    searchaddr = '0xF000702c'
+    searchmask = '0x0FFFFFFF'
+    reg = hal.search_address(searchaddr,mask=searchmask)
+    print(f'# Register {reg}')
+    addr = hex(hal[reg].addr)
+    print(f'# Address: {addr}')
+    assert literal_eval(addr) & literal_eval(searchmask) == literal_eval(searchaddr) & literal_eval(searchmask)
+    reg = hal.search_address(searchaddr)
     assert reg is None
 
-    # test conversion to doc
+    print('# hal conversion to doc')
     test_to_docx()
 
-    # test dump
+    print('# hal dump')
     dump1 = 'dump1.hkl'
     dump2 = 'dump2.hkl'
     hal.dump(dump1)
     hal['ADC_ANA_CTRL']['ADC_BM'] = 3
     hal.dump(dump2)
-    hal.dump_diff(dump1,dump2)
+    diff = hal.dump_diff(dump1,dump2)
+    print(diff)
+    assert len(diff) == 2
 
 if __name__ == '__main__':
     test_cp_hal()

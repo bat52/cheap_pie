@@ -10,7 +10,7 @@ bitfield register class for cheap-pie.
 
 from ast import literal_eval
 
-class cp_bitfield():
+class cp_bitfield(object):
     """A bitfield register class """
     # field width
     width = 1
@@ -74,9 +74,14 @@ class cp_bitfield():
         self.rw = rw
         self.reset = reset
 
-    def _strval(self,fieldval,width=25):
+    def __str__(self,fieldval=None,width=25):
+        """ returns value string of a bitfield from a register value
+        input : regval value of the full register either in decimal or
+        hexadecimal """
         #
-        bitstr = self.fieldname  + ' [' + str(self.width) + '] = ' + hex(fieldval)
+        bitstr = self.fieldname  + ' [' + str(self.width) + ']'
+        if not fieldval is None:
+            bitstr += ' = ' + hex(fieldval)
 
         if self.width > 1:
             msb = str( self.lsb + self.width - 1)
@@ -87,32 +92,24 @@ class cp_bitfield():
         fmtstr = '%%%ds @ %%%ds' % (width,width)
         return fmtstr % (regstr,bitstr)
 
-    def __repr__(self,regval=None):
-        """ displays value of a bitfield from a register value
-        input : regval value of the full register either in decimal or
-        hexadecimal """
+    def __repr__(self, regval = None):
+        """ 
+        displays position of a bitfield in a register 
+        """
         #
         if regval is None:
-            if self.hif is None:
-                regval=0
-            else:
-                regval=self.hif.hifread(self.addr)
-        #
-        # compute field value from register value
-        if isinstance(regval, str):
-            regval=literal_eval(regval)
-        fieldval = (regval & self.mask ) >> (self.lsb)
-
-        outstr= self._strval(fieldval)
-        # print(outstr)
-        return outstr
+            fieldval = None
+        else:
+            fieldval = self.getbit(regval=regval)
+        return self.__str__(fieldval=fieldval)
 
     def display(self,regval=None):
         """
         Display the bitfield
         """
-        print(self)
-        return self
+        fieldval = self.getbit(regval=regval)
+        fieldstr = self.__str__(fieldval=fieldval)
+        print(fieldstr)
 
     def getbit(self,regval=None,echo=False,as_signed=False,*args,**kwargs):
         """ function display(self,regval=None,echo=False,as_signed=False)
@@ -137,10 +134,8 @@ class cp_bitfield():
             fieldmod = (fieldval & (self.mask>>(self.lsb+1)))
             fieldval = fieldsign + fieldmod
 
-        # fieldval=self.value(regval)
         if echo:
-            outstr= self._strval(fieldval)
-            print(outstr)
+            self.display(regval)
         #
         return fieldval
 
@@ -182,8 +177,7 @@ class cp_bitfield():
             self.hif.hifwrite(self.addr,outregval,*args,**kwargs)
         #
         if echo:
-            outstr=self._strval(fieldval)
-            print(outstr)
+            self.display(regval=regval)
         #
         return outregval
 
@@ -192,19 +186,6 @@ class cp_bitfield():
         """ function ret = help(self)
         # displays register comments """
         print(self.comments)
-
-    #@function
-    def value(self,regval=0):
-        """ function ret = value(self,regval)
-        # Returns value of a bitfield from a register value
-        # input : regval value of the full register either in decimal or
-        # hexadecimal """
-        #
-        if isinstance(regval, str):
-            regval=literal_eval(regval)
-        #
-        ret = (regval & self.mask ) >> (self.lsb)
-        return ret
 
     def __index__(self):
         return int(self.getbit())
@@ -228,30 +209,41 @@ def test_cp_bitfield():
         hif = cp_dummy()
     )
 
+    print('# setbit, getbit')
     val = 3
     field.setbit(val)
     assert field.getbit() == val
-    field.value()
-    field.display()
-    field.display(2)
+
+    print('# display')
+    field.display(4)
+
+    print('# str')
+    print(str(field))
+
+    print('# print')
+    print(field)
+    
+    print('# help')
     field.help()
 
-    # signed assignement
+    print('# signed assignement')
     negval = -1
     field.setbit(negval)
     retval = field.getbit(as_signed=True)
     assert negval==retval
 
-    # decimal representation
+    print('# decimal representation')
     print(hex(field))
 
-    # options
+    print('# setbit with echo')
     field.setbit(val,echo=True)
+    
+    print('# setbit with writeback')
     field.setbit(val,writeback=False)
     rv = field.setbit(1,regval=1)
     assert rv==5
 
-    # test assertion
+    print('# test assertion')
     try:
         field.setbit(7)
         assert False, 'Assertion was not raised!!!'
