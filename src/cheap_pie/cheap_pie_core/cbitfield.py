@@ -89,12 +89,12 @@ class cp_bitfield(object):
         else:
             regstr = self.regname + '[' + str(self.lsb) + ']'
 
-        fmtstr = '%%%ds @ %%%ds' % (width,width)
+        fmtstr = '%%%ds @ %%%ds' % (width,width) # pylint: disable=C0209
         return fmtstr % (regstr,bitstr)
 
     def __repr__(self, regval = None):
-        """ 
-        displays position of a bitfield in a register 
+        """
+        displays position of a bitfield in a register
         """
         #
         if regval is None:
@@ -108,7 +108,7 @@ class cp_bitfield(object):
         Display the bitfield
         """
         fieldval = self.getbit(regval=regval)
-        fieldstr = self.__str__(fieldval=fieldval)
+        fieldstr = self.__str__(fieldval=fieldval) # pylint: disable=C2801
         print(fieldstr)
 
     def getbit(self,regval=None,echo=False,as_signed=False,*args,**kwargs):
@@ -194,10 +194,10 @@ def test_cp_bitfield():
     """
     Test function for cp_bitfield class
     """
-    import sys
-    import os.path
+    import sys # pylint: disable=C0415
+    import os.path # pylint: disable=C0415
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-    from transport.cp_dummy_transport import cp_dummy
+    from transport.cp_dummy_transport import cp_dummy # pylint: disable=C0415
 
     field = cp_bitfield(
         regfield = 'fname',
@@ -222,7 +222,7 @@ def test_cp_bitfield():
 
     print('# print')
     print(field)
-    
+
     print('# help')
     field.help()
 
@@ -237,7 +237,7 @@ def test_cp_bitfield():
 
     print('# setbit with echo')
     field.setbit(val,echo=True)
-    
+
     print('# setbit with writeback')
     field.setbit(val,writeback=False)
     rv = field.setbit(1,regval=1)
