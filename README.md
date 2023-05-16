@@ -185,6 +185,9 @@ In conjunction with pyVISA (https://pyvisa.readthedocs.io/en/master/), used for
 instument control, it provides a simple and fully python-contained environment
 for silicon validation.
 
+Graphical Render of bitfield structures
+https://github.com/wavedrom/bitfield
+
 C++ register/bitfields access (including generation from svd)
 https://github.com/thanks4opensource/regbits
 
