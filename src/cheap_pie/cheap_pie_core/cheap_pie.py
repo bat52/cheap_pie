@@ -20,7 +20,7 @@ from cheap_pie_core.cp_hal import cp_hal                  # pylint: disable=C041
 # %reset
 # %run cheap_pie
 
-def main(argv=[]): # pylint: disable=W0102
+def cp_main(argv=[]): # pylint: disable=W0102
     """
     Main cheap_pie function
     """
@@ -64,4 +64,4 @@ def main(argv=[]): # pylint: disable=W0102
     return lhal
 
 if __name__ == '__main__':
-    hal = main(sys.argv[1:])
+    hal = cp_main(sys.argv[1:])

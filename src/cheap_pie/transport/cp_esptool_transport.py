@@ -1,82 +1,80 @@
 #!/usr/bin/python3
-#
+
+""" Esptool Cheap Pie transport module """
+
 # -*- coding: utf-8 -*-
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
+import os
 from ast import literal_eval
 import esptool
-import os
 
-class cp_esptool(object):
-    """ A wrapper around pyocd transport """
+from transport.cp_dummy_transport import cp_dummy # pylint: disable=E0401
+
+class cp_esptool(cp_dummy):
+    """ A wrapper around esptool transport """
     port = None
-    mem = dict()
-    
+
     def __init__(self, port='/dev/ttyUSB0' ):
-        if port is None:
-            self.port = None
-        else:
-            print('Connecting to pyocd probe... ') 
-            self.port = port
-        
+        self.port = port
+
     def hifread(self, addr = '0x3ff00014'):
-        # print self
-        # print addr    
+        """ read register through esptool """
 
         if isinstance(addr,int):
             # convert to string
             addr = hex(addr)
-            
-        if not self.port is None:
+
+        if self.port is None:
+            # fallback to dummy transport
+            ret = cp_dummy.hifread(self,addr)
+        else:
             #  ret = esptool.main( ['--port' , self.port , '--after no_reset', 'read_mem', addr]  )
             # dump value on file... horrible hack because no output available
             tmpfile = 'tmpdump'
-            ret = esptool.main( ['--port' , self.port , '--after', 'no_reset', 'dump_mem', addr, '4', tmpfile]  )
+            ret = esptool.main( # pylint: disable=E1101
+                ['--port' , self.port , '--after',
+                'no_reset', 'dump_mem', addr, '4', tmpfile]
+                               )
 
             if os.path.isfile(tmpfile):
-                f = open(tmpfile, "rb")
-                ret = '0x' + f.read().hex()
-                os.remove(tmpfile)                
+                with open(tmpfile, "rb") as tmpfh:
+                    ret = '0x' + tmpfh.read().hex()
+                os.remove(tmpfile)
             else:
                 ret = 0
 
-            pass
-        else:
-            ret = self.mem[addr]
-            
-        return(ret)
+        return ret
 
-    def hifwrite(self,addr = '0x3ff00014',val = "0x00000352"):
+    def hifwrite(self, addr = '0x3ff00014', val = "0x00000352"):
+        """ write register through esptool """
 
         if isinstance(addr,int):
             addr = hex(addr)
-            
+
         if isinstance(val, int):
             val = hex(val)
-        
-        if not self.port is None:            
-            # ret = esptool.main( ['--port' , self.port , 'write_mem', addr, val ,'0xFFFFFFFF'] )
-            ret = esptool.main( ['--port' , self.port , '--after', 'no_reset' ,'write_mem', addr, val ,'0x0'] )
-            pass
+
+        if self.port is None:
+            # fallback to dummy transport
+            cp_dummy.hifwrite(self,addr,val)
         else:
-            # print hex(addr)
-            self.mem[addr] = val
-            
+            esptool.main( # pylint: disable=E1101
+                ['--port' , self.port , '--after', 'no_reset' ,'write_mem', addr, val ,'0x0']
+                )
+
         return literal_eval( val )
-       
 
 def test_cp_esptool():
-    t = cp_esptool(port= None)
-    # t = cp_esptool()
+    """ Test esptool transport """
+    transport = cp_esptool(port=None)
     addr = '0x3ff00014'
-    val = '2'
-    t.hifwrite(addr=addr,val=val)
-    val=t.hifread(addr = addr)
-    print(val)
-    pass
+    val = 2
+    transport.hifwrite(addr=addr,val=val)
+    readback=transport.hifread(addr = addr)
+    assert readback==val, 'Wrong readback value! val: %x, readback: %x' % (val,readback) # pylint: disable=C0209
 
 if __name__ == '__main__':
     test_cp_esptool()
-    pass

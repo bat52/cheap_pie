@@ -7,10 +7,12 @@ import argparse
 import sys
 from ast import literal_eval
 from shutil import copyfile
+import subprocess
+from packaging import version
 
 import pyverilator
 
-def cli(args=[]):
+def cli(args):
     """ Command Line Interface for pyverilator transport class """
     parser = argparse.ArgumentParser(description='rdl2verilog pyverilator ')
     # register format options
@@ -144,7 +146,6 @@ class cp_pyverilator_transport():
 
 def verilator_version():
     """ Return verilator version """
-    import subprocess
     result = subprocess.run(['verilator', '--version'], stdout=subprocess.PIPE)
     ver = result.stdout.split()[1]
     return ver.decode("utf-8")
@@ -153,16 +154,15 @@ def verilator_version_ok():
     """ True if the installed verilator version works as transport for cheap_pie """
     # check Verilated::flushCall() exist
     # https://github.com/chipsalliance/chisel3/issues/1565
-    from packaging import version
     ver = verilator_version()
     # print(ver)
-    if ( version.parse(ver) < version.parse("4.036") or
-         version.parse(ver) > version.parse("4.102")):
-        return True
-    else:
-        return False
 
-def test_cp_pyverilator(args = []):
+    return (
+            version.parse(ver) < version.parse("4.036") or
+            version.parse(ver) > version.parse("4.102")
+            )
+
+def test_cp_pyverilator(args=[]): # pylint: disable=W0102
     """ Test pyverilator transport """
     if verilator_version_ok():
         prms = cli(args)

@@ -265,7 +265,7 @@ def test_cp_hal(): # pylint: disable=R0914,R0915
     assert (literal_eval(addr)       & literal_eval(searchmask) ==
             literal_eval(searchaddr) & literal_eval(searchmask) )
     reg = hal.search_address(searchaddr)
-    assert reg is None
+    assert reg==''
 
     print('# hal conversion to doc')
     test_to_docx()

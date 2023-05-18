@@ -21,3 +21,4 @@ src/cheap_pie/devices/rdl/*.xml
 *.log
 src/*.py
 src/*.xml
+*.uvm

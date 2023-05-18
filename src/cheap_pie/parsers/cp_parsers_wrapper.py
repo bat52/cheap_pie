@@ -47,7 +47,7 @@ def cp_parsers_wrapper(prms,hif=None, base_address_offset = "0x00000000"):
 
 def test_cp_parsers_wrapper():
     """ Test function for parsers wrapper """
-    from cheap_pie_core.cp_cli import cp_cli
+    from cheap_pie_core.cp_cli import cp_cli # pylint: disable=E0401,C0415
     prms = cp_cli()
     cp_parsers_wrapper(prms)
 

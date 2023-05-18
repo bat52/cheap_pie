@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
+""" Cheap Pie module to convert .rdl register description into IP-XACT or UVM """
+
 import sys
 import os
 import argparse
 
 from systemrdl import RDLCompiler, RDLCompileError
-# from peakrdl.verilog import VerilogExporter
 
 try:
     # newer version
@@ -17,40 +18,45 @@ except:
     from peakrdl.uvm import UVMExporter
 
 def cli(args):
+    """ Command Line parse to convert .rdl register description into IP-XACT or UVM """
     parser = argparse.ArgumentParser(description='rdl2any')
+
     # register format options
-    parser.add_argument("-f", "--fname", help="register file description .rdl", action='store', type = str, default="./devices/rdl/basic.rdl")
-    parser.add_argument("-ofmt", "--out-format", help="output format", action='store', type = str, default="ipxact", choices=["ipxact","uvm"])
+    parser.add_argument("-f", "--fname", help="register file description .rdl",
+                        action='store', type = str, default="./devices/rdl/basic.rdl")
+    parser.add_argument("-ofmt", "--out-format", help="output format",
+                        action='store', type = str, default="ipxact", choices=["ipxact","uvm"])
 
     return parser.parse_args(args)
 
-def rdl2any(args=[]):
-    p = cli(args)
+def rdl2any(args):
+    """  convert .rdl register description into IP-XACT or UVM """
+    prms = cli(args)
     rdlc = RDLCompiler()
 
     try:
-        rdlc.compile_file(p.fname)
+        rdlc.compile_file(prms.fname)
         root = rdlc.elaborate()
     except RDLCompileError:
         sys.exit(1)
 
-    if p.out_format == 'ipxact': 
+    if prms.out_format == 'ipxact':
         exporter = IPXACTExporter()
         ext = '.xml'
-    elif p.out_format == 'uvm': 
+    elif prms.out_format == 'uvm':
         exporter = UVMExporter()
         ext = '.uvm'
     else:
-        print('Unsupported output format!')
-        assert(False)
+        assert False, f'Unsupported output format {prms.out_format} !'
 
-    base = os.path.splitext(p.fname)[0]
+    base = os.path.splitext(prms.fname)[0]
     outfname = base + ext
     print('output file: ' + outfname)
     exporter.export(root, outfname )
     return outfname
 
 def test_rdl2any():
+    """ test convert .rdl register description into IP-XACT and UVM """
     rdl2any(['-ofmt','ipxact'])
     rdl2any(['-ofmt','uvm'])
 
