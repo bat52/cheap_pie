@@ -1,3 +1,4 @@
+""" Cheap Pie tools """
 try:
     # cheap_pie installed
     import cheap_pie.tools.hal2doc

@@ -23,6 +23,7 @@ from parsers.ipxact_parse import test_ipxact_parse                  # pylint: di
 from parsers.ipyxact_parse import test_ipyxact_parse                # pylint: disable=C0413,E0401
 from parsers.rdl_parse import test_rdl_parse                        # pylint: disable=C0413,E0401
 from parsers.cp_parsers_wrapper import test_cp_parsers_wrapper      # pylint: disable=C0413,E0401
+from parsers.xml_xslt import test_xml_xslt                          # pylint: disable=C0413,E0401
 
 # tools
 from tools.hal2doc import test_hal2doc                              # pylint: disable=C0413,E0401
@@ -71,6 +72,7 @@ class CheapPieMethods(unittest.TestCase):
         test_ipxact_parse()
         test_ipyxact_parse()
         test_rdl_parse()
+        test_xml_xslt()
         test_cp_parsers_wrapper()
 
     def test_tools(self):

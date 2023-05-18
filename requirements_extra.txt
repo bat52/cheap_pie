@@ -5,3 +5,4 @@ esptool
 pyverilator
 # other
 packaging # for verilator version check
+lxml # for xlst ipxact conversions

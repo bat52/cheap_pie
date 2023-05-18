@@ -26,6 +26,7 @@ setup(
           'peakrdl-ipxact',
           'peakrdl-uvm',
           'peakrdl-verilog',
+          # 'lxml', # for xlst ipxact conversions
           # transport layers
           #'pylink-square',
           #'pyocd',

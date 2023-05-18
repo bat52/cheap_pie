@@ -28,7 +28,7 @@ def cp_parsers_wrapper(prms,hif=None, base_address_offset = "0x00000000"):
         hal = svd_parse_repo(fname=fname,hif=hif,vendor=prms.vendor,
                         base_address_offset=base_address_offset)
     elif prms.format == 'svd':
-        # parser build for CMSIS-SVD xml file format    
+        # parser build for CMSIS-SVD xml file format
         hal = svd_parse(fname=fname,hif=hif,vendor=prms.vendor,
                         base_address_offset=base_address_offset)
     elif prms.format == 'ipxact':
