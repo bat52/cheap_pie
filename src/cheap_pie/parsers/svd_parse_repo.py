@@ -22,16 +22,16 @@ from ast import literal_eval
 from collections import namedtuple
 from cmsis_svd.parser import SVDParser
 
-import sys
-import os.path
+import sys     # pylint: disable=C0411
+import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cbitfield   import cp_bitfield
-from cheap_pie_core.cp_register import cp_register
-from parsers.name_subs import name_subs
+from cheap_pie_core.cbitfield   import cp_bitfield # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_register import cp_register # pylint: disable=C0413,E0401
+from parsers.name_subs import name_subs            # pylint: disable=C0413,E0401
 
-def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"):
-    """ Cheap Pie parser function for .svd files using SVDParser module """    
+def svd_parse_repo(fname,vendor=None,hif=None, base_address_offset = "0x00000000"):
+    """ Cheap Pie parser function for .svd files using SVDParser module """
     ## read input file ########################################################
     if vendor is None:
         svd = SVDParser.for_xml_file(fname)
@@ -95,12 +95,10 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"):
 def test_svd_parse_repo():
     """ Test Function for .svd parser based of SVDParser module """
     print('Testing QN9080 with repo parser...')
-
-    from parsers.svd_parse_repo import svd_parse
-    svd_parse(fname="./devices/QN908XC.svd")
+    svd_parse_repo(fname="./devices/QN908XC.svd")
 
     print('Testing K20 with repo parser...')
-    svd_parse(fname='MK20D7.svd',vendor='Freescale')
+    svd_parse_repo(fname='MK20D7.svd',vendor='Freescale')
 
 if __name__ == '__main__':
     test_svd_parse_repo()

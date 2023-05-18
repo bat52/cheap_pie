@@ -10,7 +10,7 @@ bitfield register class for cheap-pie.
 
 from ast import literal_eval
 
-class cp_bitfield(object):
+class cp_bitfield():  # pylint: disable=R0902
     """A bitfield register class """
     # field width
     width = 1
@@ -42,7 +42,7 @@ class cp_bitfield(object):
     # reset value
     reset = 0
 
-    def __init__(self, regfield="",regaddr=0, regname="", width="1",
+    def __init__(self, regfield="",regaddr=0, regname="", width="1", # pylint: disable=R0913
                  bit_offset="0", comments="",hif=None, rw = "rw", reset=0):
 
         if isinstance(width,str):
@@ -121,7 +121,7 @@ class cp_bitfield(object):
             if self.hif is None:
                 regval=0
             else:
-                regval=self.hif.hifread(self.addr)
+                regval=self.hif.hifread(self.addr,*args,**kwargs)
 
         # compute field value from register value
         if isinstance(regval, str):
@@ -139,7 +139,7 @@ class cp_bitfield(object):
         #
         return fieldval
 
-    def setbit(self,fieldval=0,echo=False, writeback=True, regval=None,*args,**kwargs):
+    def setbit(self,fieldval=0,echo=False, writeback=True, regval=None,*args,**kwargs): # pylint: disable=W1113
         """ function display(self,regval)
         # displays value of a bitfield from a register value
         # input : regval value of the full register either in decimal or
@@ -197,7 +197,7 @@ def test_cp_bitfield():
     import sys # pylint: disable=C0415
     import os.path # pylint: disable=C0415
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-    from transport.cp_dummy_transport import cp_dummy # pylint: disable=C0415
+    from transport.cp_dummy_transport import cp_dummy # pylint: disable=C0415, disable=E0401
 
     field = cp_bitfield(
         regfield = 'fname',
@@ -238,10 +238,18 @@ def test_cp_bitfield():
     print('# setbit with echo')
     field.setbit(val,echo=True)
 
-    print('# setbit with writeback')
-    field.setbit(val,writeback=False)
-    rv = field.setbit(1,regval=1)
-    assert rv==5
+    print('# setbit without writeback')
+    val=1
+    field.setbit(val)
+    assert field.getbit() == val
+    newval = 3
+    field.setbit(newval,writeback=False)
+    assert field.getbit() == val
+
+    print('# setbit with regval')
+    val=3
+    regretval = field.setbit(val)
+    assert field.setbit(val,regval=regretval) == regretval
 
     print('# test assertion')
     try:

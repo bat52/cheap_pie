@@ -8,13 +8,13 @@ from ast import literal_eval
 from collections import namedtuple
 import untangle # for parsing xml
 
-import sys
-import os.path
+import sys     # pylint: disable=C0411
+import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cbitfield   import cp_bitfield
-from cheap_pie_core.cp_register import cp_register
-from parsers.name_subs import name_subs
+from cheap_pie_core.cbitfield   import cp_bitfield # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_register import cp_register # pylint: disable=C0413,E0401
+from parsers.name_subs import name_subs            # pylint: disable=C0413,E0401
 
 def ipxact_remove_prefix(ipx):
     """ remove ipxact or spirit prefix"""
@@ -24,12 +24,11 @@ def ipxact_remove_prefix(ipx):
         for elm in ipx.children:
             # remove all suffixes
             for repl in replist:
-                elm._name = elm._name.replace(repl,'')
+                elm._name = elm._name.replace(repl,'') # pylint: disable=W0212
             # remove recursively
             ipxact_remove_prefix(elm)
 
     return ipx
-    pass
 
 def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     """ Cheap Pie native module parser for IP-XACT """
@@ -102,8 +101,8 @@ def test_ipxact_parse():
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        fname=sys.argv[1]
+        LFNAME=sys.argv[1]
     else:
-        fname="./devices/my_subblock.xml"
-    print(fname)
-    print(ipxact_parse(fname))
+        LFNAME="./devices/my_subblock.xml"
+    print(LFNAME)
+    print(ipxact_parse(LFNAME))

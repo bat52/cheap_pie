@@ -9,6 +9,12 @@ import os
 import sys
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
+from parsers.svd_parse_repo import svd_parse_repo # pylint: disable=C0415,E0401,C0413
+from parsers.svd_parse import svd_parse           # pylint: disable=C0415,E0401,C0413
+from parsers.ipxact_parse import ipxact_parse     # pylint: disable=C0415,E0401,C0413
+from parsers.ipyxact_parse import ipyxact_parse   # pylint: disable=C0415,E0401,C0413
+from parsers.rdl_parse import rdl_parse           # pylint: disable=C0415,E0401,C0413
+
 def cp_parsers_wrapper(prms,hif=None, base_address_offset = "0x00000000"):
     """ Cheap Pie function wrapper around all parsers """
     if prms.vendor is None:
@@ -19,24 +25,19 @@ def cp_parsers_wrapper(prms,hif=None, base_address_offset = "0x00000000"):
         fname = prms.regfname
     if prms.format == 'cmsis-svd':
         # parser build for CMSIS-SVD xml file format
-        from parsers.svd_parse_repo import svd_parse
-        hal = svd_parse(fname=fname,hif=hif,vendor=prms.vendor,
+        hal = svd_parse_repo(fname=fname,hif=hif,vendor=prms.vendor,
                         base_address_offset=base_address_offset)
     elif prms.format == 'svd':
-        # parser build for CMSIS-SVD xml file format
-        from parsers.svd_parse_repo import svd_parse
+        # parser build for CMSIS-SVD xml file format    
         hal = svd_parse(fname=fname,hif=hif,vendor=prms.vendor,
                         base_address_offset=base_address_offset)
     elif prms.format == 'ipxact':
-        from parsers.ipxact_parse import ipxact_parse
         hal = ipxact_parse(fname=fname,hif=hif,
                            base_address_offset=base_address_offset)
     elif prms.format == 'ipyxact':
-        from parsers.ipyxact_parse import ipxact_parse
-        hal = ipxact_parse(fname=fname,hif=hif,
+        hal = ipyxact_parse(fname=fname,hif=hif,
                            base_address_offset=base_address_offset)
     elif prms.format == 'rdl':
-        from parsers.rdl_parse import rdl_parse
         hal = rdl_parse(fname=fname,hif=hif,
                         base_address_offset=base_address_offset)
     else:

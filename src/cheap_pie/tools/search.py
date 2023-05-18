@@ -46,8 +46,8 @@ def address(hal, address, mask='0xFFFFFFFF'):
 
 def test_search():
     print('Testing search...')
-    from parsers.svd_parse_repo import svd_parse
-    hal = svd_parse(fname="./devices/QN908XC.svd", hif=None)
+    from parsers.svd_parse_repo import svd_parse_repo
+    hal = svd_parse_repo(fname="./devices/QN908XC.svd", hif=None)
 
     print('## ADC registers:')
     ret = register(hal,'ADC')

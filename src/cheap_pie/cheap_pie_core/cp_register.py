@@ -13,7 +13,7 @@ from collections import namedtuple
 from ast import literal_eval
 
 try:
-    # cheap_pie installed with pip 
+    # cheap_pie installed with pip
     from cheap_pie.cheap_pie_core.cbitfield import cp_bitfield
 except:
     try:
@@ -21,7 +21,7 @@ except:
     except:
         from cbitfield import cp_bitfield
 
-class cp_register(object):
+class cp_register(): # pylint: disable=R0902
     """
     Register Class for Cheap Pie
     """
@@ -35,7 +35,7 @@ class cp_register(object):
     addr_offset = 0
     addr_base   = 0
     #
-    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0):
+    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0): # pylint: disable=R0913
         # address
         self.addr = regaddr
 
@@ -84,7 +84,7 @@ class cp_register(object):
 
         return retval
 
-    def setreg(self,regval = 0, echo =False, *args,**kwargs):
+    def setreg(self,regval = 0, echo =False, *args,**kwargs): # pylint: disable=W1113
         """ function setreg(self,regval)
         %
         % Displays value of a register from a register value
@@ -142,11 +142,11 @@ class cp_register(object):
         return byte.setbit(byteval)
 
     def help(self,width=25):
-        """ function ret = help(self)   
+        """ function ret = help(self)
         # displays register comments """
         print(self.comments)
 
-        fmtstr = '%%%ds: %%s' % width
+        fmtstr = '%%%ds: %%s' % width # pylint: disable=C0209
         for field in self.bitfields:
             print( fmtstr % (field.fieldname,''))
 
@@ -171,7 +171,7 @@ class cp_register(object):
         if regval is None:
             # read register value
             regval = self.getreg()
-        outstr = self.__repr__(regval)
+        outstr = self.__repr__(regval) # pylint: disable=C2801
         print(outstr)
         # return outstr
 
@@ -190,7 +190,7 @@ class cp_register(object):
         Find a child element by name
         """
         if name:
-            return [e for e in self.bitfields if e._name == name]
+            return [e for e in self.bitfields if e._name == name] # pylint: disable=W0212
 
         return self.bitfields
 
@@ -225,14 +225,13 @@ class cp_register(object):
     def __index__(self):
         return int(self.getreg())
 
-def test_cp_register():
+def test_cp_register(): # pylint: disable=R0914,R0915
     """ Cheap Pie test for cp_register class """
-    import sys
-    import os.path
+    import sys # pylint: disable=C0415
+    import os.path # pylint: disable=C0415
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-    from transport.cp_dummy_transport import cp_dummy
-    from cheap_pie_core.cbitfield import cp_bitfield
-    from random import randint
+    from random import randint # pylint: disable=C0415
+    from transport.cp_dummy_transport import cp_dummy # pylint: disable=C0415,E0401
 
     reg = cp_register(
         regname='regname',
@@ -292,8 +291,8 @@ def test_cp_register():
     reg.help()
 
     print('# reg item access')
-    reg[0]
-    reg['fname']
+    reg[0]       # pylint: disable=W0104
+    reg['fname'] # pylint: disable=W0104
 
     print('# item assignement')
     reg[0] = 1

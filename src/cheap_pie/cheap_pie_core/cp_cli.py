@@ -9,7 +9,7 @@ Cheap Pie Command Line Interface
 import argparse
 import sys
 
-def cp_cli(args=[]):
+def cp_cli(args=[]): # pylint: disable=W0102
     """
     Cheap Pie Command Line Interface
     """

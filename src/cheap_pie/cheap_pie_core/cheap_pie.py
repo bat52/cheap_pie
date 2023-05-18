@@ -5,22 +5,22 @@ This file is part of cheap_pie, a python tool for chip validation
  email: marcomerli@gmail.com
 """
 
+import os
+import sys
+sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+
+from parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_banner import cp_banner            # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_hal import cp_hal                  # pylint: disable=C0413,E0401
+
 # Ipython autoreload
 # %load_ext autoreload
 # %autoreload 2
 # %reset
 # %run cheap_pie
 
-import os
-import sys
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-
-from parsers.cp_parsers_wrapper import cp_parsers_wrapper
-from cheap_pie_core.cp_banner import cp_banner
-from cheap_pie_core.cp_cli import cp_cli
-from cheap_pie_core.cp_hal import cp_hal
-
-def main(argv=[]):
+def main(argv=[]): # pylint: disable=W0102
     """
     Main cheap_pie function
     """
@@ -29,39 +29,39 @@ def main(argv=[]):
     #
     ## input parameters ###########################################################
     print('Parsing input arguments...')
-    p = cp_cli(argv)
+    prms = cp_cli(argv)
 
     ## transport hif interface %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     print('Initialising Host Interface...')
 
-    # init jlink transport
-    if p.transport == 'jlink': # disable jlink for testing
-        from transport.cp_jlink_transport import cp_jlink
-        hif = cp_jlink(device = p.device )
-    elif p.transport == 'dummy':
-        from transport.cp_dummy_transport import cp_dummy
+    # init jlink transport: importing under if case allows not installing all transport libraries
+    if prms.transport == 'jlink': # disable jlink for testing
+        from transport.cp_jlink_transport import cp_jlink # pylint: disable=C0413,C0415,E0401
+        hif = cp_jlink(device = prms.device )
+    elif prms.transport == 'dummy':
+        from transport.cp_dummy_transport import cp_dummy # pylint: disable=C0413,C0415,E0401
         hif = cp_dummy()
-    elif p.transport == 'ocd':
-        from transport.cp_pyocd_transport import cp_pyocd
-        hif = cp_pyocd(device = p.device )
-    elif p.transport == 'esptool':
-        from transport.cp_esptool_transport import cp_esptool
-        hif = cp_esptool(port = p.port )
-    elif p.transport == 'verilator':
-        from transport.cp_pyverilator_transport import cp_pyverilator_transport
-        hif = cp_pyverilator_transport( p.top_verilog )
+    elif prms.transport == 'ocd':
+        from transport.cp_pyocd_transport import cp_pyocd # pylint: disable=C0413,C0415,E0401
+        hif = cp_pyocd(device = prms.device )
+    elif prms.transport == 'esptool':
+        from transport.cp_esptool_transport import cp_esptool # pylint: disable=C0413,C0415,E0401
+        hif = cp_esptool(port = prms.port )
+    elif prms.transport == 'verilator':
+        from transport.cp_pyverilator_transport import cp_pyverilator_transport # pylint: disable=C0413,C0415,E0401
+        hif = cp_pyverilator_transport( prms.top_verilog )
     else:
         hif=None
-        assert False, f'Invalid transport: {p.transport}'
+        assert False, f'Invalid transport: {prms.transport}'
 
     ## init chip ##################################################################
     print('Initialising Hardware Abstraction Layer...')
-    hal = cp_hal( cp_parsers_wrapper( p, hif=hif ) )
+    lhal = cp_hal( cp_parsers_wrapper( prms, hif=hif ) )
 
     ## welcome ####################################################################
     print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')
 
-    return hal
+    return lhal
 
 if __name__ == '__main__':
     hal = main(sys.argv[1:])

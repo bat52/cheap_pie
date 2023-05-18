@@ -21,21 +21,21 @@ from ast import literal_eval
 from collections import namedtuple
 import untangle # for parsing xml
 
-import sys
-import os.path
+import sys     # pylint: disable=C0411
+import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cbitfield   import cp_bitfield
-from cheap_pie_core.cp_register import cp_register
-from parsers.name_subs import name_subs
+from cheap_pie_core.cbitfield   import cp_bitfield  # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_register import cp_register  # pylint: disable=C0413,E0401
+from parsers.name_subs import name_subs             # pylint: disable=C0413,E0401
 
-def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"):
-    """ Cheap Pie native parser for .svd files """    
+def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): # pylint: disable=W0613
+    """ Cheap Pie native parser for .svd files """
     ## read input file ########################################################
     svd = untangle.parse(fname)
 
     ## loop over lines ########################################################
-    outdict = dict()
+    outdict = {}
 
     for periph in svd.device.peripherals.peripheral:
         # print(periph.name.cdata)
@@ -86,7 +86,7 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"):
     # convert output dictionary into structure
     return namedtuple("HAL", outdict.keys())(*outdict.values())
 
-def test_svd_parse(argv=[]):
+def test_svd_parse(argv=[]): # pylint: disable=W0102
     """ test function for .svd parser """
     if len(argv) > 1:
         fname=argv[1]

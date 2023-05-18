@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" Cheap Pie parser module for IP-XACT structure with ipyxact """   
+""" Cheap Pie parser module for IP-XACT structure with ipyxact """
 
 ## this file is part of cheap_pie, a python tool for chip validation
 ## author: Marco Merlin
@@ -7,18 +7,18 @@
 
 from ast import literal_eval
 from collections import namedtuple
-from ipyxact.ipyxact import Component
+from ipyxact.ipyxact import Component              # pylint: disable=E0611
 
-import sys
-import os.path
+import sys                                         # pylint: disable=C0411
+import os.path                                     # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cbitfield   import cp_bitfield
-from cheap_pie_core.cp_register import cp_register
-from parsers.name_subs import name_subs
+from cheap_pie_core.cbitfield   import cp_bitfield # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_register import cp_register # pylint: disable=C0413,E0401
+from parsers.name_subs import name_subs            # pylint: disable=C0413,E0401
 
-def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
-    """ Cheap Pie parser for IP-XACT structure with ipyxact """   
+def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
+    """ Cheap Pie parser for IP-XACT structure with ipyxact """
     ## read input file ########################################################
     xml = Component()
     xml.load(fname)
@@ -73,16 +73,18 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     return namedtuple("HAL", outdict.keys())(*outdict.values())
 
 def test_ipyxact_parse():
-    """ Test function for IP-XACT parser with ipyxact """   
-    ipxact_parse("./devices/my_subblock.xml")
-    # ipxact_parse("./devices/leon2_creg.xml") # ValueError: invalid literal for int() with base 10: '4 * (2 ** 10)'
-    ipxact_parse("./devices/generic_example.xml")
+    """ Test function for IP-XACT parser with ipyxact """
+    ipyxact_parse("./devices/my_subblock.xml")
+    ipyxact_parse("./devices/generic_example.xml")
+
+    # ipyxact_parse("./devices/leon2_creg.xml")
+    # ValueError: invalid literal for int() with base 10: '4 * (2 ** 10)'
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        fname=sys.argv[1]
+        FNAME=sys.argv[1]
     else:
-        fname="./devices/my_subblock.xml"
-    print(fname)
-    hal = ipxact_parse(fname)
+        FNAME="./devices/my_subblock.xml"
+    print(FNAME)
+    hal = ipyxact_parse(FNAME)
     print(hal)

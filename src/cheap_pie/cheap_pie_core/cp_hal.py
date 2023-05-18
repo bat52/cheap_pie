@@ -11,9 +11,9 @@ Cheap Pie Hardware Abstraction Layer
 import hickle as hkl
 
 try:
-    # cheap_pie installed with pip 
+    # cheap_pie installed with pip
     from cheap_pie.transport.cp_dummy_transport import cp_dummy
-    import cheap_pie.tools.search
+    import cheap_pie.tools.search # pylint: disable=W0611
     from cheap_pie.tools.hal2doc import hal2doc
 
 except:
@@ -24,7 +24,7 @@ except:
     import tools.search
     from tools.hal2doc import hal2doc
 
-class cp_hal(object):
+class cp_hal():
     """
     Cheap Pie Hardware Abstraction Layer
     """
@@ -50,19 +50,19 @@ class cp_hal(object):
     def __getitem__(self, idx):
         if isinstance(idx,int):
             return self.regs[idx]
-        elif isinstance(idx,str):
+        if isinstance(idx,str):
             return self.regs._asdict()[idx]
         assert False,'Unsupported indexing!'
 
     def __setitem__(self, idx, value):
         if isinstance(idx,int):
             return self.regs[idx].setreg(value)
-        elif isinstance(idx,str):
+        if isinstance(idx,str):
             return self.regs._asdict()[idx].setreg(value)
         assert False, 'Unsupported indexing!'
 
     def __repr__(self):
-        return 'CP_HAL: %d registers' % len(self.regs)
+        return 'CP_HAL: %d registers' % len(self.regs) # pylint: disable=C0209
 
 ## search methods ###########################################################
 
@@ -70,7 +70,7 @@ class cp_hal(object):
         """
         Search bitfields which name contains a specified string
         """
-        return tools.search.bitfield(self.regs,field,case_sensitive=case_sensitive)
+        return tools.search.bitfield(self.regs,field,case_sensitive=case_sensitive) # pylint: disable=E0601
 
     def search_register(self,reg,case_sensitive=False):
         """
@@ -115,7 +115,7 @@ class cp_hal(object):
         """
         Perform a diff on two dumped .hkl files.
         """
-        fmtstr = '%%%ds |%%%ds' % (width,width)
+        fmtstr = '%%%ds |%%%ds' % (width,width) # pylint: disable=C0209
 
         field1 = hkl.load(f1name)
         field2 = hkl.load(f2name)
@@ -124,8 +124,8 @@ class cp_hal(object):
         outstrlist = []
         for reg,val in field1.items():
             if not field2[reg] == val:
-                f1regstr = self[reg].__repr__(val        ).split('\n')
-                f2regstr = self[reg].__repr__(field2[reg]).split('\n')
+                f1regstr = self[reg].__repr__(val        ).split('\n') # pylint: disable=C2801
+                f2regstr = self[reg].__repr__(field2[reg]).split('\n') # pylint: disable=C2801
 
                 for idx in range(len(f1regstr)):
                     if not f1regstr[idx]==f2regstr[idx]:
@@ -147,21 +147,21 @@ def test_to_docx():
     """
     Test Function for Cheap Pie HAL to .docx
     """
-    from parsers.cp_parsers_wrapper import cp_parsers_wrapper
-    from cheap_pie_core.cp_cli import cp_cli
+    from parsers.cp_parsers_wrapper import cp_parsers_wrapper  # pylint: disable=C0415,C0413,E0401
+    from cheap_pie_core.cp_cli import cp_cli                   # pylint: disable=C0415,C0413,E0401
 
     prms = cp_cli(['-t','dummy','-rf','my_subblock.xml','-fmt','ipxact'])
     hal = cp_hal(cp_parsers_wrapper(prms))
 
     hal.to_docx()
 
-def test_cp_hal():
+def test_cp_hal(): # pylint: disable=R0914,R0915
     """
     Test Function for Cheap Pie Hardware Abstraction Layer
     """
-    from parsers.cp_parsers_wrapper import cp_parsers_wrapper
-    from cheap_pie_core.cp_cli import cp_cli
-    from ast import literal_eval
+    from ast import literal_eval # pylint: disable=C0415
+    from parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0415,E0401
+    from cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0415,E0401
 
     print('# hal initialize')
     prms = cp_cli(['-t','dummy'])
@@ -182,7 +182,7 @@ def test_cp_hal():
     assert inval == retval
 
     print('# hal reg representation')
-    hal.regs.ADC_ANA_CTRL
+    hal.regs.ADC_ANA_CTRL # pylint: disable=W0104
 
     print('# hal reg display')
     hal.regs.ADC_ANA_CTRL.display()
@@ -262,7 +262,8 @@ def test_cp_hal():
     print(f'# Register {reg}')
     addr = hex(hal[reg].addr)
     print(f'# Address: {addr}')
-    assert literal_eval(addr) & literal_eval(searchmask) == literal_eval(searchaddr) & literal_eval(searchmask)
+    assert (literal_eval(addr)       & literal_eval(searchmask) ==
+            literal_eval(searchaddr) & literal_eval(searchmask) )
     reg = hal.search_address(searchaddr)
     assert reg is None
 

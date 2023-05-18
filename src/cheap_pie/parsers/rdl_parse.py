@@ -8,8 +8,8 @@ import sys
 import os.path
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from parsers.ipyxact_parse import ipxact_parse
-from tools.rdl2any import rdl2any
+from parsers.ipyxact_parse import ipyxact_parse # pylint: disable=C0413,E0401
+from tools.rdl2any import rdl2any               # pylint: disable=C0413,E0401
 
 def rdl_parse(fname,hif=None,base_address_offset = "0x00000000" ):
     """ Cheap Pie function to parse .rdl files """
@@ -17,7 +17,7 @@ def rdl_parse(fname,hif=None,base_address_offset = "0x00000000" ):
     # convert rdl to ipxact
     ipxact_fname = rdl2any(['-f',fname,'-ofmt','ipxact'])
     # parse ipxact
-    return ipxact_parse(ipxact_fname,hif=hif, base_address_offset=base_address_offset)
+    return ipyxact_parse(ipxact_fname,hif=hif, base_address_offset=base_address_offset)
 
 def test_rdl_parse():
     """ Cheap Pie function to test .rdl file parser """
@@ -26,9 +26,9 @@ def test_rdl_parse():
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        fname=sys.argv[1]
+        FNAME=sys.argv[1]
     else:
-        fname="./devices/rdl/basic.rdl"
-    print(fname)
-    hal = rdl_parse(fname)
+        FNAME="./devices/rdl/basic.rdl"
+    print(FNAME)
+    hal = rdl_parse(FNAME)
     print(hal)
