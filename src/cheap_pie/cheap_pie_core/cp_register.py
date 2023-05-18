@@ -21,6 +21,9 @@ except:
     except:
         from cbitfield import cp_bitfield
 
+def dict2namedtuple(outdict,tuplename="HAL"):
+    """ Convert a dictionary into a namedtuple """
+    return namedtuple(tuplename, outdict.keys())(*outdict.values())
 class cp_register(): # pylint: disable=R0902
     """
     Register Class for Cheap Pie
@@ -177,13 +180,21 @@ class cp_register(): # pylint: disable=R0902
 
     def addfield(self, field):
         """ Add a field to a register """
+        assert isinstance(field,cp_bitfield)
         self.dictfields[field.fieldname] = field
+
+    def addfield_cp(self, regfield, regaddr,regname,width,offset,comments='',hif=None):
+        """ Add a field to a register """
+        self.addfield(
+            cp_bitfield(regfield,regaddr,regname,width,offset,comments,hif)
+            )
 
     def dictfield2struct(self):
         """ Convert the list of bitfields into a namedtuple """
         if len(self.dictfields) > 0:
-            self.bitfields = namedtuple(self.regname,
-                                        self.dictfields.keys())(*self.dictfields.values())
+            self.bitfields = dict2namedtuple(
+                self.dictfields, tuplename=self.regname
+            )
 
     def get_bitfields(self, name=None):
         """

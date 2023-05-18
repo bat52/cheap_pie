@@ -12,9 +12,8 @@ import sys                                         # pylint: disable=C0411
 import os.path                                     # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cbitfield   import cp_bitfield # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_register import cp_register # pylint: disable=C0413,E0401
-from parsers.common import name_subs,dict2namedtuple # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_register import cp_register, dict2namedtuple # pylint: disable=C0413,E0401
+from parsers.common import name_subs                                # pylint: disable=C0413,E0401
 
 def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     """ Cheap Pie parser for IP-XACT structure with ipyxact """
@@ -39,22 +38,25 @@ def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                     # new register
                     regname = name_subs(f'{periph.name}_{reg.name}')
                     regaddr=reg.addressOffset + periph.baseAddress + literal_eval(base_address_offset)
-                    comments=reg.description
-                    struct_register=cp_register(regname,regaddr,comments,hif)
+                    struct_register=cp_register(
+                        regname=regname,
+                        regaddr=regaddr,
+                        comments=reg.description,
+                        hif=hif)
 
                     if hasattr(reg,'field'):
                         for field in reg.field :
                             if not field is None:
-                                regfield=name_subs(field.name)
-
-                                csv_width=field.bitWidth
-                                bitoffset=field.bitOffset
-                                comments=field.description
-
                                 # Create new field class
-                                class_regfield=cp_bitfield(
-                                    regfield,regaddr,regname,csv_width,bitoffset,comments,hif)
-                                struct_register.addfield(class_regfield)
+                                struct_register.addfield_cp(
+                                    regfield = name_subs(field.name),
+                                    regaddr = regaddr,
+                                    regname = regname,
+                                    width = field.bitWidth,
+                                    offset=field.bitOffset,
+                                    comments=field.description,
+                                    hif=hif
+                                    )
 
             # create last register, if existing
             if 'regname' in locals():

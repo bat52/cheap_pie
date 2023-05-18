@@ -24,9 +24,8 @@ import sys     # pylint: disable=C0411
 import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cbitfield   import cp_bitfield  # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_register import cp_register  # pylint: disable=C0413,E0401
-from parsers.common import name_subs, dict2namedtuple             # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_register import cp_register, dict2namedtuple  # pylint: disable=C0413,E0401
+from parsers.common import name_subs                                 # pylint: disable=C0413,E0401
 
 def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): # pylint: disable=W0613
     """ Cheap Pie native parser for .svd files """
@@ -52,29 +51,29 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
 
                     # new register
                     regname = name_subs(f'{periph.name.cdata}_{reg.name.cdata}')
-
                     addr_str=reg.addressOffset.cdata
                     regaddr=literal_eval(addr_str) + base_address + literal_eval(base_address_offset)
-                    comments=reg.description.cdata
-                    # print(comments)
-                    struct_register=cp_register(regname,regaddr,comments,hif)
+
+                    struct_register=cp_register(
+                        regname=regname,
+                        regaddr=regaddr,
+                        comments=reg.description.cdata,
+                        hif=hif )
 
                     if hasattr(reg,'fields'):
                         for field in reg.fields.field:
-                            regfield=field.name.cdata
-
                             if not field is None:
-                                # print(regfield)
-                                regfield=name_subs(regfield)
-                                width=field.bitWidth.cdata
-                                bitoffset=field.bitOffset.cdata
-                                comments=field.description.cdata
-                                # print(comments)
-
                                 # Create new field class
-                                class_regfield=cp_bitfield(
-                                    regfield,regaddr,regname,width,bitoffset,comments,hif)
-                                struct_register.addfield(class_regfield)
+                                struct_register.addfield_cp(
+                                    regfield=name_subs(field.name.cdata),
+                                    regaddr=regaddr,
+                                    regname=regname,
+                                    width=field.bitWidth.cdata,
+                                    offset=field.bitOffset.cdata,
+                                    comments=field.description.cdata,
+                                    hif=hif
+                                    )
+
             # create last register, if existing
             if 'regname' in locals():
                 # outstruct=addreg2struct(outstruct,regname,struct_register)

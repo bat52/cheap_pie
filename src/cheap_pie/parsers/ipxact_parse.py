@@ -11,9 +11,8 @@ import sys     # pylint: disable=C0411
 import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cbitfield   import cp_bitfield # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_register import cp_register # pylint: disable=C0413,E0401
-from parsers.common import name_subs,dict2namedtuple # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_register import cp_register, dict2namedtuple # pylint: disable=C0413,E0401
+from parsers.common import name_subs                                # pylint: disable=C0413,E0401
 
 def ipxact_remove_prefix(ipx):
     """ remove ipxact or spirit prefix"""
@@ -73,9 +72,9 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                             # print(comments)
 
                             # Create new field class
-                            class_regfield=cp_bitfield(
-                                regfield,regaddr,regname,csv_width,bitoffset,comments,hif)
-                            struct_register.addfield(class_regfield)
+                            struct_register.addfield_cp(
+                                regfield,regaddr,regname,csv_width,bitoffset,comments,hif
+                                )
 
         # create last register, if existing
         if 'regname' in locals():
