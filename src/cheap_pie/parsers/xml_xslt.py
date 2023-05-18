@@ -43,8 +43,13 @@ def compare(fromfile,tofile):
     with open(tofile, encoding='utf-8') as tfh:
         tolines = tfh.readlines()
     diff = difflib.unified_diff(fromlines,tolines,fromfile=fromfile,tofile=tofile)
-    assert not diff
-    sys.stdout.writelines(diff)
+
+    difflines = []
+    for line in diff:
+        difflines.append(line)
+        print(line)
+
+    assert len(difflines) > 0
 
 def test_xml_xslt(args=[]): # pylint: disable=W0102
     """ Test convert between different .xml formats using .xslt rules """
