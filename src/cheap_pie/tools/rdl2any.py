@@ -26,7 +26,8 @@ def cli(args):
     parser.add_argument("-f", "--fname", help="register file description .rdl",
                         action='store', type = str, default="./devices/rdl/basic.rdl")
     parser.add_argument("-ofmt", "--out-format", help="output format",
-                        action='store', type = str, default="ipxact", choices=["ipxact","uvm","vlog"])
+                        action='store', type = str, default="ipxact",
+                        choices=["ipxact","uvm","vlog"])
 
     return parser.parse_args(args)
 
