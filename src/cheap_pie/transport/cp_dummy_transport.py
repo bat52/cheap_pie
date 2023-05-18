@@ -27,7 +27,7 @@ def hex_bw(val,hex_digits_width = 8 ):
 
     return retstr
 
-class cp_dummy():
+class CpDummyTransport():
     """ A transport mockup """
     mem = {}
 
@@ -61,7 +61,7 @@ class cp_dummy():
 
 def test_cp_dummy():
     """ Test transport mockup """
-    transport = cp_dummy()
+    transport = CpDummyTransport()
     addr = 4
     val = 5
     transport.hifwrite(addr=addr,val=val)

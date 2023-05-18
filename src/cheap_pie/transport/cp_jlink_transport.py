@@ -9,8 +9,8 @@
 
 from ast import literal_eval
 import pylink
-from transport.cp_dummy_transport import cp_dummy # pylint: disable=E0401
-class cp_jlink(cp_dummy):
+from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=E0401
+class CpJlinkTransport(CpDummyTransport):
     """ A wrapper around jlink transport """
     jl = None
 
@@ -35,7 +35,7 @@ class cp_jlink(cp_dummy):
             addr = int(literal_eval(addr))
 
         if self.jl is None:
-            ret = cp_dummy.hifread(self,addr)
+            ret = CpDummyTransport.hifread(self,addr)
         else:
             read = self.jl.memory_read32(addr,1)
             ret = read[0]
@@ -52,7 +52,7 @@ class cp_jlink(cp_dummy):
             val = int ( literal_eval(val) )
 
         if self.jl is None:
-            cp_dummy.hifwrite(self, addr, val)
+            CpDummyTransport.hifwrite(self, addr, val)
         else:
             self.jl.memory_write32( addr, [val] )
 
@@ -60,7 +60,7 @@ class cp_jlink(cp_dummy):
 
 def test_cp_jlink():
     """ test JLink transport """
-    transport = cp_jlink(device = None)
+    transport = CpJlinkTransport(device = None)
     addr = 4
     val = 5
     transport.hifwrite(addr=addr,val=val)

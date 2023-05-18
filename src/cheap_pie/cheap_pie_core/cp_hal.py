@@ -12,7 +12,7 @@ import hickle as hkl
 
 try:
     # cheap_pie installed with pip
-    from cheap_pie.transport.cp_dummy_transport import cp_dummy
+    from cheap_pie.transport.cp_dummy_transport import CpDummyTransport
     import cheap_pie.tools.search # pylint: disable=W0611
     from cheap_pie.tools.hal2doc import hal2doc
 
@@ -20,7 +20,7 @@ except:
     import sys
     import os.path
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-    from transport.cp_dummy_transport import cp_dummy
+    from transport.cp_dummy_transport import CpDummyTransport
     import tools.search
     from tools.hal2doc import hal2doc
 
@@ -165,7 +165,7 @@ def test_cp_hal(): # pylint: disable=R0914,R0915
 
     print('# hal initialize')
     prms = cp_cli(['-t','dummy'])
-    hal = cp_hal(cp_parsers_wrapper(prms,cp_dummy()))
+    hal = cp_hal(cp_parsers_wrapper(prms,CpDummyTransport()))
 
     print('# hal test register methods...')
     print('# hal hex assignement')

@@ -231,13 +231,13 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     import os.path # pylint: disable=C0415
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
     from random import randint # pylint: disable=C0415
-    from transport.cp_dummy_transport import cp_dummy # pylint: disable=C0415,E0401
+    from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0415,E0401
 
     reg = cp_register(
         regname='regname',
         regaddr=10,
         comments='comments',
-        hif = cp_dummy(),
+        hif = CpDummyTransport(),
         addr_offset=10,
         addr_base=10
     )
@@ -268,7 +268,7 @@ def test_cp_register(): # pylint: disable=R0914,R0915
         width = '2',
         bit_offset = '2',
         comments = 'comment',
-        hif = cp_dummy()
+        hif = CpDummyTransport()
     )
     field2 = cp_bitfield(
         regfield = 'fname2',
@@ -277,7 +277,7 @@ def test_cp_register(): # pylint: disable=R0914,R0915
         width = '2',
         bit_offset = '4',
         comments = 'comment2',
-        hif = cp_dummy()
+        hif = CpDummyTransport()
     )
 
     reg.addfield(field1)

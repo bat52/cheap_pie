@@ -21,7 +21,7 @@ def cli(args):
                         type = str, default="./devices/verilog/basic_rf.v")
     return parser.parse_args(args)
 
-class cp_pyverilator_transport():
+class CpPyverilatorTransport():
     """
     Cheap Pie class for pyverilator transport
     """
@@ -166,7 +166,7 @@ def test_cp_pyverilator(args=[]): # pylint: disable=W0102
     """ Test pyverilator transport """
     if verilator_version_ok():
         prms = cli(args)
-        hif = cp_pyverilator_transport(prms.fname)
+        hif = CpPyverilatorTransport(prms.fname)
         val = literal_eval('0x5A5A5A5A')
         hif.hifwrite(val = val)
         print( hex(hif.hifread()) )

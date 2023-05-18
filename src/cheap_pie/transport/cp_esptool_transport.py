@@ -11,9 +11,9 @@ import os
 from ast import literal_eval
 import esptool
 
-from transport.cp_dummy_transport import cp_dummy # pylint: disable=E0401
+from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=E0401
 
-class cp_esptool(cp_dummy):
+class CpEsptoolTransport(CpDummyTransport):
     """ A wrapper around esptool transport """
     port = None
 
@@ -29,7 +29,7 @@ class cp_esptool(cp_dummy):
 
         if self.port is None:
             # fallback to dummy transport
-            ret = cp_dummy.hifread(self,addr)
+            ret = CpDummyTransport.hifread(self,addr)
         else:
             #  ret = esptool.main( ['--port' , self.port , '--after no_reset', 'read_mem', addr]  )
             # dump value on file... horrible hack because no output available
@@ -59,7 +59,7 @@ class cp_esptool(cp_dummy):
 
         if self.port is None:
             # fallback to dummy transport
-            cp_dummy.hifwrite(self,addr,val)
+            CpDummyTransport.hifwrite(self,addr,val)
         else:
             esptool.main( # pylint: disable=E1101
                 ['--port' , self.port , '--after', 'no_reset' ,'write_mem', addr, val ,'0x0']
@@ -69,7 +69,7 @@ class cp_esptool(cp_dummy):
 
 def test_cp_esptool():
     """ Test esptool transport """
-    transport = cp_esptool(port=None)
+    transport = CpEsptoolTransport(port=None)
     addr = '0x3ff00014'
     val = 2
     transport.hifwrite(addr=addr,val=val)

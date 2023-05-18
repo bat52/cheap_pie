@@ -13,6 +13,7 @@ from parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C041
 from cheap_pie_core.cp_banner import cp_banner            # pylint: disable=C0413,E0401
 from cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0413,E0401
 from cheap_pie_core.cp_hal import cp_hal                  # pylint: disable=C0413,E0401
+from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0413,E0401
 
 # Ipython autoreload
 # %load_ext autoreload
@@ -35,21 +36,20 @@ def cp_main(argv=[]): # pylint: disable=W0102
     print('Initialising Host Interface...')
 
     # init jlink transport: importing under if case allows not installing all transport libraries
-    if prms.transport == 'jlink': # disable jlink for testing
-        from transport.cp_jlink_transport import cp_jlink # pylint: disable=C0413,C0415,E0401
-        hif = cp_jlink(device = prms.device )
-    elif prms.transport == 'dummy':
-        from transport.cp_dummy_transport import cp_dummy # pylint: disable=C0413,C0415,E0401
-        hif = cp_dummy()
+    if prms.transport == 'dummy':
+        hif = CpDummyTransport()
+    elif prms.transport == 'jlink': # disable jlink for testing
+        from transport.cp_jlink_transport import CpJlinkTransport # pylint: disable=C0413,C0415,E0401
+        hif = CpJlinkTransport(device = prms.device )
     elif prms.transport == 'ocd':
-        from transport.cp_pyocd_transport import cp_pyocd # pylint: disable=C0413,C0415,E0401
-        hif = cp_pyocd(device = prms.device )
+        from transport.cp_pyocd_transport import CpPyocdTransport # pylint: disable=C0413,C0415,E0401
+        hif = CpPyocdTransport(device = prms.device )
     elif prms.transport == 'esptool':
-        from transport.cp_esptool_transport import cp_esptool # pylint: disable=C0413,C0415,E0401
-        hif = cp_esptool(port = prms.port )
+        from transport.cp_esptool_transport import CpEsptoolTransport # pylint: disable=C0413,C0415,E0401
+        hif = CpEsptoolTransport(port = prms.port )
     elif prms.transport == 'verilator':
-        from transport.cp_pyverilator_transport import cp_pyverilator_transport # pylint: disable=C0413,C0415,E0401
-        hif = cp_pyverilator_transport( prms.top_verilog )
+        from transport.cp_pyverilator_transport import CpPyverilatorTransport # pylint: disable=C0413,C0415,E0401
+        hif = CpPyverilatorTransport( prms.top_verilog )
     else:
         hif=None
         assert False, f'Invalid transport: {prms.transport}'

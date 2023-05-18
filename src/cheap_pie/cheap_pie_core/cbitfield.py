@@ -197,7 +197,7 @@ def test_cp_bitfield():
     import sys # pylint: disable=C0415
     import os.path # pylint: disable=C0415
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-    from transport.cp_dummy_transport import cp_dummy # pylint: disable=C0415, disable=E0401
+    from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0415, disable=E0401
 
     field = cp_bitfield(
         regfield = 'fname',
@@ -206,7 +206,7 @@ def test_cp_bitfield():
         width = '2',
         bit_offset = '2',
         comments = 'comment',
-        hif = cp_dummy()
+        hif = CpDummyTransport()
     )
 
     print('# setbit, getbit')

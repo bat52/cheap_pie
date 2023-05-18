@@ -9,8 +9,8 @@
 
 from ast import literal_eval
 from pyocd.core.helpers import ConnectHelper
-from transport.cp_dummy_transport import cp_dummy # pylint: disable=E0401
-class cp_pyocd(cp_dummy):
+from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=E0401
+class CpPyocdTransport(CpDummyTransport):
     """ A wrapper around pyocd transport """
     ocd = None
 
@@ -30,7 +30,7 @@ class cp_pyocd(cp_dummy):
             addr = int(literal_eval(addr))
 
         if self.ocd is None:
-            ret = cp_dummy.hifread(self,addr)
+            ret = CpDummyTransport.hifread(self,addr)
         else:
             # ret = self.ocd.board.target.dp.read_reg(addr)
             ret = self.ocd.board.target.read32(addr)
@@ -45,7 +45,7 @@ class cp_pyocd(cp_dummy):
             val = int ( literal_eval(val) )
 
         if self.ocd is None:
-            cp_dummy.hifwrite(self, addr, val)
+            CpDummyTransport.hifwrite(self, addr, val)
         else:
             # ret = self.ocd.board.target.dp.write_reg(addr,val)
             self.ocd.board.target.write32(addr,val)
@@ -54,7 +54,7 @@ class cp_pyocd(cp_dummy):
 
 def test_cp_pyocd():
     """ test pyocd transport """
-    transport = cp_pyocd()
+    transport = CpPyocdTransport()
     addr = 4
     val = 5
     transport.hifwrite(addr=addr,val=val)
