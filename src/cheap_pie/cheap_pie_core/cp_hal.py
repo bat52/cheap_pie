@@ -127,7 +127,7 @@ class cp_hal():
                 f1regstr = self[reg].__repr__(val        ).split('\n') # pylint: disable=C2801
                 f2regstr = self[reg].__repr__(field2[reg]).split('\n') # pylint: disable=C2801
 
-                for idx in range(len(f1regstr)):
+                for idx in range(len(f1regstr)): # pylint: disable=C0200
                     if not f1regstr[idx]==f2regstr[idx]:
                         linestr = fmtstr % (f1regstr[idx],f2regstr[idx])
                         outstrlist.append(linestr)
