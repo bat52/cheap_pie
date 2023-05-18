@@ -15,7 +15,7 @@ try:
     from peakrdl_uvm import UVMExporter
 except:
     # older version
-    from peakrdl.ipxact import IPXACTExporter
+    from peakrdl.ipxact import IPXACTExporter # pylint: disable=C0412
     from peakrdl.uvm import UVMExporter
 
 def cli(args):
