@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
-""" Cheap Pie module to convert .rdl register description into IP-XACT or UVM """
+""" Cheap Pie module to convert .rdl register description into IP-XACT, UVM or verilog """
 
 import sys
 import os
 import argparse
 
 from systemrdl import RDLCompiler, RDLCompileError
+from peakrdl.verilog import VerilogExporter
 
 try:
     # newer version
@@ -18,19 +19,19 @@ except:
     from peakrdl.uvm import UVMExporter
 
 def cli(args):
-    """ Command Line parse to convert .rdl register description into IP-XACT or UVM """
+    """ Command Line parse to convert .rdl register description into IP-XACT, UVM or verilog """
     parser = argparse.ArgumentParser(description='rdl2any')
 
     # register format options
     parser.add_argument("-f", "--fname", help="register file description .rdl",
                         action='store', type = str, default="./devices/rdl/basic.rdl")
     parser.add_argument("-ofmt", "--out-format", help="output format",
-                        action='store', type = str, default="ipxact", choices=["ipxact","uvm"])
+                        action='store', type = str, default="ipxact", choices=["ipxact","uvm","vlog"])
 
     return parser.parse_args(args)
 
 def rdl2any(args):
-    """  convert .rdl register description into IP-XACT or UVM """
+    """  convert .rdl register description into IP-XACT, UVM or verilog """
     prms = cli(args)
     rdlc = RDLCompiler()
 
@@ -46,19 +47,28 @@ def rdl2any(args):
     elif prms.out_format == 'uvm':
         exporter = UVMExporter()
         ext = '.uvm'
+    elif prms.out_format == 'vlog':
+        exporter = VerilogExporter()
+        ext = '.v'
     else:
         assert False, f'Unsupported output format {prms.out_format} !'
 
     base = os.path.splitext(prms.fname)[0]
     outfname = base + ext
     print('output file: ' + outfname)
-    exporter.export(root, outfname )
+
+    if prms.out_format == 'vlog':
+        exporter.export(root, outfname, signal_overrides = {} )
+    else:
+        exporter.export(root, outfname )
+
     return outfname
 
 def test_rdl2any():
-    """ test convert .rdl register description into IP-XACT and UVM """
+    """ test convert .rdl register description into IP-XACT, UVM or verilog """
     rdl2any(['-ofmt','ipxact'])
     rdl2any(['-ofmt','uvm'])
+    rdl2any(['-ofmt','vlog'])
 
 if __name__ == '__main__':
     rdl2any(sys.argv[1:])

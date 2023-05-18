@@ -29,7 +29,6 @@ from parsers.xml_xslt import test_xml_xslt                          # pylint: di
 from tools.hal2doc import test_hal2doc                              # pylint: disable=C0413,E0401
 from tools.search import test_search                                # pylint: disable=C0413,E0401
 from tools.rdl2any import test_rdl2any                              # pylint: disable=C0413,E0401
-from tools.rdl2verilog import test_rdl2verilog                      # pylint: disable=C0413,E0401
 
 # Transport
 from transport.cp_dummy_transport import test_cp_dummy              # pylint: disable=C0413,E0401
@@ -74,7 +73,6 @@ class CheapPieMethods(unittest.TestCase):
         test_hal2doc()
         test_search()
         test_rdl2any()
-        test_rdl2verilog()
 
 if __name__ == '__main__':
     unittest.main()
