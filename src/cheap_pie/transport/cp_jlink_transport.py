@@ -9,7 +9,7 @@
 
 from ast import literal_eval
 import pylink
-from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=E0401
+from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy # pylint: disable=E0401
 class CpJlinkTransport(CpDummyTransport):
     """ A wrapper around jlink transport """
     jl = None
@@ -60,12 +60,9 @@ class CpJlinkTransport(CpDummyTransport):
 
 def test_cp_jlink():
     """ test JLink transport """
-    transport = CpJlinkTransport(device = None)
-    addr = 4
-    val = 5
-    transport.hifwrite(addr=addr,val=val)
-    retval=transport.hifread(addr = addr)
-    assert retval==val
+    test_cp_dummy(
+        CpJlinkTransport(device = None)
+    )
 
 if __name__ == '__main__':
     test_cp_jlink()

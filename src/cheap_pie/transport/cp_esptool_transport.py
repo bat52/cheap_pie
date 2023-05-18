@@ -11,7 +11,7 @@ import os
 from ast import literal_eval
 import esptool
 
-from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=E0401
+from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy # pylint: disable=E0401
 
 class CpEsptoolTransport(CpDummyTransport):
     """ A wrapper around esptool transport """
@@ -69,12 +69,9 @@ class CpEsptoolTransport(CpDummyTransport):
 
 def test_cp_esptool():
     """ Test esptool transport """
-    transport = CpEsptoolTransport(port=None)
-    addr = '0x3ff00014'
-    val = 2
-    transport.hifwrite(addr=addr,val=val)
-    readback=transport.hifread(addr = addr)
-    assert readback==val, 'Wrong readback value! val: %x, readback: %x' % (val,readback) # pylint: disable=C0209
+    test_cp_dummy(
+        transport = CpEsptoolTransport(port = None)
+        )
 
 if __name__ == '__main__':
     test_cp_esptool()

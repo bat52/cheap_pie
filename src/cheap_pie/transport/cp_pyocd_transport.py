@@ -9,7 +9,7 @@
 
 from ast import literal_eval
 from pyocd.core.helpers import ConnectHelper
-from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=E0401
+from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy # pylint: disable=E0401
 class CpPyocdTransport(CpDummyTransport):
     """ A wrapper around pyocd transport """
     ocd = None
@@ -54,12 +54,9 @@ class CpPyocdTransport(CpDummyTransport):
 
 def test_cp_pyocd():
     """ test pyocd transport """
-    transport = CpPyocdTransport()
-    addr = 4
-    val = 5
-    transport.hifwrite(addr=addr,val=val)
-    retval=transport.hifread(addr = addr)
-    assert retval==val
+    test_cp_dummy(
+        CpPyocdTransport()
+    )
 
 if __name__ == '__main__':
     test_cp_pyocd()
