@@ -262,19 +262,19 @@ def test_cp_register(): # pylint: disable=R0914,R0915
 
     print('# test bitfield')
     field1 = cp_bitfield(
-        regfield = 'fname',
-        regaddr = 10,
-        regname = 'rname',
+        regfield = 'fname1',
+        regaddr = 11,
+        regname = 'rname1',
         width = '2',
         bit_offset = '2',
-        comments = 'comment',
+        comments = 'comment1',
         hif = CpDummyTransport()
     )
     field2 = cp_bitfield(
         regfield = 'fname2',
-        regaddr = 10,
-        regname = 'rname',
-        width = '2',
+        regaddr = 12,
+        regname = 'rname2',
+        width = '3',
         bit_offset = '4',
         comments = 'comment2',
         hif = CpDummyTransport()
@@ -291,12 +291,12 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     reg.help()
 
     print('# reg item access')
-    reg[0]       # pylint: disable=W0104
-    reg['fname'] # pylint: disable=W0104
+    reg[0]        # pylint: disable=W0104
+    reg['fname1'] # pylint: disable=W0104
 
     print('# item assignement')
     reg[0] = 1
-    reg['fname'] = 2
+    reg['fname2'] = 2
 
     print('# reg bit access')
     for offset in range(32):
@@ -314,7 +314,7 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     print(hex(reg))
 
     print('# reg dict-based assignement')
-    dreg = {'fname': 1, 'fname2': 2}
+    dreg = {'fname1': 1, 'fname2': 2}
     reg.setreg(dreg)
 
     print('# reg dict-based readback')
