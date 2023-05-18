@@ -18,7 +18,6 @@
 # ADC_BM = cp_bitfield("ADC_BM","0x4000702C","ADC_ANA_CTRL",3,0, "ADC bias current selection." ,hif)
 
 from ast import literal_eval
-from collections import namedtuple
 import untangle # for parsing xml
 
 import sys     # pylint: disable=C0411
@@ -27,7 +26,7 @@ sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
 from cheap_pie_core.cbitfield   import cp_bitfield  # pylint: disable=C0413,E0401
 from cheap_pie_core.cp_register import cp_register  # pylint: disable=C0413,E0401
-from parsers.name_subs import name_subs             # pylint: disable=C0413,E0401
+from parsers.common import name_subs, dict2namedtuple             # pylint: disable=C0413,E0401
 
 def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): # pylint: disable=W0613
     """ Cheap Pie native parser for .svd files """
@@ -50,30 +49,28 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
                     if 'regname' in locals():
                         struct_register.dictfield2struct()
                         outdict[regname]=struct_register
-                    #
+
                     # new register
-                    periph_name=periph.name.cdata
-                    rname=reg.name.cdata
-                    regname = name_subs(f'{periph_name}_{rname}')
-                    print(regname)
-                    #
+                    regname = name_subs(f'{periph.name.cdata}_{reg.name.cdata}')
+
                     addr_str=reg.addressOffset.cdata
                     regaddr=literal_eval(addr_str) + base_address + literal_eval(base_address_offset)
                     comments=reg.description.cdata
                     # print(comments)
                     struct_register=cp_register(regname,regaddr,comments,hif)
-                    #
+
                     if hasattr(reg,'fields'):
                         for field in reg.fields.field:
                             regfield=field.name.cdata
-                            #
+
                             if not field is None:
-                                print(regfield)
+                                # print(regfield)
                                 regfield=name_subs(regfield)
                                 width=field.bitWidth.cdata
                                 bitoffset=field.bitOffset.cdata
                                 comments=field.description.cdata
                                 # print(comments)
+
                                 # Create new field class
                                 class_regfield=cp_bitfield(
                                     regfield,regaddr,regname,width,bitoffset,comments,hif)
@@ -83,8 +80,9 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
                 # outstruct=addreg2struct(outstruct,regname,struct_register)
                 struct_register.dictfield2struct()
                 outdict[regname]=struct_register
+
     # convert output dictionary into structure
-    return namedtuple("HAL", outdict.keys())(*outdict.values())
+    return dict2namedtuple(outdict=outdict)
 
 def test_svd_parse(argv=[]): # pylint: disable=W0102
     """ test function for .svd parser """

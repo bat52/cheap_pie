@@ -1,5 +1,7 @@
 """ Names Substitution module for Cheap Pie parsers """
 
+from collections import namedtuple
+
 def name_subs(regname=None):
     """ Names Substitution function for Cheap Pie parsers """
 
@@ -12,3 +14,7 @@ def name_subs(regname=None):
     if regname[0].isdigit():
         regname= 'M' + regname
     return regname
+
+def dict2namedtuple(outdict,tuplename="HAL"):
+    """ Convert a dictionary into a namedtuple """
+    return namedtuple(tuplename, outdict.keys())(*outdict.values())
