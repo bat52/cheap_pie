@@ -12,8 +12,7 @@ import sys                                         # pylint: disable=C0411
 import os.path                                     # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_register import cp_register, dict2namedtuple # pylint: disable=C0413,E0401
-from parsers.common import name_subs                                # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_builder import CpBuilder # pylint: disable=C0413,E0401
 
 def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     """ Cheap Pie parser for IP-XACT structure with ipyxact """
@@ -22,49 +21,37 @@ def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     xml.load(fname)
 
     ## loop over lines ########################################################
-    outdict = {}
+    cpb = CpBuilder(hif)
 
     for mem in xml.memoryMaps.memoryMap:
         for periph in mem.addressBlock:
-            # print(periph)
-
             if hasattr(periph,'register'):
                 for reg in periph.register:
-                    # close old register, before opening a new one
-                    if 'regname' in locals():
-                        struct_register.dictfield2struct()
-                        outdict[regname]=struct_register
-
-                    # new register
-                    regname = name_subs(f'{periph.name}_{reg.name}')
+                    # new register                    
                     regaddr=reg.addressOffset + periph.baseAddress + literal_eval(base_address_offset)
-                    struct_register=cp_register(
-                        regname=regname,
+
+                    cpb.reg_open(
+                        regname=f'{periph.name}_{reg.name}',
                         regaddr=regaddr,
                         comments=reg.description,
-                        hif=hif)
+                        )
 
                     if hasattr(reg,'field'):
                         for field in reg.field :
                             if not field is None:
                                 # Create new field class
-                                struct_register.addfield_cp(
-                                    regfield = name_subs(field.name),
-                                    regaddr = regaddr,
-                                    regname = regname,
+                                cpb.newfield(
+                                    regfield = field.name,
                                     width = field.bitWidth,
                                     offset=field.bitOffset,
-                                    comments=field.description,
-                                    hif=hif
+                                    comments=field.description
                                     )
 
             # create last register, if existing
-            if 'regname' in locals():
-                struct_register.dictfield2struct()
-                outdict[regname]=struct_register
+            cpb.reg_close()
 
     # convert output dictionary into structure
-    return dict2namedtuple(outdict=outdict)
+    return cpb.out()
 
 def test_ipyxact_parse():
     """ Test function for IP-XACT parser with ipyxact """

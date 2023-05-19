@@ -25,8 +25,7 @@ import sys     # pylint: disable=C0411
 import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_register import cp_register, dict2namedtuple # pylint: disable=C0413,E0401
-from parsers.common import name_subs # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_builder import CpBuilder # pylint: disable=C0413,E0401
 
 def svd_parse_repo(fname,vendor=None,hif=None, base_address_offset = "0x00000000"):
     """ Cheap Pie parser function for .svd files using SVDParser module """
@@ -37,54 +36,39 @@ def svd_parse_repo(fname,vendor=None,hif=None, base_address_offset = "0x00000000
         svd = SVDParser.for_packaged_svd(vendor,fname)
 
     ## loop over lines ########################################################
-    outdict = {}
+    cpb = CpBuilder(hif)
 
     for periph in svd.get_device().peripherals:
         # print(periph.name.cdata)
 
-        base_address=periph.base_address
-
         if hasattr(periph,'registers'):
             for reg in periph.registers:
                 if hasattr( reg, 'name'):
-                    # close old register, before opening a new one
-                    if 'regname' in locals():
-                        struct_register.dictfield2struct()
-                        outdict[regname]=struct_register
-
                     # new register
-                    regname = name_subs(f'{periph.name}_{reg.name}')
-                    regaddr=reg.address_offset + base_address + literal_eval(base_address_offset)
+                    regaddr=reg.address_offset + periph.base_address + literal_eval(base_address_offset)
 
-                    struct_register=cp_register(
-                        regname = regname,
+                    cpb.reg_open(
+                        regname = f'{periph.name}_{reg.name}',
                         regaddr = regaddr,
-                        comments = reg.description,
-                        hif = hif
+                        comments = reg.description
                         )
 
                     if hasattr(reg,'fields'):
                         for field in reg.fields:
                             if not field is None:
                                 # Create new field class
-                                struct_register.addfield_cp(
-                                    regfield = name_subs(field.name),
-                                    regaddr = regaddr,
-                                    regname = regname,
+                                cpb.newfield(
+                                    regfield = field.name,
                                     width = field.bit_width,
                                     offset = field.bit_offset,
                                     comments = field.description,
-                                    hif = hif
                                 )
 
             # create last register, if existing
-            if 'regname' in locals():
-                # outstruct=addreg2struct(outstruct,regname,struct_register)
-                struct_register.dictfield2struct()
-                outdict[regname]=struct_register
+            cpb.reg_close()
 
     # convert output dictionary into structure
-    return dict2namedtuple(outdict=outdict)
+    return cpb.out()
 
 def test_svd_parse_repo():
     """ Test Function for .svd parser based of SVDParser module """

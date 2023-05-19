@@ -13,7 +13,8 @@ sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 # Cheap Pie Core
 from cheap_pie_core.cbitfield import test_cp_bitfield               # pylint: disable=C0413,E0401
 from cheap_pie_core.cp_register import test_cp_register             # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_hal import test_cp_hal                       # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_builder import test_cp_builder               # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_hal import test_cp_hal, test_cp_hal_to_docx  # pylint: disable=C0413,E0401
 from cheap_pie_core.cheap_pie import cp_main                        # pylint: disable=C0413,E0401
 
 # parsers
@@ -55,7 +56,9 @@ class CheapPieMethods(unittest.TestCase):
         """ Test cheap pie core classes """
         test_cp_bitfield()
         test_cp_register()
+        test_cp_builder()
         test_cp_hal()
+        test_cp_hal_to_docx()
         cp_main()
 
     def test_parsers(self):
@@ -70,7 +73,7 @@ class CheapPieMethods(unittest.TestCase):
 
     def test_tools(self):
         """ Test cheap_pie tools """
-        test_hal2doc()
+        test_hal2doc() # this is slow!
         test_search()
         test_rdl2any()
 

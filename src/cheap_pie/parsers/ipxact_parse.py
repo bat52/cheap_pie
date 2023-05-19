@@ -11,8 +11,7 @@ import sys     # pylint: disable=C0411
 import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_register import cp_register, dict2namedtuple # pylint: disable=C0413,E0401
-from parsers.common import name_subs                                # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_builder import CpBuilder # pylint: disable=C0413,E0401
 
 def ipxact_remove_prefix(ipx):
     """ remove ipxact or spirit prefix"""
@@ -37,7 +36,7 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     csv = ipxact_remove_prefix(csv)
 
     ## loop over lines ########################################################
-    outdict = {}
+    cpb = CpBuilder(hif)
 
     periph = csv.component.memoryMaps.memoryMap.addressBlock
     base_addr_str=periph.baseAddress.cdata.replace("'h",'0x')
@@ -46,44 +45,30 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     if hasattr(periph,'register'):
         for reg in periph.register:
             if hasattr( reg.name, 'cdata'):
-                # close old register, before opening a new one
-                if 'regname' in locals():
-                    struct_register.dictfield2struct()
-                    outdict[regname]=struct_register
-
                 # new register
-                regname=name_subs(f'{periph.name.cdata}_{reg.name.cdata}')
-
                 addr_str=reg.addressOffset.cdata.replace("'h",'0x')
                 regaddr=literal_eval(addr_str) + base_address + literal_eval(base_address_offset)
-                comments=""
-                # print(comments)
-                struct_register=cp_register(regname,regaddr,comments,hif)
+
+                cpb.reg_open(regname = f'{periph.name.cdata}_{reg.name.cdata}',
+                             regaddr = regaddr)
 
                 # for field_idx in range(nfields):
                 if hasattr(reg,'field'):
                     for field in reg.field:
-                        if not field is None:
-                            # print regfield
-                            regfield=name_subs(field.name.cdata)
-                            csv_width=field.bitWidth.cdata
-                            bitoffset=field.bitOffset.cdata
-                            comments="" # field.description.cdata
-                            # print(comments)
-
-                            # Create new field class
-                            struct_register.addfield_cp(
-                                regfield,regaddr,regname,csv_width,bitoffset,comments,hif
+                        if not field is None:                        
+                            # Create new field
+                            cpb.newfield(
+                                regfield = field.name.cdata,
+                                width = field.bitWidth.cdata,
+                                offset = field.bitOffset.cdata,
+                                comments = "" # field.description.cdata
                                 )
 
         # create last register, if existing
-        if 'regname' in locals():
-            # outstruct=addreg2struct(outstruct,regname,struct_register)
-            struct_register.dictfield2struct()
-            outdict[regname]=struct_register
+        cpb.reg_close()
 
     # convert output dictionary into structure
-    return dict2namedtuple(outdict=outdict)
+    return cpb.out()
 
 def test_ipxact_parse():
     """ Test function for cheap pie native IP-XACT parser """

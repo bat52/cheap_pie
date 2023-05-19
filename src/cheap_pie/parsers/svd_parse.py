@@ -24,8 +24,7 @@ import sys     # pylint: disable=C0411
 import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_register import cp_register, dict2namedtuple  # pylint: disable=C0413,E0401
-from parsers.common import name_subs                                 # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_builder import CpBuilder # pylint: disable=C0413,E0401
 
 def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): # pylint: disable=W0613
     """ Cheap Pie native parser for .svd files """
@@ -33,7 +32,7 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
     svd = untangle.parse(fname)
 
     ## loop over lines ########################################################
-    outdict = {}
+    cpb = CpBuilder(hif)
 
     for periph in svd.device.peripherals.peripheral:
         # print(periph.name.cdata)
@@ -44,44 +43,32 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
         if hasattr(periph,'registers'):
             for reg in periph.registers.register:
                 if hasattr( reg.name, 'cdata'):
-                    # close old register, before opening a new one
-                    if 'regname' in locals():
-                        struct_register.dictfield2struct()
-                        outdict[regname]=struct_register
-
                     # new register
-                    regname = name_subs(f'{periph.name.cdata}_{reg.name.cdata}')
                     addr_str=reg.addressOffset.cdata
                     regaddr=literal_eval(addr_str) + base_address + literal_eval(base_address_offset)
 
-                    struct_register=cp_register(
-                        regname=regname,
+                    cpb.reg_open(
+                        regname=f'{periph.name.cdata}_{reg.name.cdata}',
                         regaddr=regaddr,
                         comments=reg.description.cdata,
-                        hif=hif )
+                        )
 
                     if hasattr(reg,'fields'):
                         for field in reg.fields.field:
                             if not field is None:
                                 # Create new field class
-                                struct_register.addfield_cp(
-                                    regfield=name_subs(field.name.cdata),
-                                    regaddr=regaddr,
-                                    regname=regname,
+                                cpb.newfield(
+                                    regfield=field.name.cdata,
                                     width=field.bitWidth.cdata,
                                     offset=field.bitOffset.cdata,
                                     comments=field.description.cdata,
-                                    hif=hif
                                     )
 
             # create last register, if existing
-            if 'regname' in locals():
-                # outstruct=addreg2struct(outstruct,regname,struct_register)
-                struct_register.dictfield2struct()
-                outdict[regname]=struct_register
+            cpb.reg_close()
 
     # convert output dictionary into structure
-    return dict2namedtuple(outdict=outdict)
+    return cpb.out()
 
 def test_svd_parse(argv=[]): # pylint: disable=W0102
     """ test function for .svd parser """
@@ -90,7 +77,10 @@ def test_svd_parse(argv=[]): # pylint: disable=W0102
     else:
         fname="./devices/QN908XC.svd"
         # fname="./devices/MIMXRT1011.svd"
-    return svd_parse(fname)
+    hal = svd_parse(fname)
+    assert len(hal) > 0
+
+    return hal
 
 if __name__ == '__main__':
     print(svd_parse(sys.argv))

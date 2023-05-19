@@ -143,7 +143,7 @@ class cp_hal():
 
         return outstrlist
 
-def test_to_docx():
+def test_cp_hal_to_docx():
     """
     Test Function for Cheap Pie HAL to .docx
     """
@@ -152,7 +152,6 @@ def test_to_docx():
 
     prms = cp_cli(['-t','dummy','-rf','my_subblock.xml','-fmt','ipxact'])
     hal = cp_hal(cp_parsers_wrapper(prms))
-
     hal.to_docx()
 
 def test_cp_hal(): # pylint: disable=R0914,R0915
@@ -267,9 +266,6 @@ def test_cp_hal(): # pylint: disable=R0914,R0915
     reg = hal.search_address(searchaddr)
     assert reg==''
 
-    print('# hal conversion to doc')
-    test_to_docx()
-
     print('# hal dump')
     dump1 = 'dump1.hkl'
     dump2 = 'dump2.hkl'
@@ -279,6 +275,10 @@ def test_cp_hal(): # pylint: disable=R0914,R0915
     diff = hal.dump_diff(dump1,dump2)
     print(diff)
     assert len(diff) == 2
+
+    print('# hal regs2dict')
+    mydict = hal.regs2dict()
+    assert isinstance(mydict,dict)
 
 if __name__ == '__main__':
     test_cp_hal()

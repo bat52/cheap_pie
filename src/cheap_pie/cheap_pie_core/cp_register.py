@@ -24,6 +24,14 @@ except:
 def dict2namedtuple(outdict,tuplename="HAL"):
     """ Convert a dictionary into a namedtuple """
     return namedtuple(tuplename, outdict.keys())(*outdict.values())
+
+def isnamedtupleinstance(x):
+    t = type(x)
+    b = t.__bases__
+    if len(b) != 1 or b[0] != tuple: return False
+    f = getattr(t, '_fields', None)
+    if not isinstance(f, tuple): return False
+    return all(type(n)==str for n in f)
 class cp_register(): # pylint: disable=R0902
     """
     Register Class for Cheap Pie
@@ -191,10 +199,11 @@ class cp_register(): # pylint: disable=R0902
 
     def dictfield2struct(self):
         """ Convert the list of bitfields into a namedtuple """
-        if len(self.dictfields) > 0:
-            self.bitfields = dict2namedtuple(
-                self.dictfields, tuplename=self.regname
+        # if len(self.dictfields) > 0:
+        self.bitfields = dict2namedtuple(
+            self.dictfields, tuplename=self.regname
             )
+        self.dictfields = []
 
     def get_bitfields(self, name=None):
         """
@@ -223,14 +232,16 @@ class cp_register(): # pylint: disable=R0902
         if isinstance(idx,int):
             return self.bitfields[idx]
         if isinstance(idx,str):
-            return self.bitfields._asdict()[idx]
+            bfdict = self.bitfields._asdict()
+            return bfdict[idx]
         assert False, 'Unsupported indexing!'
 
     def __setitem__(self, idx, value):
         if isinstance(idx,int):
             return self.bitfields[idx].setbit(value)
         if isinstance(idx,str):
-            return self.bitfields._asdict()[idx].setbit(value)
+            bfdict = self.bitfields._asdict()
+            return bfdict[idx].setbit(value)
         assert False, 'Unsupported indexing!'
 
     def __index__(self):
@@ -294,7 +305,8 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     reg.addfield(field1)
     reg.addfield(field2)
     reg.dictfield2struct()
-    reg.get_bitfields()
+    assert isnamedtupleinstance(reg.bitfields)
+    assert len(reg.get_bitfields()) == 2
 
     print('# reg display with bitfields')
     reg.display()
@@ -305,9 +317,15 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     reg[0]        # pylint: disable=W0104
     reg['fname1'] # pylint: disable=W0104
 
-    print('# item assignement')
-    reg[0] = 1
-    reg['fname2'] = 2
+    print('# numeric item assignement')
+    val = 1
+    reg[0] = val
+    assert reg[0].getbit()==val
+
+    print('# dict item assignement')
+    val = 2
+    reg['fname2'] = val
+    assert reg['fname2'].getbit() == val
 
     print('# reg bit access')
     for offset in range(32):
@@ -325,8 +343,12 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     print(hex(reg))
 
     print('# reg dict-based assignement')
-    dreg = {'fname1': 1, 'fname2': 2}
+    val1 = 1
+    val2 = 2
+    dreg = {'fname1': val1, 'fname2': val2}
     reg.setreg(dreg)
+    assert reg['fname1'].getbit() == val1
+    assert reg['fname2'].getbit() == val2
 
     print('# reg dict-based readback')
     dregb = reg.getreg(asdict=True)

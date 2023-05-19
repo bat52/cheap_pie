@@ -47,7 +47,7 @@ def compare(fromfile,tofile):
     difflines = []
     for line in diff:
         difflines.append(line)
-        print(line)
+        # print(line)
 
     assert len(difflines) > 0
 

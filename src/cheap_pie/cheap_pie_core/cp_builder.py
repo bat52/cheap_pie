@@ -1,0 +1,90 @@
+#!/usr/bin/python3
+"""
+Namedtuple HAL builder for Cheap Pie
+"""
+#
+# -*- coding: utf-8 -*-
+## this file is part of cheap_pie, a python tool for chip validation
+## author: Marco Merlin
+## email: marcomerli@gmail.com
+
+import sys     # pylint: disable=C0411
+import os.path # pylint: disable=C0411
+sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+
+from cheap_pie_core.cp_register import cp_register, dict2namedtuple, isnamedtupleinstance  # pylint: disable=C0413,E0401
+
+def name_subs(regname=None):
+    """ Names Substitution function for Cheap Pie parsers """
+
+    # print(regname)
+    # regname=strrep(regname,'"','')
+    regname=regname.replace('"','')
+    regname=regname.replace('[','')
+    regname=regname.replace(']','')
+    regname=regname.replace('%','')
+    if regname[0].isdigit():
+        regname= 'M' + regname
+    return regname
+
+class CpBuilder():
+
+    hif = None
+    outdict = {}
+    struct_register = None
+
+    def __init__(self, hif = None):
+        self.hif = hif
+
+    def reg_close(self):
+        if not self.struct_register is None:
+            # check
+            assert isinstance(self.struct_register,cp_register), f'bitfields type: {type(cp_register)}'
+
+            self.struct_register.dictfield2struct()
+
+            assert isnamedtupleinstance( self.struct_register.bitfields ), f'bitfields type: {type(self.struct_register.bitfields)} len: {len(self.struct_register.bitfields)}'
+
+            self.outdict[self.struct_register.regname]=self.struct_register
+            self.struct_register = None
+
+    def reg_open(self, regname, regaddr, comments=''):
+        self.reg_close()
+        self.struct_register=cp_register(
+            regname=name_subs(regname),
+            regaddr=regaddr,
+            comments=comments,
+            hif=self.hif)
+
+    def newfield(self, regfield, width, offset, comments):
+        self.struct_register.addfield_cp(
+        regfield=name_subs(regfield),
+        regaddr=self.struct_register.addr,
+        regname=self.struct_register.regname,
+        width=width,
+        offset=offset,
+        comments=comments,
+        hif=self.hif
+        )
+
+    def out(self):
+        self.reg_close()
+        return dict2namedtuple(outdict=self.outdict)
+
+def test_cp_builder():
+    cpb = CpBuilder()
+
+    cpb.reg_open('reg1',1,'comment1')
+    cpb.newfield('reg1_field1',offset=0,width=1,comments='reg1_field1')
+    cpb.newfield('reg1_field2',offset=1,width=2,comments='reg1_field2')
+
+    cpb.reg_open('reg2',2,'comment2')
+    cpb.newfield('reg2_field1',offset=0,width=4,comments='reg2_field1')
+    cpb.newfield('reg2_field2',offset=5,width=2,comments='reg2_field2')
+
+    regfile = cpb.out()
+
+    assert isnamedtupleinstance(regfile)
+    assert len(regfile) == 2
+
+    assert isnamedtupleinstance(regfile.reg2.bitfields)
