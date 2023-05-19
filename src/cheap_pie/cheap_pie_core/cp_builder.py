@@ -28,6 +28,7 @@ def name_subs(regname=None):
     return regname
 
 class CpBuilder():
+    """ Namedtuple HAL builder for Cheap Pie """
 
     hif = None
     outdict = {}
@@ -37,6 +38,7 @@ class CpBuilder():
         self.hif = hif
 
     def reg_close(self):
+        """ close a register instance declaration """
         if not self.struct_register is None:
             # check
             assert isinstance(self.struct_register,cp_register), f'bitfields type: {type(cp_register)}'
@@ -49,6 +51,7 @@ class CpBuilder():
             self.struct_register = None
 
     def reg_open(self, regname, regaddr, comments=''):
+        """ start a register instance declaration """
         self.reg_close()
         self.struct_register=cp_register(
             regname=name_subs(regname),
@@ -57,6 +60,8 @@ class CpBuilder():
             hif=self.hif)
 
     def newfield(self, regfield, width, offset, comments):
+        """ add a new field to current register """
+
         self.struct_register.addfield_cp(
         regfield=name_subs(regfield),
         regaddr=self.struct_register.addr,
@@ -68,10 +73,12 @@ class CpBuilder():
         )
 
     def out(self):
+        """ returns a namedtuple that represent the register list """
         self.reg_close()
         return dict2namedtuple(outdict=self.outdict)
 
 def test_cp_builder():
+    """ test cp_builder """
     cpb = CpBuilder()
 
     cpb.reg_open('reg1',1,'comment1')

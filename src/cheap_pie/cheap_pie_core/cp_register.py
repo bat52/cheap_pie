@@ -25,13 +25,17 @@ def dict2namedtuple(outdict,tuplename="HAL"):
     """ Convert a dictionary into a namedtuple """
     return namedtuple(tuplename, outdict.keys())(*outdict.values())
 
-def isnamedtupleinstance(x):
-    t = type(x)
-    b = t.__bases__
-    if len(b) != 1 or b[0] != tuple: return False
-    f = getattr(t, '_fields', None)
-    if not isinstance(f, tuple): return False
-    return all(type(n)==str for n in f)
+def isnamedtupleinstance(xtuple):
+    """ check if a given instance is a namedtuple (can return false positives) """
+    # https://stackoverflow.com/questions/2166818/how-to-check-if-an-object-is-an-instance-of-a-namedtuple
+    ttt = type(xtuple)
+    bbb = ttt.__bases__
+    if len(bbb) != 1 or bbb[0] != tuple:
+        return False
+    fff = getattr(ttt, '_fields', None)
+    if not isinstance(fff, tuple):
+        return False
+    return all( isinstance(n,str) for n in fff)
 class cp_register(): # pylint: disable=R0902
     """
     Register Class for Cheap Pie
