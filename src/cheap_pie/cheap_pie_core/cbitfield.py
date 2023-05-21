@@ -10,7 +10,7 @@ bitfield register class for cheap-pie.
 
 from ast import literal_eval
 
-class cp_bitfield():  # pylint: disable=R0902
+class CpBitfield():  # pylint: disable=R0902
     """A bitfield register class """
     # field width
     width = 1
@@ -43,7 +43,7 @@ class cp_bitfield():  # pylint: disable=R0902
     reset = 0
 
     def __init__(self, regfield="",regaddr=0, regname="", width="1", # pylint: disable=R0913
-                 bit_offset="0", comments="",hif=None, rw = "rw", reset=0):
+                 bit_offset="0", comments="", hif=None, rw = "rw", reset=0):
 
         if isinstance(width,str):
             width= literal_eval(width)
@@ -199,7 +199,7 @@ def test_cp_bitfield():
     sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
     from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0415, disable=E0401
 
-    field = cp_bitfield(
+    field = CpBitfield(
         regfield = 'fname',
         regaddr = 10,
         regname = 'rname',

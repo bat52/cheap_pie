@@ -9,6 +9,7 @@ import os
 import sys
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
+from cheap_pie_core.cp_hal import CpHal           # pylint: disable=C0415,E0401,C0413
 from parsers.svd_parse_repo import svd_parse_repo # pylint: disable=C0415,E0401,C0413
 from parsers.svd_parse import svd_parse           # pylint: disable=C0415,E0401,C0413
 from parsers.ipxact_parse import ipxact_parse     # pylint: disable=C0415,E0401,C0413
@@ -43,6 +44,7 @@ def cp_parsers_wrapper(prms,hif=None, base_address_offset = "0x00000000"):
     else:
         assert False, 'Unsupported input format!'
 
+    assert isinstance(hal,CpHal)
     return hal
 
 def test_cp_parsers_wrapper():

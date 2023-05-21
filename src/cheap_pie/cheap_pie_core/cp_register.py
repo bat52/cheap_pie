@@ -14,15 +14,16 @@ from ast import literal_eval
 
 try:
     # cheap_pie installed with pip
-    from cheap_pie.cheap_pie_core.cbitfield import cp_bitfield
+    from cheap_pie.cheap_pie_core.cbitfield import CpBitfield
 except:
     try:
-        from cheap_pie_core.cbitfield import cp_bitfield
+        from cheap_pie_core.cbitfield import CpBitfield
     except:
-        from cbitfield import cp_bitfield
+        from cbitfield import CpBitfield
 
 def dict2namedtuple(outdict,tuplename="HAL"):
     """ Convert a dictionary into a namedtuple """
+    assert isinstance(outdict,dict)
     return namedtuple(tuplename, outdict.keys())(*outdict.values())
 
 def isnamedtupleinstance(xtuple):
@@ -36,21 +37,20 @@ def isnamedtupleinstance(xtuple):
     if not isinstance(fff, tuple):
         return False
     return all( isinstance(n,str) for n in fff)
-class cp_register(): # pylint: disable=R0902
+class CpRegister(): # pylint: disable=R0902
     """
     Register Class for Cheap Pie
     """
     addr = 0
     regname = ''
     bitfields = []
-    dictfields = {}
     comments = ''
     # host interface handler
     hif = None
     addr_offset = 0
     addr_base   = 0
     #
-    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0): # pylint: disable=R0913
+    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0, bitfields=None): # pylint: disable=R0913
         # address
         self.addr = regaddr
 
@@ -58,7 +58,8 @@ class cp_register(): # pylint: disable=R0902
         self.regname = regname
 
         # fields
-        self.dictfields = {}
+        if not bitfields is None:
+            self.bitfields = dict2namedtuple(bitfields)
 
         # Comments
         self.comments = comments
@@ -138,22 +139,22 @@ class cp_register(): # pylint: disable=R0902
 
     def getbit(self, bit_offset=0, width=1):
         """ Get a custom bitfield within a register """
-        bitfield = cp_bitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)
+        bitfield = CpBitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)
         return bitfield.getbit()
 
     def setbit(self, bitval=0, bit_offset=0, width=1):
         """ Set a custom bitfield within a register """
-        bitfield = cp_bitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)
+        bitfield = CpBitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)
         return bitfield.setbit(bitval)
 
     def getbyte(self, byte_offset=0):
         """ Get a custom byte within a register """
-        byte = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)
+        byte = CpBitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)
         return byte.getbit()
 
     def setbyte(self, byteval=0, byte_offset=0):
         """ Set a custom byte within a register """
-        byte = cp_bitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)
+        byte = CpBitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)
         return byte.setbit(byteval)
 
     def help(self,width=25):
@@ -189,25 +190,6 @@ class cp_register(): # pylint: disable=R0902
         outstr = self.__repr__(regval) # pylint: disable=C2801
         print(outstr)
         # return outstr
-
-    def addfield(self, field):
-        """ Add a field to a register """
-        assert isinstance(field,cp_bitfield)
-        self.dictfields[field.fieldname] = field
-
-    def addfield_cp(self, regfield, regaddr,regname,width,offset,comments='',hif=None):
-        """ Add a field to a register """
-        self.addfield(
-            cp_bitfield(regfield,regaddr,regname,width,offset,comments,hif)
-            )
-
-    def dictfield2struct(self):
-        """ Convert the list of bitfields into a namedtuple """
-        # if len(self.dictfields) > 0:
-        self.bitfields = dict2namedtuple(
-            self.dictfields, tuplename=self.regname
-            )
-        self.dictfields = []
 
     def get_bitfields(self, name=None):
         """
@@ -250,6 +232,55 @@ class cp_register(): # pylint: disable=R0902
 
     def __index__(self):
         return int(self.getreg())
+class CpRegBuilder():
+    """
+    Register Class builder for Cheap Pie
+    """
+    addr = 0
+    regname = ''
+    dictfields = {}
+    comments = ''
+    # host interface handler
+    hif = None
+    addr_offset = 0
+    addr_base   = 0
+
+    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0): # pylint: disable=R0913
+        # address
+        self.addr = regaddr
+
+        # name
+        self.regname = regname
+
+        # Comments
+        self.comments = comments
+
+        # host interface handler
+        self.hif = hif
+
+        # address offset
+        self.addr_offset = addr_offset
+
+        # address base
+        self.addr_base = addr_base
+
+        # for some reason need to reset this
+        self.dictfields = {}
+
+    def addfield(self, regfield, regaddr,regname,width,offset,comments='',hif=None):
+        """ Add a field to a register dictionary of fields """
+        self.dictfields[regfield]=CpBitfield(
+            regfield,regaddr,regname,width,offset,comments,hif)
+
+    def dictfield2struct(self):
+        """ Convert the list of bitfields into a namedtuple """
+        return CpRegister(regname=self.regname,
+                           regaddr=self.addr,
+                           comments=self.comments,
+                           hif=self.hif,
+                           addr_offset=self.addr_offset,
+                           addr_base=self.addr_base,
+                           bitfields=self.dictfields)
 
 def test_cp_register(): # pylint: disable=R0914,R0915
     """ Cheap Pie test for cp_register class """
@@ -259,7 +290,7 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     from random import randint # pylint: disable=C0415
     from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0415,E0401
 
-    reg = cp_register(
+    reg = CpRegister(
         regname='regname',
         regaddr=10,
         comments='comments',
@@ -286,29 +317,37 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     print(retval)
     assert retval==negval
 
-    print('# test bitfield')
-    field1 = cp_bitfield(
+    print('# test CpRegBuilder with bitfields')
+    reg_build = CpRegBuilder(
+        regname='regname',
+        regaddr=10,
+        comments='comments',
+        hif = CpDummyTransport(),
+        addr_offset=10,
+        addr_base=10
+    )
+
+    reg_build.addfield(
         regfield = 'fname1',
         regaddr = 11,
         regname = 'rname1',
         width = '2',
-        bit_offset = '2',
+        offset = '2',
         comments = 'comment1',
         hif = CpDummyTransport()
     )
-    field2 = cp_bitfield(
+
+    reg_build.addfield(
         regfield = 'fname2',
         regaddr = 12,
         regname = 'rname2',
         width = '3',
-        bit_offset = '4',
+        offset = '4',
         comments = 'comment2',
         hif = CpDummyTransport()
     )
 
-    reg.addfield(field1)
-    reg.addfield(field2)
-    reg.dictfield2struct()
+    reg = reg_build.dictfield2struct()
     assert isnamedtupleinstance(reg.bitfields)
     assert len(reg.get_bitfields()) == 2
 

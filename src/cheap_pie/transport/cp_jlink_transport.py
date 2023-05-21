@@ -9,7 +9,7 @@
 
 from ast import literal_eval
 import pylink
-from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy # pylint: disable=E0401
+from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy, hifread_preproc, hifwrite_preproc # pylint: disable=E0401
 class CpJlinkTransport(CpDummyTransport):
     """ A wrapper around jlink transport """
     jl = None
@@ -31,8 +31,7 @@ class CpJlinkTransport(CpDummyTransport):
     def hifread(self, addr = "0x40000888"):
         """ read register through JLink """
 
-        if isinstance(addr,str):
-            addr = int(literal_eval(addr))
+        addr = hifread_preproc(addr)
 
         if self.jl is None:
             ret = CpDummyTransport.hifread(self,addr)
@@ -45,11 +44,7 @@ class CpJlinkTransport(CpDummyTransport):
     def hifwrite(self,addr = "0x40000888",val = "0x00000352"):
         """ write register through JLink """
 
-        if isinstance(addr,str):
-            addr = int( literal_eval(addr) )
-
-        if isinstance(val, str):
-            val = int ( literal_eval(val) )
+        addr,val,_ = hifwrite_preproc(addr,val)
 
         if self.jl is None:
             CpDummyTransport.hifwrite(self, addr, val)

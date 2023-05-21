@@ -27,6 +27,22 @@ def hex_bw(val,hex_digits_width = 8 ):
 
     return retstr
 
+def numeric_input(val):
+    """ Numeric input that supports string evaluation with literal_eval """
+    if isinstance(val, int):
+        return val
+    if isinstance(val, str):
+        return int ( literal_eval(val) )
+    assert False, f'Unsupported input type: {type(val)}'
+
+def hifread_preproc(addr):
+    """ convert input of hifread into numeric """
+    return numeric_input(addr)
+
+def hifwrite_preproc(addr,val,mask='0xFFFFFFFF'):
+    """ convert input of hifwrite into numeric """
+    return numeric_input(addr),numeric_input(val),numeric_input(mask)
+
 class CpDummyTransport():
     """ A transport mockup """
     mem = {}
@@ -35,8 +51,7 @@ class CpDummyTransport():
         """ Mockup for read a register """
 
         # make sure string format is always the same
-        if isinstance(addr,str):
-            addr = int(literal_eval(addr))
+        addr = hifread_preproc(addr)
 
         addrstr = hex_bw(addr)
 
@@ -49,11 +64,7 @@ class CpDummyTransport():
     def hifwrite(self,addr = "0x40000888",val = "0x00000352"):
         """ Mockup for write a register """
 
-        if isinstance(addr,str):
-            addr = int( literal_eval(addr) )
-
-        if isinstance(val, str):
-            val  = int ( literal_eval(val) )
+        addr,val,_ = hifwrite_preproc(addr,val)
 
         self.mem[hex_bw(addr)] = val
 

@@ -9,7 +9,7 @@
 
 from ast import literal_eval
 from pyocd.core.helpers import ConnectHelper
-from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy # pylint: disable=E0401
+from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy, hifread_preproc, hifwrite_preproc # pylint: disable=E0401
 class CpPyocdTransport(CpDummyTransport):
     """ A wrapper around pyocd transport """
     ocd = None
@@ -26,8 +26,7 @@ class CpPyocdTransport(CpDummyTransport):
     def hifread(self, addr = "0x40000888"):
         """ read register through pyocd """
 
-        if isinstance(addr,str):
-            addr = int(literal_eval(addr))
+        addr = hifread_preproc(addr)
 
         if self.ocd is None:
             ret = CpDummyTransport.hifread(self,addr)
@@ -39,10 +38,7 @@ class CpPyocdTransport(CpDummyTransport):
 
     def hifwrite(self,addr = "0x40000888",val = "0x00000352"):
         """ rwrite register through pyocd """
-        if isinstance(addr,str):
-            addr = int( literal_eval(addr) )
-        if isinstance(val, str):
-            val = int ( literal_eval(val) )
+        addr,val,_ = hifwrite_preproc(addr,val)
 
         if self.ocd is None:
             CpDummyTransport.hifwrite(self, addr, val)

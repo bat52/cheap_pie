@@ -73,7 +73,7 @@ class CheapPieMethods(unittest.TestCase):
 
     def test_tools(self):
         """ Test cheap_pie tools """
-        test_hal2doc() # this is slow!
+        test_hal2doc()
         test_search()
         test_rdl2any()
 

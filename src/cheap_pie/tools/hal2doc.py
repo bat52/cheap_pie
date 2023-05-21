@@ -15,7 +15,7 @@ import sys     # pylint: disable=C0411
 import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cbitfield import cp_bitfield # pylint: disable=C0413,E0401
+from cheap_pie_core.cbitfield import CpBitfield # pylint: disable=C0413,E0401
 
 INCH2EMU = 914400
 
@@ -33,7 +33,7 @@ def reg_add_reserved_bitfields(fields,regwidth=32):
 
                 if next_lsb < field.lsb:
                     # print("Add Reserved field!")
-                    newfield=cp_bitfield("Reserved",0,field.regname,
+                    newfield=CpBitfield("Reserved",0,field.regname,
                                          field.lsb-next_lsb,next_lsb,"Reserved")
                     outfields.insert(1,newfield)
                     # outfields.append(newfield)
@@ -43,7 +43,7 @@ def reg_add_reserved_bitfields(fields,regwidth=32):
 
             # check if register is filled up to full width
             if next_lsb < regwidth:
-                newfield=cp_bitfield("Reserved",0,fields[0].regname,
+                newfield=CpBitfield("Reserved",0,fields[0].regname,
                                      regwidth-next_lsb,next_lsb,"Reserved")
                 outfields.insert(0,newfield)
 

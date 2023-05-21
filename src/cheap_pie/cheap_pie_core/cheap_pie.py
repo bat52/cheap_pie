@@ -12,7 +12,6 @@ sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 from parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0413,E0401
 from cheap_pie_core.cp_banner import cp_banner            # pylint: disable=C0413,E0401
 from cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_hal import cp_hal                  # pylint: disable=C0413,E0401
 from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0413,E0401
 
 # Ipython autoreload
@@ -56,7 +55,7 @@ def cp_main(argv=[]): # pylint: disable=W0102
 
     ## init chip ##################################################################
     print('Initialising Hardware Abstraction Layer...')
-    lhal = cp_hal( cp_parsers_wrapper( prms, hif=hif ) )
+    lhal = cp_parsers_wrapper( prms, hif=hif )
 
     ## welcome ####################################################################
     print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')

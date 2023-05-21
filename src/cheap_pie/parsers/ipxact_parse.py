@@ -11,7 +11,7 @@ import sys     # pylint: disable=C0411
 import os.path # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_builder import CpBuilder # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_builder import CpHalBuilder # pylint: disable=C0413,E0401
 
 def ipxact_remove_prefix(ipx):
     """ remove ipxact or spirit prefix"""
@@ -36,7 +36,7 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     csv = ipxact_remove_prefix(csv)
 
     ## loop over lines ########################################################
-    cpb = CpBuilder(hif)
+    cpb = CpHalBuilder(hif)
 
     periph = csv.component.memoryMaps.memoryMap.addressBlock
     base_addr_str=periph.baseAddress.cdata.replace("'h",'0x')
@@ -55,7 +55,7 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                 # for field_idx in range(nfields):
                 if hasattr(reg,'field'):
                     for field in reg.field:
-                        if not field is None:                        
+                        if not field is None:
                             # Create new field
                             cpb.newfield(
                                 regfield = field.name.cdata,
@@ -65,7 +65,7 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                                 )
 
         # create last register, if existing
-        cpb.reg_close()
+        # cpb.reg_close()
 
     # convert output dictionary into structure
     return cpb.out()

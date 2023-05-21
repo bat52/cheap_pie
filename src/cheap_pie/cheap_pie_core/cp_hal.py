@@ -24,7 +24,7 @@ except:
     import tools.search
     from tools.hal2doc import hal2doc
 
-class cp_hal():
+class CpHal():
     """
     Cheap Pie Hardware Abstraction Layer
     """
@@ -151,7 +151,8 @@ def test_cp_hal_to_docx():
     from cheap_pie_core.cp_cli import cp_cli                   # pylint: disable=C0415,C0413,E0401
 
     prms = cp_cli(['-t','dummy','-rf','my_subblock.xml','-fmt','ipxact'])
-    hal = cp_hal(cp_parsers_wrapper(prms))
+    hal = cp_parsers_wrapper(prms)
+    assert isinstance(hal,CpHal)
     hal.to_docx()
 
 def test_cp_hal(): # pylint: disable=R0914,R0915
@@ -164,7 +165,8 @@ def test_cp_hal(): # pylint: disable=R0914,R0915
 
     print('# hal initialize')
     prms = cp_cli(['-t','dummy'])
-    hal = cp_hal(cp_parsers_wrapper(prms,CpDummyTransport()))
+    hal = cp_parsers_wrapper(prms,CpDummyTransport())
+    assert isinstance(hal,CpHal)
 
     print('# hal test register methods...')
     print('# hal hex assignement')

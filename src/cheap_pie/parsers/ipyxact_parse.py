@@ -12,7 +12,8 @@ import sys                                         # pylint: disable=C0411
 import os.path                                     # pylint: disable=C0411
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_builder import CpBuilder # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_builder import CpHalBuilder # pylint: disable=C0413,E0401
+from cheap_pie_core.cp_hal import CpHal # pylint: disable=C0413,E0401
 
 def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     """ Cheap Pie parser for IP-XACT structure with ipyxact """
@@ -21,13 +22,13 @@ def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     xml.load(fname)
 
     ## loop over lines ########################################################
-    cpb = CpBuilder(hif)
+    cpb = CpHalBuilder(hif)
 
     for mem in xml.memoryMaps.memoryMap:
         for periph in mem.addressBlock:
             if hasattr(periph,'register'):
                 for reg in periph.register:
-                    # new register                    
+                    # new register
                     regaddr=reg.addressOffset + periph.baseAddress + literal_eval(base_address_offset)
 
                     cpb.reg_open(
@@ -48,15 +49,17 @@ def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                                     )
 
             # create last register, if existing
-            cpb.reg_close()
+            # cpb.reg_close()
 
     # convert output dictionary into structure
     return cpb.out()
 
 def test_ipyxact_parse():
     """ Test function for IP-XACT parser with ipyxact """
-    ipyxact_parse("./devices/my_subblock.xml")
-    ipyxact_parse("./devices/generic_example.xml")
+    sbhal = ipyxact_parse("./devices/my_subblock.xml")
+    assert isinstance(sbhal,CpHal)
+    ehal = ipyxact_parse("./devices/generic_example.xml")
+    assert isinstance(ehal,CpHal)
 
     # ipyxact_parse("./devices/leon2_creg.xml")
     # ValueError: invalid literal for int() with base 10: '4 * (2 ** 10)'

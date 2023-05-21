@@ -12,6 +12,8 @@ from packaging import version
 
 import pyverilator
 
+from transport.cp_dummy_transport import hifread_preproc, hifwrite_preproc # pylint: disable=E0401
+
 def cli(args):
     """ Command Line Interface for pyverilator transport class """
     parser = argparse.ArgumentParser(description='rdl2verilog pyverilator ')
@@ -88,14 +90,8 @@ class CpPyverilatorTransport():
 
     def hifwrite(self, addr='0x00', val='0xB16B00B5', mask='0xFFFFFFFF'):
         """ Write register """
-        if isinstance(addr,str):
-            addr = literal_eval(addr)
 
-        if isinstance(val,str):
-            val = literal_eval(val)
-
-        if isinstance(mask,str):
-            mask = literal_eval(mask)
+        addr,val,mask = hifwrite_preproc(addr,val,mask)
 
         # write value
         self.sim.io.addr = addr
@@ -123,8 +119,7 @@ class CpPyverilatorTransport():
 
     def hifread(self,addr = '0x00'):
         """ Read register """
-        if isinstance(addr,str):
-            addr = literal_eval(addr)
+        addr = hifread_preproc(addr)
 
         # SW read
         self.sim.io.addr = addr
