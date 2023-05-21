@@ -256,7 +256,7 @@ class CpRegister(): # pylint: disable=R0902
 
         for field in reversed(self.get_ordered_bitfields(fieldname="")):
             wdlines.append(
-                '{ "name": "%s",   "bits": %d, "attr": "%s" },' % (
+                '{ "name": "%s",   "bits": %d, "attr": "%s" },' % ( # pylint: disable=C0209
                     field.fieldname,field.width,field.read_write
                     )
                 )
