@@ -37,13 +37,13 @@ class CpBitfield():  # pylint: disable=R0902
     hif = None
 
     # read/write
-    rw  = "rw"
+    read_write = "rw"
 
     # reset value
     reset = 0
 
     def __init__(self, regfield="",regaddr=0, regname="", width="1", # pylint: disable=R0913
-                 bit_offset="0", comments="", hif=None, rw = "rw", reset=0):
+                 bit_offset="0", comments="", hif=None, read_write = "rw", reset=0):
 
         if isinstance(width,str):
             width= literal_eval(width)
@@ -71,7 +71,11 @@ class CpBitfield():  # pylint: disable=R0902
         self.regname = regname
         self.fieldname = regfield
         self.hif = hif
-        self.rw = rw
+
+        assert isinstance(read_write,str)
+        assert read_write.lower() in ['r','w','rw']
+        self.read_write = read_write
+
         self.reset = reset
 
     def __str__(self,fieldval=None,width=25):

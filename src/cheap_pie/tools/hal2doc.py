@@ -108,10 +108,10 @@ def doc_add_regtable(doc,reg,tablestyle=None,nbits_addr=32):
         row_cells[0].text = field.fieldname
         row_cells[0].width = cwidths[0]*INCH2EMU
 
-        if len(field.rw)/field.width > 1:
-            row_cells[1].text = str.lower(field.rw[0:2])
+        if len(field.read_write)/field.width > 1:
+            row_cells[1].text = str.lower(field.read_write[0:2])
         else:
-            row_cells[1].text = str.lower(field.rw)
+            row_cells[1].text = str.lower(field.read_write)
         row_cells[1].width = cwidths[1]*INCH2EMU
 
         if field.width == 1:
