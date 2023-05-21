@@ -119,8 +119,7 @@ class CpHal():
 
                 for idx in range(len(f1regstr)): # pylint: disable=C0200
                     if not f1regstr[idx]==f2regstr[idx]:
-                        linestr = fmtstr % (f1regstr[idx],f2regstr[idx])
-                        outstrlist.append(linestr)
+                        outstrlist.append(fmtstr % (f1regstr[idx],f2regstr[idx]))
 
         # print output
         if len(outstrlist) > 0:
