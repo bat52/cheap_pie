@@ -115,7 +115,7 @@ class CpBitfield():  # pylint: disable=R0902
         fieldstr = self.__str__(fieldval=fieldval) # pylint: disable=C2801
         print(fieldstr)
 
-    def getbit(self,regval=None,echo=False,as_signed=False,*args,**kwargs):
+    def getbit(self,regval=None,echo=False,as_signed=False): # ,*args,**kwargs):
         """ function display(self,regval=None,echo=False,as_signed=False)
         # displays value of a bitfield from a register value
         # input : regval value of the full register either in decimal or
@@ -125,7 +125,7 @@ class CpBitfield():  # pylint: disable=R0902
             if self.hif is None:
                 regval=0
             else:
-                regval=self.hif.hifread(self.addr,*args,**kwargs)
+                regval=self.hif.hifread(self.addr) # ,*args,**kwargs)
 
         # compute field value from register value
         if isinstance(regval, str):

@@ -65,7 +65,7 @@ def doc_create_header(template=None):
 
     return document
 
-def doc_add_regtable(doc,reg,tablestyle=None,nbits_addr=32):
+def doc_add_regtable(doc,reg,tablestyle=None,nbits_addr=32): # pylint: disable=R0912
     """ Add table description of a register to a document """
     # header
     doc.add_heading(reg.regname, level=3)
@@ -84,7 +84,6 @@ def doc_add_regtable(doc,reg,tablestyle=None,nbits_addr=32):
 
     if tablestyle is not None:
         table.style = tablestyle
-
     # table.alignment = WD_TABLE_ALIGNMENT.CENTER
 
     # configure column width
