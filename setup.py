@@ -22,6 +22,7 @@ setup(
           'cmsis-svd',
           'ipyxact',
           'python-docx',
+          'wavedrom',
           'pyverilator',
           'peakrdl-ipxact',
           'peakrdl-uvm',

@@ -13,6 +13,7 @@ from collections import namedtuple
 from ast import literal_eval
 from operator import attrgetter
 
+import wavedrom
 from cheap_pie.cheap_pie_core.cbitfield import CpBitfield
 
 def dict2namedtuple(outdict,tuplename="HAL"):
@@ -32,7 +33,7 @@ def isnamedtupleinstance(xtuple):
         return False
     return all( isinstance(n,str) for n in fff)
 
-def reg_add_reserved_bitfields(fields,regwidth=32):
+def reg_add_reserved_bitfields(fields,regwidth=32, fieldname="Reserved", read_write="r"):
     """ Add inferred reserved bits to register description """
     next_lsb = 0
     outfields = []
@@ -46,8 +47,10 @@ def reg_add_reserved_bitfields(fields,regwidth=32):
 
                 if next_lsb < field.lsb:
                     # print("Add Reserved field!")
-                    newfield=CpBitfield("Reserved",0,field.regname,
-                                         field.lsb-next_lsb,next_lsb,"Reserved")
+                    newfield=CpBitfield(fieldname,0,field.regname,
+                                         field.lsb-next_lsb,next_lsb,
+                                         comments = "Reserved",
+                                         read_write=read_write)
                     outfields.insert(1,newfield)
                     # outfields.append(newfield)
 
@@ -56,8 +59,11 @@ def reg_add_reserved_bitfields(fields,regwidth=32):
 
             # check if register is filled up to full width
             if next_lsb < regwidth:
-                newfield=CpBitfield("Reserved",0,fields[0].regname,
-                                     regwidth-next_lsb,next_lsb,"Reserved")
+                newfield=CpBitfield(fieldname,0,fields[0].regname,
+                                     regwidth-next_lsb,next_lsb,
+                                     comments="Reserved",
+                                     read_write=read_write
+                                     )
                 outfields.insert(0,newfield)
 
     return outfields
@@ -225,7 +231,7 @@ class CpRegister(): # pylint: disable=R0902
 
         return self.bitfields
 
-    def get_ordered_bitfields(self):
+    def get_ordered_bitfields(self,fieldname="Reserved"):
         """ Return ordered list of bitfields sorted by position and including Reserved fields """
         # convert bitfields namedtuple into list
         bitfields = list(self.bitfields)
@@ -235,7 +241,41 @@ class CpRegister(): # pylint: disable=R0902
         bitfields.reverse()
 
         # add reserved bitfields
-        return reg_add_reserved_bitfields(bitfields)
+        return reg_add_reserved_bitfields(bitfields,fieldname=fieldname)
+
+    def save_wavedrom_json(self):
+        """ Export wavedrom .svg representation of register """
+        jfname = f'{self.regname}.json'
+
+        wdlines = []
+
+        # reg header
+        wdlines.append(
+            '{ "reg": [',
+        )
+
+        for field in reversed(self.get_ordered_bitfields(fieldname="")):
+            wdlines.append(
+                '{ "name": "%s",   "bits": %d, "attr": "%s" },' % (
+                    field.fieldname,field.width,field.read_write
+                    )
+                )
+
+        # reg header
+        wdlines.append(']}')
+
+        with open(jfname,'w',encoding='utf-8') as fileh:
+            for line in wdlines:
+                fileh.write(line + '\n')
+
+        return jfname
+
+    def save_wavedrom_svg(self):
+        """ Export wavedrom .svg representation of register """
+        svgfname = f'{self.regname}.svg'
+        jfname = self.save_wavedrom_json()
+        wavedrom.render_file( jfname, svgfname)
+        return svgfname
 
     def __contains__(self, key):
         if self.bitfields is None:
@@ -439,6 +479,13 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     for field in bitfields:
         print(field)
     assert len(bitfields) == 4
+
+    print('# reg save wavedrom json')
+    wdfile = reg.save_wavedrom_json()
+    assert os.path.isfile(wdfile)
+    print('# reg save wavedrom svg')
+    wdfile = reg.save_wavedrom_svg()
+    assert os.path.isfile(wdfile)
 
 if __name__ == '__main__':
     test_cp_register()

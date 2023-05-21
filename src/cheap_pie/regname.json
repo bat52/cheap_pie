@@ -1,0 +1,6 @@
+{ "reg": [
+{ "name": "",   "bits": 2, "attr": "r" },
+{ "name": "fname1",   "bits": 2, "attr": "rw" },
+{ "name": "fname2",   "bits": 3, "attr": "rw" },
+{ "name": "",   "bits": 25, "attr": "r" },
+]}
