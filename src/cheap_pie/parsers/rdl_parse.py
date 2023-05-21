@@ -4,12 +4,9 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-import sys
-import os.path
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-
-from parsers.ipyxact_parse import ipyxact_parse # pylint: disable=C0413,E0401
-from tools.rdl2any import rdl2any               # pylint: disable=C0413,E0401
+from cheap_pie.parsers.ipyxact_parse import ipyxact_parse    # pylint: disable=C0413,E0401
+from cheap_pie.tools.rdl2any import rdl2any                  # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname # pylint: disable=C0413,E0401
 
 def rdl_parse(fname,hif=None,base_address_offset = "0x00000000" ):
     """ Cheap Pie function to parse .rdl files """
@@ -21,14 +18,15 @@ def rdl_parse(fname,hif=None,base_address_offset = "0x00000000" ):
 
 def test_rdl_parse():
     """ Cheap Pie function to test .rdl file parser """
-    rdl_parse("./devices/rdl/basic.rdl")
-    rdl_parse("./devices/rdl/counter.rdl")
+    rdl_parse(cp_devices_fname("rdl/basic.rdl"))
+    rdl_parse(cp_devices_fname("rdl/counter.rdl"))
 
 if __name__ == '__main__':
+    import sys
     if len(sys.argv) > 1:
         FNAME=sys.argv[1]
     else:
-        FNAME="./devices/rdl/basic.rdl"
+        FNAME=cp_devices_fname("rdl/basic.rdl")
     print(FNAME)
     hal = rdl_parse(FNAME)
     print(hal)

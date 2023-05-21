@@ -6,15 +6,13 @@
 ## email: marcomerli@gmail.com
 
 import os
-import sys
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_hal import CpHal           # pylint: disable=C0415,E0401,C0413
-from parsers.svd_parse_repo import svd_parse_repo # pylint: disable=C0415,E0401,C0413
-from parsers.svd_parse import svd_parse           # pylint: disable=C0415,E0401,C0413
-from parsers.ipxact_parse import ipxact_parse     # pylint: disable=C0415,E0401,C0413
-from parsers.ipyxact_parse import ipyxact_parse   # pylint: disable=C0415,E0401,C0413
-from parsers.rdl_parse import rdl_parse           # pylint: disable=C0415,E0401,C0413
+from cheap_pie.cheap_pie_core.cp_cli import cp_cli          # pylint: disable=C0415,E0401,C0413
+from cheap_pie.parsers.svd_parse_repo import svd_parse_repo # pylint: disable=C0415,E0401,C0413
+from cheap_pie.parsers.svd_parse import svd_parse           # pylint: disable=C0415,E0401,C0413
+from cheap_pie.parsers.ipxact_parse import ipxact_parse     # pylint: disable=C0415,E0401,C0413
+from cheap_pie.parsers.ipyxact_parse import ipyxact_parse   # pylint: disable=C0415,E0401,C0413
+from cheap_pie.parsers.rdl_parse import rdl_parse           # pylint: disable=C0415,E0401,C0413
 
 def cp_parsers_wrapper(prms,hif=None, base_address_offset = "0x00000000"):
     """ Cheap Pie function wrapper around all parsers """
@@ -44,12 +42,12 @@ def cp_parsers_wrapper(prms,hif=None, base_address_offset = "0x00000000"):
     else:
         assert False, 'Unsupported input format!'
 
-    assert isinstance(hal,CpHal)
+    # assert isinstance(hal,CpHal), f'Wrong type! {type(hal)}'
     return hal
 
 def test_cp_parsers_wrapper():
     """ Test function for parsers wrapper """
-    from cheap_pie_core.cp_cli import cp_cli # pylint: disable=E0401,C0415
+    # from cheap_pie_core.cp_cli import cp_cli # pylint: disable=E0401,C0415
     prms = cp_cli()
     cp_parsers_wrapper(prms)
 

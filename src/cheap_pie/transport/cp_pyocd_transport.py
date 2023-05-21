@@ -7,9 +7,9 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-from ast import literal_eval
 from pyocd.core.helpers import ConnectHelper
-from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy, hifread_preproc, hifwrite_preproc # pylint: disable=E0401
+from cheap_pie.transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy, \
+    hifread_preproc,hifwrite_preproc # pylint: disable=E0401
 class CpPyocdTransport(CpDummyTransport):
     """ A wrapper around pyocd transport """
     ocd = None

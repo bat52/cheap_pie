@@ -7,7 +7,7 @@ rm $START
 echo "%load_ext autoreload" > $START
 echo "%autoreload" >> $START
 echo "# %reset" >> $START
-echo "%run ./cheap_pie_core/cheap_pie.py $@" >> $START
+echo "%run ./cheap_pie_core/cheap_pie_main.py $@" >> $START
 echo "%tb" >> $START 
 
 # add start to ipython default

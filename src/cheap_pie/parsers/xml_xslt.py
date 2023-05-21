@@ -10,15 +10,20 @@ import os
 import difflib
 
 import lxml.etree as ET
+from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname, cp_root_dir
 
 def xml_xslt_parse(args=[]): # pylint: disable=W0102
     """ Parsing function for xml converter """
     parser = argparse.ArgumentParser(description='Apply XSLT to .xml file')
     parser.add_argument("-in", "--input", help=".xml input",
-                        action='store', type = str, default="./devices/generic_example.xml")
+                        action='store', type = str, default=cp_devices_fname("generic_example.xml"))
     parser.add_argument("-xslt", "--xslt", help=".xslt file",
                         action='store', type = str,
-                        default="./parsers/ipxact_rules/from1685_2009_to_1685_2014.xsl")
+                        default=os.path.join(
+                            cp_root_dir(),
+                            "parsers/ipxact_rules/from1685_2009_to_1685_2014.xsl"
+                            )
+                        )
     parser.add_argument("-out", "--output", help=".xml output",
                         action='store', type = str, default="output.xml")
     return parser.parse_args(args)

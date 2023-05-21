@@ -7,11 +7,12 @@
 from ast import literal_eval
 import untangle # for parsing xml
 
-import sys     # pylint: disable=C0411
-import os.path # pylint: disable=C0411
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+#import sys     # pylint: disable=C0411
+#import os.path # pylint: disable=C0411
+#sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_builder import CpHalBuilder # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_builder import CpHalBuilder # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname
 
 def ipxact_remove_prefix(ipx):
     """ remove ipxact or spirit prefix"""
@@ -72,14 +73,16 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
 
 def test_ipxact_parse():
     """ Test function for cheap pie native IP-XACT parser """
-    ipxact_parse("./devices/my_subblock.xml")
-    ipxact_parse("./devices/leon2_creg.xml")
-    ipxact_parse("./devices/generic_example.xml")
+
+    ipxact_parse(cp_devices_fname("my_subblock.xml"))
+    ipxact_parse(cp_devices_fname("leon2_creg.xml"))
+    ipxact_parse(cp_devices_fname("generic_example.xml"))
 
 if __name__ == '__main__':
+    import sys
     if len(sys.argv) > 1:
         LFNAME=sys.argv[1]
     else:
-        LFNAME="./devices/my_subblock.xml"
+        LFNAME=cp_devices_fname("my_subblock.xml")
     print(LFNAME)
     print(ipxact_parse(LFNAME))

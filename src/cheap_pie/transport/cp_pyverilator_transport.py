@@ -12,7 +12,7 @@ from packaging import version
 
 import pyverilator
 
-from transport.cp_dummy_transport import hifread_preproc, hifwrite_preproc # pylint: disable=E0401
+from cheap_pie.transport.cp_dummy_transport import hifread_preproc, hifwrite_preproc # pylint: disable=E0401
 
 def cli(args):
     """ Command Line Interface for pyverilator transport class """
@@ -141,7 +141,7 @@ class CpPyverilatorTransport():
 
 def verilator_version():
     """ Return verilator version """
-    result = subprocess.run(['verilator', '--version'], stdout=subprocess.PIPE)
+    result = subprocess.run(['verilator', '--version'], stdout=subprocess.PIPE, check=False)
     ver = result.stdout.split()[1]
     return ver.decode("utf-8")
 

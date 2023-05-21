@@ -7,15 +7,10 @@
 ## email: marcomerli@gmail.com
 
 from operator import attrgetter
-
 from docx import Document
 # from docx.enum.table import WD_TABLE_ALIGNMENT
 
-import sys     # pylint: disable=C0411
-import os.path # pylint: disable=C0411
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-
-from cheap_pie_core.cbitfield import CpBitfield # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cbitfield import CpBitfield # pylint: disable=C0413,E0401
 
 INCH2EMU = 914400
 
@@ -171,8 +166,11 @@ def test_hal2doc():
     """ Test function for export tool from register description to .docx """
     print('Testing hal2doc...')
 
-    from parsers.ipxact_parse import ipxact_parse # pylint: disable=C0413,E0401,C0415
-    hal = ipxact_parse(fname="./devices/my_subblock.xml")
+    from cheap_pie.parsers.ipxact_parse import ipxact_parse      # pylint: disable=C0413,E0401,C0415
+    from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname # pylint: disable=C0413,E0401,C0415
+
+    fname = cp_devices_fname("my_subblock.xml")
+    hal = ipxact_parse(fname=fname)
 
     # convert to .docx
     hal2doc(hal)

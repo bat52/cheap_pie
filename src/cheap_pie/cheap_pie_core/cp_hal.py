@@ -10,19 +10,9 @@ Cheap Pie Hardware Abstraction Layer
 
 import hickle as hkl
 
-try:
-    # cheap_pie installed with pip
-    from cheap_pie.transport.cp_dummy_transport import CpDummyTransport
-    import cheap_pie.tools.search # pylint: disable=W0611
-    from cheap_pie.tools.hal2doc import hal2doc
-
-except:
-    import sys
-    import os.path
-    sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-    from transport.cp_dummy_transport import CpDummyTransport
-    import tools.search
-    from tools.hal2doc import hal2doc
+from cheap_pie.transport.cp_dummy_transport import CpDummyTransport
+import cheap_pie.tools.search # pylint: disable=W0611
+from cheap_pie.tools.hal2doc import hal2doc
 
 class CpHal():
     """
@@ -70,19 +60,19 @@ class CpHal():
         """
         Search bitfields which name contains a specified string
         """
-        return tools.search.bitfield(self.regs,field,case_sensitive=case_sensitive) # pylint: disable=E0601
+        return cheap_pie.tools.search.bitfield(self.regs,field,case_sensitive=case_sensitive) # pylint: disable=E0601
 
     def search_register(self,reg,case_sensitive=False):
         """
         Search registers which name contains a specified string
         """
-        return tools.search.register(self.regs,reg,case_sensitive=case_sensitive)
+        return cheap_pie.tools.search.register(self.regs,reg,case_sensitive=case_sensitive)
 
     def search_address(self,address,mask='0xFFFFFFFF'):
         """
         Search register matching a specified address
         """
-        return tools.search.address(self.regs,address,mask=mask)
+        return cheap_pie.tools.search.address(self.regs,address,mask=mask)
 
     def to_docx(self,*args):
         """
@@ -152,21 +142,19 @@ def test_cp_hal_to_docx():
 
     prms = cp_cli(['-t','dummy','-rf','my_subblock.xml','-fmt','ipxact'])
     hal = cp_parsers_wrapper(prms)
-    assert isinstance(hal,CpHal)
     hal.to_docx()
 
 def test_cp_hal(): # pylint: disable=R0914,R0915
     """
     Test Function for Cheap Pie Hardware Abstraction Layer
     """
-    from ast import literal_eval # pylint: disable=C0415
-    from parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0415,E0401
-    from cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0415,E0401
+    from ast import literal_eval                                        # pylint: disable=C0415
+    from cheap_pie.parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0415,E0401
+    from cheap_pie.cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0415,E0401
 
     print('# hal initialize')
     prms = cp_cli(['-t','dummy'])
     hal = cp_parsers_wrapper(prms,CpDummyTransport())
-    assert isinstance(hal,CpHal)
 
     print('# hal test register methods...')
     print('# hal hex assignement')

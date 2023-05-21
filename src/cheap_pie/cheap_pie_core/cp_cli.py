@@ -6,8 +6,26 @@ Cheap Pie Command Line Interface
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-import argparse
+import os
 import sys
+import pathlib
+import argparse
+
+def cp_root_dir():
+    """ Returns the full path of Cheap Pie root directory """
+    return pathlib.Path(__file__).parent.parent.absolute()
+
+def cp_devices_dir():
+    """ Returns the full path of ad filename in Cheap Pie devices directory """
+    return os.path.join(
+        cp_root_dir(),
+        'devices')
+
+def cp_devices_fname(fname):
+    """ Returns the full path of ad filename in Cheap Pie devices directory """
+    return os.path.join(
+            cp_devices_dir(), fname
+            )
 
 def cp_cli(args=[]): # pylint: disable=W0102
     """
@@ -18,7 +36,9 @@ def cp_cli(args=[]): # pylint: disable=W0102
     parser.add_argument("-rf", "--regfname", help="register description file name",
                         action='store', type = str, default="QN908XC.svd")
     parser.add_argument("-dd", "--devicedir", help="register description files folder",
-                        action='store', type = str, default="./devices")
+                        action='store', type = str,
+                        default=cp_devices_dir()
+                        )
     parser.add_argument("-fmt","--format", help="device description format",
                         action='store', type = str, default="cmsis-svd",
                         choices=["svd","cmsis-svd","ipxact","ipyxact","rdl"])

@@ -55,9 +55,12 @@ def address(hal, addr, mask='0xFFFFFFFF'):
 
 def test_search():
     """ Test Search Module """
+    from cheap_pie.parsers.svd_parse_repo import svd_parse_repo  # pylint: disable=E0401,C0415
+    from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname # pylint: disable=E0401,C0415
     print('Testing search...')
-    from parsers.svd_parse_repo import svd_parse_repo # pylint: disable=E0401,C0415
-    hal = svd_parse_repo(fname="./devices/QN908XC.svd", hif=None)
+
+    fname = cp_devices_fname("QN908XC.svd")
+    hal = svd_parse_repo(fname=fname, hif=None)
 
     print('## ADC registers:')
     ret = register(hal,'ADC')

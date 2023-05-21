@@ -11,7 +11,7 @@ import os
 from ast import literal_eval
 import esptool
 
-from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy # pylint: disable=E0401
+from cheap_pie.transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy # pylint: disable=E0401
 
 class CpEsptoolTransport(CpDummyTransport):
     """ A wrapper around esptool transport """

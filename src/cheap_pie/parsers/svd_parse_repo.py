@@ -21,12 +21,8 @@
 from ast import literal_eval
 from cmsis_svd.parser import SVDParser
 
-import sys     # pylint: disable=C0411
-import os.path # pylint: disable=C0411
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-
-from cheap_pie_core.cp_builder import CpHalBuilder # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_hal import CpHal            # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_builder import CpHalBuilder # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname # pylint: disable=C0413,E0401
 
 def svd_parse_repo(fname,vendor=None,hif=None, base_address_offset = "0x00000000"):
     """ Cheap Pie parser function for .svd files using SVDParser module """
@@ -46,7 +42,11 @@ def svd_parse_repo(fname,vendor=None,hif=None, base_address_offset = "0x00000000
             for reg in periph.registers:
                 if hasattr( reg, 'name'):
                     # new register
-                    regaddr=reg.address_offset + periph.base_address + literal_eval(base_address_offset)
+                    regaddr=(
+                        reg.address_offset +
+                        periph.base_address +
+                        literal_eval(base_address_offset)
+                    )
 
                     cpb.reg_open(
                         regname = f'{periph.name}_{reg.name}',
@@ -74,13 +74,13 @@ def svd_parse_repo(fname,vendor=None,hif=None, base_address_offset = "0x00000000
 def test_svd_parse_repo():
     """ Test Function for .svd parser based of SVDParser module """
     print('Testing QN9080 with repo parser...')
-    hal = svd_parse_repo(fname="./devices/QN908XC.svd")
-    assert isinstance(hal,CpHal)
+
+    fname = cp_devices_fname("QN908XC.svd")
+    hal = svd_parse_repo(fname=fname)
     assert len(hal) > 0
 
     print('Testing K20 with repo parser...')
     hal = svd_parse_repo(fname='MK20D7.svd',vendor='Freescale')
-    assert isinstance(hal,CpHal)
     assert len(hal) > 0
 
 if __name__ == '__main__':

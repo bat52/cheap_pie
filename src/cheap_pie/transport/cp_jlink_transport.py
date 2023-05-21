@@ -7,9 +7,9 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-from ast import literal_eval
 import pylink
-from transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy, hifread_preproc, hifwrite_preproc # pylint: disable=E0401
+from cheap_pie.transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy, \
+    hifread_preproc,hifwrite_preproc # pylint: disable=E0401
 class CpJlinkTransport(CpDummyTransport):
     """ A wrapper around jlink transport """
     jl = None

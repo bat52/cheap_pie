@@ -5,14 +5,16 @@ This file is part of cheap_pie, a python tool for chip validation
  email: marcomerli@gmail.com
 """
 
-import os
-import sys
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+if __name__ == '__main__':
+    # needed if cheap_pie not installeds
+    import os
+    import sys
+    sys.path.append( os.path.join(os.path.dirname(__file__), '../..') )
 
-from parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_banner import cp_banner            # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0413,E0401
-from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0413,E0401
+from cheap_pie.parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_banner import cp_banner            # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0413,E0401
+from cheap_pie.transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0413,E0401
 
 # Ipython autoreload
 # %load_ext autoreload
@@ -38,16 +40,16 @@ def cp_main(argv=[]): # pylint: disable=W0102
     if prms.transport == 'dummy':
         hif = CpDummyTransport()
     elif prms.transport == 'jlink': # disable jlink for testing
-        from transport.cp_jlink_transport import CpJlinkTransport # pylint: disable=C0413,C0415,E0401
+        from cheap_pie.transport.cp_jlink_transport import CpJlinkTransport # pylint: disable=C0413,C0415,E0401
         hif = CpJlinkTransport(device = prms.device )
     elif prms.transport == 'ocd':
-        from transport.cp_pyocd_transport import CpPyocdTransport # pylint: disable=C0413,C0415,E0401
+        from cheap_pie.transport.cp_pyocd_transport import CpPyocdTransport # pylint: disable=C0413,C0415,E0401
         hif = CpPyocdTransport(device = prms.device )
     elif prms.transport == 'esptool':
-        from transport.cp_esptool_transport import CpEsptoolTransport # pylint: disable=C0413,C0415,E0401
+        from cheap_pie.transport.cp_esptool_transport import CpEsptoolTransport # pylint: disable=C0413,C0415,E0401
         hif = CpEsptoolTransport(port = prms.port )
     elif prms.transport == 'verilator':
-        from transport.cp_pyverilator_transport import CpPyverilatorTransport # pylint: disable=C0413,C0415,E0401
+        from cheap_pie.transport.cp_pyverilator_transport import CpPyverilatorTransport # pylint: disable=C0413,C0415,E0401
         hif = CpPyverilatorTransport( prms.top_verilog )
     else:
         hif=None

@@ -1,8 +1,4 @@
 """ Cheap Pie tools """
-try:
-    # cheap_pie installed
-    import cheap_pie.tools.hal2doc
-    import cheap_pie.tools.search
-except:
-    import tools.hal2doc
-    import tools.search
+from .hal2doc import *
+from .rdl2any import *
+from .search import *

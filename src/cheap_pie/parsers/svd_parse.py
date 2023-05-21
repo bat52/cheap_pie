@@ -20,11 +20,8 @@
 from ast import literal_eval
 import untangle # for parsing xml
 
-import sys     # pylint: disable=C0411
-import os.path # pylint: disable=C0411
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-
-from cheap_pie_core.cp_builder import CpHalBuilder # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_builder import CpHalBuilder # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname
 
 def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): # pylint: disable=W0613
     """ Cheap Pie native parser for .svd files """
@@ -45,7 +42,11 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
                 if hasattr( reg.name, 'cdata'):
                     # new register
                     addr_str=reg.addressOffset.cdata
-                    regaddr=literal_eval(addr_str) + base_address + literal_eval(base_address_offset)
+                    regaddr=(
+                        literal_eval(addr_str) +
+                        base_address +
+                        literal_eval(base_address_offset)
+                    )
 
                     cpb.reg_open(
                         regname=f'{periph.name.cdata}_{reg.name.cdata}',
@@ -72,15 +73,17 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
 
 def test_svd_parse(argv=[]): # pylint: disable=W0102
     """ test function for .svd parser """
+
     if len(argv) > 1:
         fname=argv[1]
     else:
-        fname="./devices/QN908XC.svd"
-        # fname="./devices/MIMXRT1011.svd"
+        fname = cp_devices_fname("QN908XC.svd")
+
     hal = svd_parse(fname)
     assert len(hal) > 0
 
     return hal
 
 if __name__ == '__main__':
+    import sys
     print(svd_parse(sys.argv))

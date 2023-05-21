@@ -12,14 +12,8 @@ import textwrap
 from collections import namedtuple
 from ast import literal_eval
 
-try:
-    # cheap_pie installed with pip
-    from cheap_pie.cheap_pie_core.cbitfield import CpBitfield
-except:
-    try:
-        from cheap_pie_core.cbitfield import CpBitfield
-    except:
-        from cbitfield import CpBitfield
+# cheap_pie installed with pip
+from cheap_pie.cheap_pie_core.cbitfield import CpBitfield
 
 def dict2namedtuple(outdict,tuplename="HAL"):
     """ Convert a dictionary into a namedtuple """

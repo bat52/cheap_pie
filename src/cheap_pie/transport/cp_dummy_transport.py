@@ -72,6 +72,7 @@ class CpDummyTransport():
 
 def test_cp_dummy( transport = CpDummyTransport() ):
     """ Test transport mockup """
+    print("# Test dummy transport")
     addr = 4
     val = 5
     transport.hifwrite(addr=addr,val=val)
