@@ -261,10 +261,16 @@ class CpRegBuilder():
         # for some reason need to reset this
         self.dictfields = {}
 
-    def addfield(self, regfield, regaddr,regname,width,offset,comments='',hif=None):
+    def addfield(self, regfield, width, offset, comments=''):
         """ Add a field to a register dictionary of fields """
         self.dictfields[regfield]=CpBitfield(
-            regfield,regaddr,regname,width,offset,comments,hif)
+            regfield=regfield,
+            width=width,
+            bit_offset=offset,
+            comments=comments,
+            regaddr=self.addr,
+            regname=self.regname,
+            hif=self.hif)
 
     def dictfield2struct(self):
         """ Convert the list of bitfields into a namedtuple """
@@ -323,22 +329,16 @@ def test_cp_register(): # pylint: disable=R0914,R0915
 
     reg_build.addfield(
         regfield = 'fname1',
-        regaddr = 11,
-        regname = 'rname1',
         width = '2',
         offset = '2',
         comments = 'comment1',
-        hif = CpDummyTransport()
     )
 
     reg_build.addfield(
         regfield = 'fname2',
-        regaddr = 12,
-        regname = 'rname2',
         width = '3',
         offset = '4',
         comments = 'comment2',
-        hif = CpDummyTransport()
     )
 
     reg = reg_build.dictfield2struct()

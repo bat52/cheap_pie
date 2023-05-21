@@ -21,7 +21,7 @@ def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     ## loop over lines ########################################################
     cpb = CpHalBuilder(hif)
 
-    for mem in xml.memoryMaps.memoryMap:
+    for mem in xml.memoryMaps.memoryMap: # pylint: disable=R1702
         for periph in mem.addressBlock:
             if hasattr(periph,'register'):
                 for reg in periph.register:
@@ -48,9 +48,6 @@ def ipyxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                                     offset=field.bitOffset,
                                     comments=field.description
                                     )
-
-            # create last register, if existing
-            # cpb.reg_close()
 
     # convert output dictionary into structure
     return cpb.out()

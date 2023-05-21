@@ -62,12 +62,9 @@ class CpHalBuilder():
         assert isinstance(self.struct_register,CpRegBuilder)
         self.struct_register.addfield(
             regfield=name_subs(regfield),
-            regaddr=self.struct_register.addr,
-            regname=self.struct_register.regname,
             width=width,
             offset=offset,
             comments=comments,
-            hif=self.hif
             )
 
     def out(self):

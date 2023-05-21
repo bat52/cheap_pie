@@ -35,7 +35,7 @@ def svd_parse_repo(fname,vendor=None,hif=None, base_address_offset = "0x00000000
     ## loop over lines ########################################################
     cpb = CpHalBuilder(hif)
 
-    for periph in svd.get_device().peripherals:
+    for periph in svd.get_device().peripherals:  # pylint: disable=R1702
         # print(periph.name.cdata)
 
         if hasattr(periph,'registers'):
@@ -64,9 +64,6 @@ def svd_parse_repo(fname,vendor=None,hif=None, base_address_offset = "0x00000000
                                     offset = field.bit_offset,
                                     comments = field.description,
                                 )
-
-            # create last register, if existing
-            # cpb.reg_close()
 
     # convert output dictionary into structure
     return cpb.out()

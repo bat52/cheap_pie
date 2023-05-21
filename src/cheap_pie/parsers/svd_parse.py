@@ -31,7 +31,7 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
     ## loop over lines ########################################################
     cpb = CpHalBuilder(hif)
 
-    for periph in svd.device.peripherals.peripheral:
+    for periph in svd.device.peripherals.peripheral: # pylint: disable=R1702
         # print(periph.name.cdata)
 
         base_addr_str=periph.baseAddress.cdata
@@ -64,9 +64,6 @@ def svd_parse(fname,vendor=None,hif=None, base_address_offset = "0x00000000"): #
                                     offset=field.bitOffset.cdata,
                                     comments=field.description.cdata,
                                     )
-
-            # create last register, if existing
-            # cpb.reg_close()
 
     # convert output dictionary into structure
     return cpb.out()

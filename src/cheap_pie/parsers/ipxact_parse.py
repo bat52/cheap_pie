@@ -43,7 +43,7 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
     base_addr_str=periph.baseAddress.cdata.replace("'h",'0x')
     base_address=literal_eval(base_addr_str)
 
-    if hasattr(periph,'register'):
+    if hasattr(periph,'register'): # pylint: disable=R1702
         for reg in periph.register:
             if hasattr( reg.name, 'cdata'):
                 # new register
@@ -64,9 +64,6 @@ def ipxact_parse(fname,hif=None, base_address_offset = "0x00000000"):
                                 offset = field.bitOffset.cdata,
                                 comments = "" # field.description.cdata
                                 )
-
-        # create last register, if existing
-        # cpb.reg_close()
 
     # convert output dictionary into structure
     return cpb.out()
