@@ -11,8 +11,8 @@ Register Class Module for Cheap Pie
 import textwrap
 from collections import namedtuple
 from ast import literal_eval
+from operator import attrgetter
 
-# cheap_pie installed with pip
 from cheap_pie.cheap_pie_core.cbitfield import CpBitfield
 
 def dict2namedtuple(outdict,tuplename="HAL"):
@@ -31,6 +31,37 @@ def isnamedtupleinstance(xtuple):
     if not isinstance(fff, tuple):
         return False
     return all( isinstance(n,str) for n in fff)
+
+def reg_add_reserved_bitfields(fields,regwidth=32):
+    """ Add inferred reserved bits to register description """
+    next_lsb = 0
+    outfields = []
+
+    if isinstance(fields,list):
+        if len(fields) > 0:
+            for idx in reversed(range(len(fields))):
+                field = fields[idx]
+                outfields.insert(0,field)
+                #outfields.append(field)
+
+                if next_lsb < field.lsb:
+                    # print("Add Reserved field!")
+                    newfield=CpBitfield("Reserved",0,field.regname,
+                                         field.lsb-next_lsb,next_lsb,"Reserved")
+                    outfields.insert(1,newfield)
+                    # outfields.append(newfield)
+
+                # print("LSB: %d, WIDTH: %d" % ( field.lsb, field.width ) )
+                next_lsb = field.lsb + field.width
+
+            # check if register is filled up to full width
+            if next_lsb < regwidth:
+                newfield=CpBitfield("Reserved",0,fields[0].regname,
+                                     regwidth-next_lsb,next_lsb,"Reserved")
+                outfields.insert(0,newfield)
+
+    return outfields
+
 class CpRegister(): # pylint: disable=R0902
     """
     Register Class for Cheap Pie
@@ -193,6 +224,18 @@ class CpRegister(): # pylint: disable=R0902
             return [e for e in self.bitfields if e._name == name] # pylint: disable=W0212
 
         return self.bitfields
+
+    def get_ordered_bitfields(self):
+        """ Return ordered list of bitfields sorted by position and including Reserved fields """
+        # convert bitfields namedtuple into list
+        bitfields = list(self.bitfields)
+
+        # sort by lsb
+        bitfields=sorted(bitfields,key=attrgetter('lsb'))
+        bitfields.reverse()
+
+        # add reserved bitfields
+        return reg_add_reserved_bitfields(bitfields)
 
     def __contains__(self, key):
         if self.bitfields is None:
@@ -390,6 +433,12 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     print('# reg dict-based readback')
     dregb = reg.getreg(asdict=True)
     assert dreg == dregb
+
+    print('# reg get_ordered_bitfields')
+    bitfields = reg.get_ordered_bitfields()
+    for field in bitfields:
+        print(field)
+    assert len(bitfields) == 4
 
 if __name__ == '__main__':
     test_cp_register()

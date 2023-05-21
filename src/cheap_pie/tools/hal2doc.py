@@ -6,43 +6,9 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-from operator import attrgetter
 from docx import Document
 # from docx.enum.table import WD_TABLE_ALIGNMENT
-
-from cheap_pie.cheap_pie_core.cbitfield import CpBitfield # pylint: disable=C0413,E0401
-
 INCH2EMU = 914400
-
-def reg_add_reserved_bitfields(fields,regwidth=32):
-    """ Add inferred reserved bits to register description """
-    next_lsb = 0
-    outfields = []
-
-    if isinstance(fields,list):
-        if len(fields) > 0:
-            for idx in reversed(range(len(fields))):
-                field = fields[idx]
-                outfields.insert(0,field)
-                #outfields.append(field)
-
-                if next_lsb < field.lsb:
-                    # print("Add Reserved field!")
-                    newfield=CpBitfield("Reserved",0,field.regname,
-                                         field.lsb-next_lsb,next_lsb,"Reserved")
-                    outfields.insert(1,newfield)
-                    # outfields.append(newfield)
-
-                # print("LSB: %d, WIDTH: %d" % ( field.lsb, field.width ) )
-                next_lsb = field.lsb + field.width
-
-            # check if register is filled up to full width
-            if next_lsb < regwidth:
-                newfield=CpBitfield("Reserved",0,fields[0].regname,
-                                     regwidth-next_lsb,next_lsb,"Reserved")
-                outfields.insert(0,newfield)
-
-    return outfields
 
 def int2hexstr(num,width): # pylint: disable=W0613
     """ Convert integer into hex string """
@@ -102,7 +68,7 @@ def doc_add_regtable(doc,reg,tablestyle=None,nbits_addr=32): # pylint: disable=R
         # hdr_cells[idx].alignment=WD_ALIGN_PARAGRAPH.CENTER
 
     # add bitfields
-    for field in reversed(reg.bitfields):
+    for field in reversed(reg.get_ordered_bitfields()):
         row_cells = table.add_row().cells
         row_cells[0].text = field.fieldname
         row_cells[0].width = cwidths[0]*INCH2EMU
@@ -143,18 +109,6 @@ def hal2doc(hal,fname='hal.docx',template=None,tablestyle=None,nbits_addr=32):
 
     # loop over registers
     for reg in hal:
-        # print(reg.regname)
-
-        # convert bitfields namedtuple into list
-        bitfields = list(reg.bitfields)
-
-        # sort by lsb
-        bitfields=sorted(bitfields,key=attrgetter('lsb'))
-        bitfields.reverse()
-
-        # add reserved bitfields
-        reg.bitfields = reg_add_reserved_bitfields(bitfields)
-
         # create register table
         doc_add_regtable(doc,reg,tablestyle,nbits_addr)
 
