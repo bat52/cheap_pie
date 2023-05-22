@@ -23,6 +23,7 @@ setup(
           'ipyxact',
           'python-docx',
           'wavedrom',
+          'wavedrom-ascii',
           'pyverilator',
           'peakrdl-ipxact',
           'peakrdl-uvm',

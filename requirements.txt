@@ -2,6 +2,7 @@ untangle
 hickle
 python-docx
 wavedrom
+wavedrom-ascii
 # parsers
 cmsis-svd
 ipyxact

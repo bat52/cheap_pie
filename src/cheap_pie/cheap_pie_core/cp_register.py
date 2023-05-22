@@ -12,8 +12,10 @@ import textwrap
 from collections import namedtuple
 from ast import literal_eval
 from operator import attrgetter
+import json
 
 import wavedrom
+from wavedrom_ascii import BitfieldASCII
 from cheap_pie.cheap_pie_core.cbitfield import CpBitfield
 
 def dict2namedtuple(outdict,tuplename="HAL"):
@@ -201,6 +203,7 @@ class CpRegister(): # pylint: disable=R0902
                 print( fmtstr % ('',line))
 
     def __repr__(self,regval = None ):
+        self.print_wavedrom()
         if len(self.bitfields) > 0:
             reg = []
             for field in self.bitfields :
@@ -243,30 +246,36 @@ class CpRegister(): # pylint: disable=R0902
         # add reserved bitfields
         return reg_add_reserved_bitfields(bitfields,fieldname=fieldname)
 
-    def save_wavedrom_json(self, vspace=200):
+    def gen_wavedrom(self, vspace=200):
+        """ generate wavedrom representation of register """
+        wdfields = []
+
+        for field in reversed(self.get_ordered_bitfields(fieldname="")):
+            wdfields.append(
+                { 'name': field.fieldname,
+                  'bits': field.width,
+                  'attr': field.read_write,
+                  'rotate': -90 }
+                )
+
+        wdconfig = { 'vspace': vspace }
+
+        wdreg = {
+            'reg' : wdfields,
+            'config': wdconfig
+        }
+
+        return wdreg
+
+    def save_wavedrom_json(self):
         """ Export wavedrom .svg representation of register """
         jfname = f'{self.regname}.json'
 
-        wdlines = []
-
-        # reg header
-        wdlines.append(
-            '{ reg: [',
-        )
-
-        for field in reversed(self.get_ordered_bitfields(fieldname="")):
-            wdlines.append(
-                '{ name: "%s", bits: %d, attr: "%s", rotate: -90 },' % ( # pylint: disable=C0209
-                    field.fieldname,field.width,field.read_write
-                    )
-                )
-
-        # reg header
-        wdlines.append('], config: { vspace: %d } }' % vspace) # pylint: disable=C0209
+        wdlines = json.dumps(self.gen_wavedrom(),indent=2)
 
         with open(jfname,'w',encoding='utf-8') as fileh:
             for line in wdlines:
-                fileh.write(line + '\n')
+                fileh.write(line)
 
         return jfname
 
@@ -276,6 +285,13 @@ class CpRegister(): # pylint: disable=R0902
         jfname = self.save_wavedrom_json()
         wavedrom.render_file( jfname, svgfname)
         return svgfname
+
+    def print_wavedrom(self):
+        """ Display wavedrom representation of register in the terminal """
+        field = BitfieldASCII.from_dict(self.gen_wavedrom())
+        print('')
+        print(field)
+        return field
 
     def __contains__(self, key):
         if self.bitfields is None:
@@ -480,6 +496,9 @@ def test_cp_register(): # pylint: disable=R0914,R0915
         print(field)
     assert len(bitfields) == 4
 
+    print('# reg gen wavedrom')
+    wd_dict = reg.gen_wavedrom()
+    assert isinstance(wd_dict,dict)
     print('# reg save wavedrom json')
     wdfile = reg.save_wavedrom_json()
     assert os.path.isfile(wdfile)
