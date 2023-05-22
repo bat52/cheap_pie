@@ -243,7 +243,7 @@ class CpRegister(): # pylint: disable=R0902
         # add reserved bitfields
         return reg_add_reserved_bitfields(bitfields,fieldname=fieldname)
 
-    def save_wavedrom_json(self):
+    def save_wavedrom_json(self, vspace=200):
         """ Export wavedrom .svg representation of register """
         jfname = f'{self.regname}.json'
 
@@ -251,18 +251,18 @@ class CpRegister(): # pylint: disable=R0902
 
         # reg header
         wdlines.append(
-            '{ "reg": [',
+            '{ reg: [',
         )
 
         for field in reversed(self.get_ordered_bitfields(fieldname="")):
             wdlines.append(
-                '{ "name": "%s",   "bits": %d, "attr": "%s" },' % ( # pylint: disable=C0209
+                '{ name: "%s", bits: %d, attr: "%s", rotate: -90 },' % ( # pylint: disable=C0209
                     field.fieldname,field.width,field.read_write
                     )
                 )
 
         # reg header
-        wdlines.append(']}')
+        wdlines.append('], config: { vspace: %d } }' % vspace) # pylint: disable=C0209
 
         with open(jfname,'w',encoding='utf-8') as fileh:
             for line in wdlines:

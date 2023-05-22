@@ -24,3 +24,4 @@ src/*.xml
 *.uvm
 *.sv
 *.cpp
+*.svg
