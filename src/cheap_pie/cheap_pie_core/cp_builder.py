@@ -8,12 +8,12 @@ Namedtuple HAL builder for Cheap Pie
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
-import sys     # pylint: disable=C0411
-import os.path # pylint: disable=C0411
-sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
+# import sys     # pylint: disable=C0411
+# import os.path # pylint: disable=C0411
+# sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from cheap_pie_core.cp_register import dict2namedtuple, isnamedtupleinstance, CpRegBuilder  # pylint: disable=C0413,E0401
-from cheap_pie_core.cp_hal import CpHal # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_register import dict2namedtuple, isnamedtupleinstance, CpRegBuilder  # pylint: disable=C0413,E0401
+from cheap_pie.cheap_pie_core.cp_hal import CpHal # pylint: disable=C0413,E0401
 
 def name_subs(regname=None):
     """ Names Substitution function for Cheap Pie parsers """

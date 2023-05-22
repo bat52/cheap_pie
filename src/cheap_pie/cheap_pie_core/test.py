@@ -8,9 +8,8 @@
 
 import unittest
 
-
 if __name__ == '__main__':
-    # needed if cheap_pie not installed
+    # needed if cheap_pie not installed, and running locally
     import sys
     import os.path
     sys.path.append( os.path.join(os.path.dirname(__file__), '../..') )

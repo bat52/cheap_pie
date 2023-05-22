@@ -10,9 +10,9 @@ Cheap Pie Hardware Abstraction Layer
 
 import hickle as hkl
 
-from cheap_pie.transport.cp_dummy_transport import CpDummyTransport
+from   cheap_pie.transport.cp_dummy_transport import CpDummyTransport
 import cheap_pie.tools.search # pylint: disable=W0611
-from cheap_pie.tools.hal2doc import hal2doc
+from   cheap_pie.tools.hal2doc import hal2doc
 
 class CpHal():
     """
