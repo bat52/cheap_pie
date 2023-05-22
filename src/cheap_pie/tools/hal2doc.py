@@ -119,8 +119,8 @@ def test_hal2doc():
     """ Test function for export tool from register description to .docx """
     print('Testing hal2doc...')
 
-    from cheap_pie.parsers.ipxact_parse import ipxact_parse      # pylint: disable=C0413,E0401,C0415
-    from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname # pylint: disable=C0413,E0401,C0415
+    from parsers.ipxact_parse import ipxact_parse      # pylint: disable=C0413,E0401,C0415
+    from cheap_pie_core.cp_cli import cp_devices_fname # pylint: disable=C0413,E0401,C0415
 
     fname = cp_devices_fname("my_subblock.xml")
     hal = ipxact_parse(fname=fname)

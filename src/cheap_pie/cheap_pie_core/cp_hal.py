@@ -10,7 +10,6 @@ Cheap Pie Hardware Abstraction Layer
 
 import hickle as hkl
 
-from   cheap_pie.transport.cp_dummy_transport import CpDummyTransport
 import cheap_pie.tools.search # pylint: disable=W0611
 from   cheap_pie.tools.hal2doc import hal2doc
 
@@ -148,12 +147,13 @@ def test_cp_hal(): # pylint: disable=R0914,R0915
     Test Function for Cheap Pie Hardware Abstraction Layer
     """
     from ast import literal_eval                                        # pylint: disable=C0415
-    from cheap_pie.parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0415,E0401
-    from cheap_pie.cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0415,E0401
+    from parsers.cp_parsers_wrapper import cp_parsers_wrapper # pylint: disable=C0415,E0401
+    from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0415,E0401
+    from cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0415,E0401
 
     print('# hal initialize')
     prms = cp_cli(['-t','dummy'])
-    hal = cp_parsers_wrapper(prms,CpDummyTransport())
+    hal = cp_parsers_wrapper(prms,hif=CpDummyTransport())
 
     print('# hal test register methods...')
     print('# hal hex assignement')
