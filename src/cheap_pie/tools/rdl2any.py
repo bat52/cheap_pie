@@ -14,8 +14,7 @@ try:
     # newer version
     from peakrdl_ipxact import IPXACTExporter
     from peakrdl_uvm import UVMExporter
-
-except ModuleNotFoundError():
+except ModuleNotFoundError: # not sure what should be put here
     # older version
     from peakrdl.ipxact import IPXACTExporter # pylint: disable=C0412
     from peakrdl.uvm import UVMExporter
