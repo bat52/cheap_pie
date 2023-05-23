@@ -21,11 +21,15 @@ class CpHal():
     hif = None
 
     def __init__(self,regs):
-        self.regs = regs
-        if len(regs) > 0:
-            self.hif = regs[0].hif
+        if isinstance(regs,CpHal):
+            # this allows generating CpHal super-classes from a CpHal instance
+            self.regs = regs.regs
         else:
-            print('# WARNING: no register defined!')
+            self.regs = regs
+            if len(regs) > 0:
+                self.hif = regs[0].hif
+            else:
+                print('# WARNING: no register defined!')
 
     def __len__(self):
         return len(self.regs)
@@ -130,6 +134,10 @@ class CpHal():
             print('No differences found!!!')
 
         return outstrlist
+
+class CpHalSuper(CpHal):
+    def super_method(self):
+        print('Super Method!!!')
 
 def test_cp_hal_to_docx():
     """
@@ -268,6 +276,10 @@ def test_cp_hal(): # pylint: disable=R0914,R0915
     print('# hal regs2dict')
     mydict = hal.regs2dict()
     assert isinstance(mydict,dict)
+
+    print('# CpHalSuper inheritance')
+    hal_super = CpHalSuper(hal)
+    hal_super.super_method()
 
 if __name__ == '__main__':
     test_cp_hal()
