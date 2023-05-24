@@ -154,22 +154,6 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         # gtkwave
         http://gtkwave.sourceforge.net/
 
-# Releasing
-
-Releases are published automatically when a tag is pushed to GitHub.
-
-.. code-block:: bash
-
-   # Set next version number
-   export RELEASE=x.x.x
-
-   # Create tags
-   git commit --allow-empty -m "Release $RELEASE"
-   git tag -a $RELEASE -m "Version $RELEASE"
-
-   # Push
-   git push upstream --tags
-
 # Register description formats
 regtool from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
 https://docs.opentitan.org/doc/rm/register_tool/
