@@ -29,7 +29,7 @@ class CpPyverilatorTransport():
     """
     sim = None
 
-    def __init__(self,fname):
+    def __init__(self,fname, gtkwave_en = False):
 
         # rename to .v, if .sv
         if not os.path.isfile(fname):
@@ -48,16 +48,23 @@ class CpPyverilatorTransport():
         print(ofname)
         self.sim = pyverilator.PyVerilator.build(ofname)
 
-        # start gtkwave to view the waveforms as they are made
-        self.sim.start_gtkwave()
+        if gtkwave_en: # still causing trouble in VSC and/or WSL
+            # start gtkwave to view the waveforms as they are made
+            self.sim.start_gtkwave()
 
-        # add all the io and internal signals to gtkwave
-        # sim.send_signal_to_gtkwave(sim.io)
-        # sim.send_signal_to_gtkwave(sim.internals)
+            # add all the io and internal signals to gtkwave
+            # sim.send_signal_to_gtkwave(sim.io)
+            # sim.send_signal_to_gtkwave(sim.internals)
 
-        # add all the io and internal signals to gtkwave
-        self.sim.send_to_gtkwave(self.sim.io)
-        self.sim.send_to_gtkwave(self.sim.internals)
+            # add all the io and internal signals to gtkwave
+            # self.sim.send_to_gtkwave(self.sim.io)
+            # self.sim.send_to_gtkwave(self.sim.internals)
+
+            self.sim.clock.send_to_gtkwave()
+            self.sim.io.resetn.send_to_gtkwave()
+            self.sim.io.addr.send_to_gtkwave()
+            self.sim.io.wdata.send_to_gtkwave()
+            self.sim.io.rdata.send_to_gtkwave()
 
         self.reset_release()
 
@@ -159,7 +166,7 @@ def verilator_version_ok():
 
 def test_cp_pyverilator(args=[]): # pylint: disable=W0102
     """ Test pyverilator transport """
-    if verilator_version_ok():
+    if True: # verilator_version_ok():
         prms = cli(args)
         hif = CpPyverilatorTransport(prms.fname)
         val = literal_eval('0x5A5A5A5A')

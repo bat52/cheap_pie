@@ -13,6 +13,6 @@ peakrdl-uvm
 # pylink-square
 # pyocd # requires cargo and rust toolchain
 # esptool
-# pyverilator
+# pyverilator-mm
 # other
 # packaging # for verilator version check
