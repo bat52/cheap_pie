@@ -61,7 +61,7 @@ class CpPyverilatorTransport():
             # self.sim.send_to_gtkwave(self.sim.internals)
 
             self.sim.clock.send_to_gtkwave()
-            self.sim.io.resetn.send_to_gtkwave()
+            self.sim.io.resetn.send_to_gtkwave() # pylint: disable=E1101
             self.sim.io.addr.send_to_gtkwave()
             self.sim.io.wdata.send_to_gtkwave()
             self.sim.io.rdata.send_to_gtkwave()
@@ -166,7 +166,7 @@ def verilator_version_ok():
 
 def test_cp_pyverilator(args=[]): # pylint: disable=W0102
     """ Test pyverilator transport """
-    if True: # verilator_version_ok():
+    if True: # verilator_version_ok(): pylint: disable=W0125
         prms = cli(args)
         hif = CpPyverilatorTransport(prms.fname)
         val = literal_eval('0x5A5A5A5A')
@@ -174,6 +174,7 @@ def test_cp_pyverilator(args=[]): # pylint: disable=W0102
         print( hex(hif.hifread()) )
         assert hif.hifread() == val
     else:
+        # this was fixed by pyverilator-mm
         print('Warning: pyverilator not working anymore \
               with verilator versions between 4.036 and 4.102.')
         print('https://github.com/chipsalliance/chisel3/issues/1565')
