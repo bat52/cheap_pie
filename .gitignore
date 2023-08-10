@@ -25,3 +25,5 @@ src/*.xml
 *.sv
 *.cpp
 *.svg
+src/cheap_pie/regname.json
+src/cheap_pie/regname.svg

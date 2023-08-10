@@ -193,6 +193,7 @@ class CpRegister(): # pylint: disable=R0902
     def help(self,width=25):
         """ function ret = help(self)
         # displays register comments """
+        self.print_wavedrom()
         print(self.comments)
 
         fmtstr = '%%%ds: %%s' % width # pylint: disable=C0209
@@ -203,7 +204,6 @@ class CpRegister(): # pylint: disable=R0902
                 print( fmtstr % ('',line))
 
     def __repr__(self,regval = None ):
-        self.print_wavedrom()
         if len(self.bitfields) > 0:
             reg = []
             for field in self.bitfields :
