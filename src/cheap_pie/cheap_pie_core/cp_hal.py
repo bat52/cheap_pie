@@ -136,6 +136,7 @@ class CpHal():
         return outstrlist
 
 class CpHalSuper(CpHal):
+    """ Just a dummy class for test """
     def super_method(self):
         print('Super Method!!!')
 
