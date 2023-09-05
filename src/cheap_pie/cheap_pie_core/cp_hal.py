@@ -113,7 +113,7 @@ class CpHal():
             regs_dict = self.regs2dict()
 
         # detect input file type from extension
-        fname_wo_ext, file_extension = os.path.splitext(fname)
+        _, file_extension = os.path.splitext(fname)
         assert file_extension in ['.txt', '.hkl']
 
         if file_extension == '.txt':
@@ -163,8 +163,8 @@ class CpHal():
         Convert a dumped .hkl file, or a dumped dictionary into a text file representation.
         Inputs:
             f1name: .hkl file containing dump dictionary, also defines .txt file output name
-            filed1: input dictionary of dumped values to save. .hkl file specified by f1name must exist, 
-                    if this is not specified
+            field1: input dictionary of dumped values to save. 
+                    .hkl file specified by f1name must exist, if this is not specified
             width: number of columns reserved for register and bitfield name
             save_en: save output to text file (default: True)
             print_en: print output to shell (default: False)
