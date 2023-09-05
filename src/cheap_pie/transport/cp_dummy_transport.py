@@ -13,8 +13,8 @@ def hex_bw(val, hex_digits_width=8):
     """ converts integer value into an hex string of fixed width """
     assert isinstance(val, int)
 
-    retstr = "{0:#0{1}x}".format(
-        val, hex_digits_width+2)  # pylint: disable=C0209
+    retstr = "{0:#0{1}x}".format( # pylint: disable=C0209
+        val, hex_digits_width+2)
 
     #  Explanation:
     # {   # Format identifier

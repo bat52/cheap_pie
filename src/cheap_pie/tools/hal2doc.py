@@ -22,6 +22,7 @@ def int2hexstr(num, width):  # pylint: disable=W0613
 
 
 def hexstr2int(hexstr):
+    """ Convert hex string into integer """
     return literal_eval('0x' + hexstr)
 
 
@@ -45,8 +46,8 @@ def doc_add_regtable(doc, reg, tablestyle=None, nbits_addr=32):  # pylint: disab
     doc.add_heading(reg.regname, level=3)
 
     # address
-    doc.add_paragraph('Offset Address: 0x%s' % int2hexstr(
-        reg.addr, nbits_addr/4))  # pylint: disable=C0209
+    doc.add_paragraph('Offset Address: 0x%s' % int2hexstr( # pylint: disable=C0209
+        reg.addr, nbits_addr/4))
 
     # description
     if isinstance(reg.comments, str):
@@ -91,15 +92,15 @@ def doc_add_regtable(doc, reg, tablestyle=None, nbits_addr=32):  # pylint: disab
         if field.width == 1:
             row_cells[2].text = "%d" % (field.lsb)  # pylint: disable=C0209
         else:
-            row_cells[2].text = "%d:%d" % (
-                field.lsb + field.width - 1, field.lsb)  # pylint: disable=C0209
+            row_cells[2].text = "%d:%d" % ( # pylint: disable=C0209
+                field.lsb + field.width - 1, field.lsb)
         row_cells[2].width = cwidths[2]*INCH2EMU
 
         if isinstance(field.reset, str):
             row_cells[3].text = field.reset
         else:
-            resetstr = "%d\'%s" % (field.width, bin(field.reset)[
-                                   1:])  # pylint: disable=C0209
+            resetstr = "%d\'%s" % (field.width, bin(field.reset)[ # pylint: disable=C0209
+                                   1:])
             row_cells[3].text = resetstr
         row_cells[3].width = cwidths[3]*INCH2EMU
 

@@ -102,7 +102,7 @@ class CpHal():
     def dump(self, fname='dump.hkl', regs_dict=None):
         """
         Dump the value of all registers in a .hkl file.
-        Inputs: 
+        Inputs:
             - fname: .hkl or .txt output file
             - regs_dict: specify a dictionary of register values.
                 registers will be read from chip, if not provided.
@@ -134,10 +134,10 @@ class CpHal():
         outstrlist = []
         for reg, val in field1.items():
             if not field2[reg] == val:
-                f1regstr = self[reg].__repr__(val).split(
-                    '\n')  # pylint: disable=C2801
-                f2regstr = self[reg].__repr__(field2[reg]).split(
-                    '\n')  # pylint: disable=C2801
+                f1regstr = self[reg].__repr__(val).split(  # pylint: disable=C2801
+                    '\n')
+                f2regstr = self[reg].__repr__(field2[reg]).split(  # pylint: disable=C2801
+                    '\n')
 
                 for idx in range(len(f1regstr)):  # pylint: disable=C0200
                     if not f1regstr[idx] == f2regstr[idx]:
@@ -158,12 +158,12 @@ class CpHal():
     def dump2text(self, f1name='dump.hkl', field1=None,
                   width=60, save_en=True, print_en=False, header_en=False,
                   byval=True, nbits_addr=32, nbits_val=32
-                  ):
+                  ):  # pylint: disable=R0913,R0914
         """
         Convert a dumped .hkl file, or a dumped dictionary into a text file representation.
         Inputs:
             f1name: .hkl file containing dump dictionary, also defines .txt file output name
-            field1: input dictionary of dumped values to save. 
+            field1: input dictionary of dumped values to save.
                     .hkl file specified by f1name must exist, if this is not specified
             width: number of columns reserved for register and bitfield name
             save_en: save output to text file (default: True)
@@ -183,18 +183,18 @@ class CpHal():
         outstrlist = []
         for reg, val in field1.items():
             if byval:
-                f1regstr = '%s %s\n' % (
+                f1regstr = '%s %s\n' % (  # pylint: disable=C0209
                     int2hexstr(self[reg].addr, nbits_addr/4),
                     int2hexstr(val, nbits_val / 4)
                 )
                 outstrlist.append(f1regstr)
             else:
-                f1regstr = self[reg].__repr__(val).split(
-                    '\n')  # pylint: disable=C2801
+                f1regstr = self[reg].__repr__(val).split(  # pylint: disable=C2801
+                    '\n')
                 for idx in range(len(f1regstr)):  # pylint: disable=C0200
                     outstrlist.append(fmtstr % f1regstr[idx])
 
-        fname_wo_ext, file_extension = os.path.splitext(f1name)
+        fname_wo_ext, _ = os.path.splitext(f1name)
 
         if header_en:
             # create a header with filenames
@@ -203,7 +203,7 @@ class CpHal():
 
         if save_en:
             outfname = fname_wo_ext + '.txt'
-            fh = open(outfname, "w")
+            file_handler = open(outfname, "w", encoding='utf8') # pylint: disable=R1732
             print(f'Output file: {outfname}')
 
         # print output
@@ -212,11 +212,11 @@ class CpHal():
                 if print_en:
                     print(line)
                 if save_en:
-                    fh.write(line)
+                    file_handler.write(line)
 
         # close file
         if save_en:
-            fh.close()
+            file_handler.close()
 
         # return outstrlist
 
@@ -225,14 +225,14 @@ class CpHal():
         Convert a dumped .txt file, in a .hkl file or a dictionary.
         Inputs:
             f1name: .txt file containing dump address and value in the form:
-                ADD43550 C0D3C057            
+                ADD43550 C0D3C057
         """
 
         assert os.path.isfile(fname)
 
         regs_dict = {}
-        with open(fname, 'r') as fh:
-            for line in fh:
+        with open(fname, 'r', encoding='utf8') as file_handler:
+            for line in file_handler:
                 line = line.strip()
                 addrstr, valstr = line.split(' ')
                 # print(f'addr: {addrstr}, val: {valstr}')
@@ -246,7 +246,7 @@ class CpHal():
                 regs_dict[regname] = val
 
         if save_en:
-            fname_wo_ext, file_extension = os.path.splitext(fname)
+            fname_wo_ext, _ = os.path.splitext(fname)
             outfname = fname_wo_ext + '.hkl'
             self.dump(fname=outfname, regs_dict=regs_dict)
 
@@ -257,6 +257,7 @@ class CpHalSuper(CpHal):
     """ Just a dummy class for test """
 
     def super_method(self):
+        """ Just a dummy method of super-class CpHalSuper """
         print('Super Method!!!')
 
 

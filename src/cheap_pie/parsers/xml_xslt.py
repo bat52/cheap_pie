@@ -36,8 +36,8 @@ def xml_xslt(xmlin, xslt, xmlout):
     xslt = ET.parse(xslt)  # pylint: disable=I1101
     transform = ET.XSLT(xslt)   # pylint: disable=I1101
     newdom = transform(dom)
-    infile = ET.tostring(newdom, pretty_print=True).decode(
-        'utf-8')  # pylint: disable=I1101
+    infile = ET.tostring(newdom, pretty_print=True).decode( # pylint: disable=I1101
+        'utf-8')
     # print(infile)
     if os.path.isfile(xmlout):
         os.remove(xmlout)

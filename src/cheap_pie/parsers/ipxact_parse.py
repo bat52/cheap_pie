@@ -23,8 +23,8 @@ def ipxact_remove_prefix(ipx):
         for elm in ipx.children:
             # remove all suffixes
             for repl in replist:
-                elm._name = elm._name.replace(
-                    repl, '')  # pylint: disable=W0212
+                elm._name = elm._name.replace( # pylint: disable=W0212
+                    repl, '')
             # remove recursively
             ipxact_remove_prefix(elm)
 

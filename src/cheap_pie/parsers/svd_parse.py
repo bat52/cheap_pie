@@ -59,7 +59,7 @@ def svd_parse(fname, vendor=None, hif=None, base_address_offset="0x00000000"):  
                         for field in reg.fields.field:
                             if not field is None:
                                 # Create new field class
-                                cpb.newfield(
+                                cpb.newfield( # pylint: disable=R0801
                                     regfield=field.name.cdata,
                                     width=field.bitWidth.cdata,
                                     offset=field.bitOffset.cdata,
