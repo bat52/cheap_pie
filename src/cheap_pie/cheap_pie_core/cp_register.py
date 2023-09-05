@@ -4,9 +4,9 @@ Register Class Module for Cheap Pie
 """
 #
 # -*- coding: utf-8 -*-
-## this file is part of cheap_pie, a python tool for chip validation
-## author: Marco Merlin
-## email: marcomerli@gmail.com
+# this file is part of cheap_pie, a python tool for chip validation
+# author: Marco Merlin
+# email: marcomerli@gmail.com
 
 import textwrap
 from collections import namedtuple
@@ -18,10 +18,12 @@ import wavedrom
 from wavedrom_ascii import BitfieldASCII
 from cheap_pie.cheap_pie_core.cbitfield import CpBitfield
 
-def dict2namedtuple(outdict,tuplename="HAL"):
+
+def dict2namedtuple(outdict, tuplename="HAL"):
     """ Convert a dictionary into a namedtuple """
-    assert isinstance(outdict,dict)
+    assert isinstance(outdict, dict)
     return namedtuple(tuplename, outdict.keys())(*outdict.values())
+
 
 def isnamedtupleinstance(xtuple):
     """ check if a given instance is a namedtuple (can return false positives) """
@@ -33,27 +35,28 @@ def isnamedtupleinstance(xtuple):
     fff = getattr(ttt, '_fields', None)
     if not isinstance(fff, tuple):
         return False
-    return all( isinstance(n,str) for n in fff)
+    return all(isinstance(n, str) for n in fff)
 
-def reg_add_reserved_bitfields(fields,regwidth=32, fieldname="Reserved", read_write="r"):
+
+def reg_add_reserved_bitfields(fields, regwidth=32, fieldname="Reserved", read_write="r"):
     """ Add inferred reserved bits to register description """
     next_lsb = 0
     outfields = []
 
-    if isinstance(fields,list):
+    if isinstance(fields, list):
         if len(fields) > 0:
             for idx in reversed(range(len(fields))):
                 field = fields[idx]
-                outfields.insert(0,field)
-                #outfields.append(field)
+                outfields.insert(0, field)
+                # outfields.append(field)
 
                 if next_lsb < field.lsb:
                     # print("Add Reserved field!")
-                    newfield=CpBitfield(fieldname,0,field.regname,
-                                         field.lsb-next_lsb,next_lsb,
-                                         comments = "Reserved",
-                                         read_write=read_write)
-                    outfields.insert(1,newfield)
+                    newfield = CpBitfield(fieldname, 0, field.regname,
+                                          field.lsb-next_lsb, next_lsb,
+                                          comments="Reserved",
+                                          read_write=read_write)
+                    outfields.insert(1, newfield)
                     # outfields.append(newfield)
 
                 # print("LSB: %d, WIDTH: %d" % ( field.lsb, field.width ) )
@@ -61,16 +64,17 @@ def reg_add_reserved_bitfields(fields,regwidth=32, fieldname="Reserved", read_wr
 
             # check if register is filled up to full width
             if next_lsb < regwidth:
-                newfield=CpBitfield(fieldname,0,fields[0].regname,
-                                     regwidth-next_lsb,next_lsb,
-                                     comments="Reserved",
-                                     read_write=read_write
-                                     )
-                outfields.insert(0,newfield)
+                newfield = CpBitfield(fieldname, 0, fields[0].regname,
+                                      regwidth-next_lsb, next_lsb,
+                                      comments="Reserved",
+                                      read_write=read_write
+                                      )
+                outfields.insert(0, newfield)
 
     return outfields
 
-class CpRegister(): # pylint: disable=R0902
+
+class CpRegister():  # pylint: disable=R0902
     """
     Register Class for Cheap Pie
     """
@@ -81,9 +85,10 @@ class CpRegister(): # pylint: disable=R0902
     # host interface handler
     hif = None
     addr_offset = 0
-    addr_base   = 0
+    addr_base = 0
     #
-    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0, bitfields=None): # pylint: disable=R0913
+
+    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0, bitfields=None):  # pylint: disable=R0913
         # address
         self.addr = regaddr
 
@@ -116,7 +121,7 @@ class CpRegister(): # pylint: disable=R0902
 
         if not self.hif is None:
             regval = self.hif.hifread(self.addr)
-        else :
+        else:
             regval = 0
 
         if asdict:
@@ -126,14 +131,15 @@ class CpRegister(): # pylint: disable=R0902
                 retval[field.fieldname] = field.getbit(regval)
         elif as_signed:
             # signed integer
-            retval = -(regval & literal_eval('0x80000000')) + (regval & literal_eval('0x7FFFFFFF'))
+            retval = -(regval & literal_eval('0x80000000')) + \
+                (regval & literal_eval('0x7FFFFFFF'))
         else:
             # unsigned integer (default)
             retval = regval
 
         return retval
 
-    def setreg(self,regval = 0, echo =False, *args,**kwargs): # pylint: disable=W1113
+    def setreg(self, regval=0, echo=False, *args, **kwargs):  # pylint: disable=W1113
         """ function setreg(self,regval)
         %
         % Displays value of a register from a register value
@@ -146,9 +152,9 @@ class CpRegister(): # pylint: disable=R0902
             regval = literal_eval(regval)
 
         ## handle dict values ############################################################
-        elif isinstance(regval,dict):
+        elif isinstance(regval, dict):
             rval = self.getreg()
-            for field,fval in regval.items():
+            for field, fval in regval.items():
                 rval = self[field].setbit(fval, regval=rval, writeback=False)
             regval = rval
 
@@ -157,14 +163,14 @@ class CpRegister(): # pylint: disable=R0902
             regval = (abs(regval) ^ literal_eval('0xFFFFFFFF')) + 1
             # print('regval write: 0x%x' % regval)
 
-        #% write %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        # % write %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         if not self.hif is None:
-            ret = self.hif.hifwrite(self.addr, regval, *args,**kwargs)
-        else :
+            ret = self.hif.hifwrite(self.addr, regval, *args, **kwargs)
+        else:
             ret = regval
 
-        #% only display output if no nargout %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        # % only display output if no nargout %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         if echo:
             self.display(regval)
 
@@ -172,41 +178,45 @@ class CpRegister(): # pylint: disable=R0902
 
     def getbit(self, bit_offset=0, width=1):
         """ Get a custom bitfield within a register """
-        bitfield = CpBitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)
+        bitfield = CpBitfield(regaddr=self.addr, width=width,
+                              bit_offset=bit_offset, hif=self.hif)
         return bitfield.getbit()
 
     def setbit(self, bitval=0, bit_offset=0, width=1):
         """ Set a custom bitfield within a register """
-        bitfield = CpBitfield(regaddr=self.addr, width=width, bit_offset=bit_offset, hif=self.hif)
+        bitfield = CpBitfield(regaddr=self.addr, width=width,
+                              bit_offset=bit_offset, hif=self.hif)
         return bitfield.setbit(bitval)
 
     def getbyte(self, byte_offset=0):
         """ Get a custom byte within a register """
-        byte = CpBitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)
+        byte = CpBitfield(regaddr=self.addr, width=8,
+                          bit_offset=byte_offset*8, hif=self.hif)
         return byte.getbit()
 
     def setbyte(self, byteval=0, byte_offset=0):
         """ Set a custom byte within a register """
-        byte = CpBitfield(regaddr=self.addr, width=8, bit_offset=byte_offset*8, hif=self.hif)
+        byte = CpBitfield(regaddr=self.addr, width=8,
+                          bit_offset=byte_offset*8, hif=self.hif)
         return byte.setbit(byteval)
 
-    def help(self,width=25):
+    def help(self, width=25):
         """ function ret = help(self)
         # displays register comments """
         self.print_wavedrom()
         print(self.comments)
 
-        fmtstr = '%%%ds: %%s' % width # pylint: disable=C0209
+        fmtstr = '%%%ds: %%s' % width  # pylint: disable=C0209
         for field in self.bitfields:
-            print( fmtstr % (field.fieldname,''))
+            print(fmtstr % (field.fieldname, ''))
 
             for line in textwrap.wrap(field.comments):
-                print( fmtstr % ('',line))
+                print(fmtstr % ('', line))
 
-    def __repr__(self,regval = None ):
+    def __repr__(self, regval=None):
         if len(self.bitfields) > 0:
             reg = []
-            for field in self.bitfields :
+            for field in self.bitfields:
                 # field.display(regval)
                 reg.append(field.__repr__(regval=regval))
             outstr = "\n".join(reg)
@@ -216,12 +226,12 @@ class CpRegister(): # pylint: disable=R0902
                 outstr += hex(regval)
         return outstr
 
-    def display(self, regval = None ):
+    def display(self, regval=None):
         """ Show a register """
         if regval is None:
             # read register value
             regval = self.getreg()
-        outstr = self.__repr__(regval) # pylint: disable=C2801
+        outstr = self.__repr__(regval)  # pylint: disable=C2801
         print(outstr)
         # return outstr
 
@@ -230,21 +240,21 @@ class CpRegister(): # pylint: disable=R0902
         Find a child element by name
         """
         if name:
-            return [e for e in self.bitfields if e._name == name] # pylint: disable=W0212
+            return [e for e in self.bitfields if e._name == name]  # pylint: disable=W0212
 
         return self.bitfields
 
-    def get_ordered_bitfields(self,fieldname="Reserved"):
+    def get_ordered_bitfields(self, fieldname="Reserved"):
         """ Return ordered list of bitfields sorted by position and including Reserved fields """
         # convert bitfields namedtuple into list
         bitfields = list(self.bitfields)
 
         # sort by lsb
-        bitfields=sorted(bitfields,key=attrgetter('lsb'))
+        bitfields = sorted(bitfields, key=attrgetter('lsb'))
         bitfields.reverse()
 
         # add reserved bitfields
-        return reg_add_reserved_bitfields(bitfields,fieldname=fieldname)
+        return reg_add_reserved_bitfields(bitfields, fieldname=fieldname)
 
     def gen_wavedrom(self, vspace=200):
         """ generate wavedrom representation of register """
@@ -252,16 +262,16 @@ class CpRegister(): # pylint: disable=R0902
 
         for field in reversed(self.get_ordered_bitfields(fieldname="")):
             wdfields.append(
-                { 'name': field.fieldname,
-                  'bits': field.width,
-                  'attr': field.read_write,
-                  'rotate': -90 }
-                )
+                {'name': field.fieldname,
+                 'bits': field.width,
+                 'attr': field.read_write,
+                 'rotate': -90}
+            )
 
-        wdconfig = { 'vspace': vspace }
+        wdconfig = {'vspace': vspace}
 
         wdreg = {
-            'reg' : wdfields,
+            'reg': wdfields,
             'config': wdconfig
         }
 
@@ -271,9 +281,9 @@ class CpRegister(): # pylint: disable=R0902
         """ Export wavedrom .svg representation of register """
         jfname = f'{self.regname}.json'
 
-        wdlines = json.dumps(self.gen_wavedrom(),indent=2)
+        wdlines = json.dumps(self.gen_wavedrom(), indent=2)
 
-        with open(jfname,'w',encoding='utf-8') as fileh:
+        with open(jfname, 'w', encoding='utf-8') as fileh:
             for line in wdlines:
                 fileh.write(line)
 
@@ -283,7 +293,7 @@ class CpRegister(): # pylint: disable=R0902
         """ Export wavedrom .svg representation of register """
         svgfname = f'{self.regname}.svg'
         jfname = self.save_wavedrom_json()
-        wavedrom.render_file( jfname, svgfname)
+        wavedrom.render_file(jfname, svgfname)
         return svgfname
 
     def print_wavedrom(self):
@@ -308,23 +318,25 @@ class CpRegister(): # pylint: disable=R0902
         return self.bitfields.next()
 
     def __getitem__(self, idx):
-        if isinstance(idx,int):
+        if isinstance(idx, int):
             return self.bitfields[idx]
-        if isinstance(idx,str):
+        if isinstance(idx, str):
             bfdict = self.bitfields._asdict()
             return bfdict[idx]
         assert False, 'Unsupported indexing!'
 
     def __setitem__(self, idx, value):
-        if isinstance(idx,int):
+        if isinstance(idx, int):
             return self.bitfields[idx].setbit(value)
-        if isinstance(idx,str):
+        if isinstance(idx, str):
             bfdict = self.bitfields._asdict()
             return bfdict[idx].setbit(value)
         assert False, 'Unsupported indexing!'
 
     def __index__(self):
         return int(self.getreg())
+
+
 class CpRegBuilder():
     """
     Register Class builder for Cheap Pie
@@ -336,9 +348,9 @@ class CpRegBuilder():
     # host interface handler
     hif = None
     addr_offset = 0
-    addr_base   = 0
+    addr_base = 0
 
-    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0): # pylint: disable=R0913
+    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0):  # pylint: disable=R0913
         # address
         self.addr = regaddr
 
@@ -362,7 +374,7 @@ class CpRegBuilder():
 
     def addfield(self, regfield, width, offset, comments=''):
         """ Add a field to a register dictionary of fields """
-        self.dictfields[regfield]=CpBitfield(
+        self.dictfields[regfield] = CpBitfield(
             regfield=regfield,
             width=width,
             bit_offset=offset,
@@ -374,26 +386,27 @@ class CpRegBuilder():
     def dictfield2struct(self):
         """ Convert the list of bitfields into a namedtuple """
         return CpRegister(regname=self.regname,
-                           regaddr=self.addr,
-                           comments=self.comments,
-                           hif=self.hif,
-                           addr_offset=self.addr_offset,
-                           addr_base=self.addr_base,
-                           bitfields=self.dictfields)
+                          regaddr=self.addr,
+                          comments=self.comments,
+                          hif=self.hif,
+                          addr_offset=self.addr_offset,
+                          addr_base=self.addr_base,
+                          bitfields=self.dictfields)
 
-def test_cp_register(): # pylint: disable=R0914,R0915
+
+def test_cp_register():  # pylint: disable=R0914,R0915
     """ Cheap Pie test for cp_register class """
-    import sys # pylint: disable=C0415
-    import os.path # pylint: disable=C0415
-    sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
-    from random import randint # pylint: disable=C0415
-    from transport.cp_dummy_transport import CpDummyTransport # pylint: disable=C0415,E0401
+    import sys  # pylint: disable=C0415
+    import os.path  # pylint: disable=C0415
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+    from random import randint  # pylint: disable=C0415
+    from transport.cp_dummy_transport import CpDummyTransport  # pylint: disable=C0415,E0401
 
     reg = CpRegister(
         regname='regname',
         regaddr=10,
         comments='comments',
-        hif = CpDummyTransport(),
+        hif=CpDummyTransport(),
         addr_offset=10,
         addr_base=10
     )
@@ -401,7 +414,7 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     print('# setreg, getreg')
     val = 15
     reg.setreg(val)
-    assert val==reg.getreg()
+    assert val == reg.getreg()
 
     print('# display')
     reg.display()
@@ -414,30 +427,30 @@ def test_cp_register(): # pylint: disable=R0914,R0915
     reg.setreg(negval)
     retval = reg.getreg(as_signed=True)
     print(retval)
-    assert retval==negval
+    assert retval == negval
 
     print('# test CpRegBuilder with bitfields')
     reg_build = CpRegBuilder(
         regname='regname',
         regaddr=10,
         comments='comments',
-        hif = CpDummyTransport(),
+        hif=CpDummyTransport(),
         addr_offset=10,
         addr_base=10
     )
 
     reg_build.addfield(
-        regfield = 'fname1',
-        width = '2',
-        offset = '2',
-        comments = 'comment1',
+        regfield='fname1',
+        width='2',
+        offset='2',
+        comments='comment1',
     )
 
     reg_build.addfield(
-        regfield = 'fname2',
-        width = '3',
-        offset = '4',
-        comments = 'comment2',
+        regfield='fname2',
+        width='3',
+        offset='4',
+        comments='comment2',
     )
 
     reg = reg_build.dictfield2struct()
@@ -451,12 +464,12 @@ def test_cp_register(): # pylint: disable=R0914,R0915
 
     print('# reg item access')
     reg[0]        # pylint: disable=W0104
-    reg['fname1'] # pylint: disable=W0104
+    reg['fname1']  # pylint: disable=W0104
 
     print('# numeric item assignement')
     val = 1
     reg[0] = val
-    assert reg[0].getbit()==val
+    assert reg[0].getbit() == val
 
     print('# dict item assignement')
     val = 2
@@ -471,7 +484,7 @@ def test_cp_register(): # pylint: disable=R0914,R0915
 
     print('# reg byte access')
     for offset in range(4):
-        byteval = randint(0,255)
+        byteval = randint(0, 255)
         reg.setbyte(byteval, byte_offset=offset)
         assert reg.getbyte(byte_offset=offset) == byteval
 
@@ -498,13 +511,14 @@ def test_cp_register(): # pylint: disable=R0914,R0915
 
     print('# reg gen wavedrom')
     wd_dict = reg.gen_wavedrom()
-    assert isinstance(wd_dict,dict)
+    assert isinstance(wd_dict, dict)
     print('# reg save wavedrom json')
     wdfile = reg.save_wavedrom_json()
     assert os.path.isfile(wdfile)
     print('# reg save wavedrom svg')
     wdfile = reg.save_wavedrom_svg()
     assert os.path.isfile(wdfile)
+
 
 if __name__ == '__main__':
     test_cp_register()

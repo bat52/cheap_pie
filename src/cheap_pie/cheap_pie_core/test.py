@@ -2,9 +2,9 @@
 """ Cheap Pie Test Module """
 
 # -*- coding: utf-8 -*-
-## this file is part of cheap_pie, a python tool for chip validation
-## author: Marco Merlin
-## email: marcomerli@gmail.com
+# this file is part of cheap_pie, a python tool for chip validation
+# author: Marco Merlin
+# email: marcomerli@gmail.com
 
 import unittest
 
@@ -12,7 +12,7 @@ if __name__ == '__main__':
     # needed if cheap_pie not installed, and running locally
     import sys
     import os.path
-    sys.path.append( os.path.join(os.path.dirname(__file__), '../..') )
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 # Cheap Pie Core
 from cheap_pie.cheap_pie_core.cbitfield import test_cp_bitfield               # pylint: disable=C0413,E0401
@@ -41,6 +41,7 @@ from cheap_pie.transport.cp_jlink_transport import test_cp_jlink              # 
 from cheap_pie.transport.cp_pyocd_transport import test_cp_pyocd              # pylint: disable=C0413,E0401
 from cheap_pie.transport.cp_esptool_transport import test_cp_esptool          # pylint: disable=C0413,E0401
 from cheap_pie.transport.cp_pyverilator_transport import test_cp_pyverilator  # pylint: disable=C0413,E0401
+
 
 class CheapPieMethods(unittest.TestCase):
     """ Cheap Pie Test Class """
@@ -80,6 +81,7 @@ class CheapPieMethods(unittest.TestCase):
         test_hal2doc()
         test_search()
         test_rdl2any()
+
 
 if __name__ == '__main__':
     unittest.main()

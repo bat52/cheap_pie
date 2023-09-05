@@ -12,7 +12,8 @@ from packaging import version
 
 import pyverilator
 
-from cheap_pie.transport.cp_dummy_transport import hifread_preproc, hifwrite_preproc # pylint: disable=E0401
+from cheap_pie.transport.cp_dummy_transport import hifread_preproc, hifwrite_preproc  # pylint: disable=E0401
+
 
 def cli(args):
     """ Command Line Interface for pyverilator transport class """
@@ -20,8 +21,9 @@ def cli(args):
     # register format options
     parser.add_argument("-f", "--fname",
                         help="register file description .v", action='store',
-                        type = str, default="./devices/verilog/basic_rf.v")
+                        type=str, default="./devices/verilog/basic_rf.v")
     return parser.parse_args(args)
+
 
 class CpPyverilatorTransport():
     """
@@ -29,13 +31,13 @@ class CpPyverilatorTransport():
     """
     sim = None
 
-    def __init__(self,fname, gtkwave_en = False):
+    def __init__(self, fname, gtkwave_en=False):
 
         # rename to .v, if .sv
         if not os.path.isfile(fname):
             assert False, f'File {fname} does not exist!'
 
-        base,ext = os.path.splitext(fname)
+        base, ext = os.path.splitext(fname)
         # print(ext)
 
         if ext == '.sv':
@@ -48,7 +50,7 @@ class CpPyverilatorTransport():
         print(ofname)
         self.sim = pyverilator.PyVerilator.build(ofname)
 
-        if gtkwave_en: # still causing trouble in VSC and/or WSL
+        if gtkwave_en:  # still causing trouble in VSC and/or WSL
             # start gtkwave to view the waveforms as they are made
             self.sim.start_gtkwave()
 
@@ -61,7 +63,7 @@ class CpPyverilatorTransport():
             # self.sim.send_to_gtkwave(self.sim.internals)
 
             self.sim.clock.send_to_gtkwave()
-            self.sim.io.resetn.send_to_gtkwave() # pylint: disable=E1101
+            self.sim.io.resetn.send_to_gtkwave()  # pylint: disable=E1101
             self.sim.io.addr.send_to_gtkwave()
             self.sim.io.wdata.send_to_gtkwave()
             self.sim.io.rdata.send_to_gtkwave()
@@ -98,7 +100,7 @@ class CpPyverilatorTransport():
     def hifwrite(self, addr='0x00', val='0xB16B00B5', mask='0xFFFFFFFF'):
         """ Write register """
 
-        addr,val,mask = hifwrite_preproc(addr,val,mask)
+        addr, val, mask = hifwrite_preproc(addr, val, mask)
 
         # write value
         self.sim.io.addr = addr
@@ -124,7 +126,7 @@ class CpPyverilatorTransport():
         # sim.io.basicreg_basicfield_we = 1
         # sim.clock.tick()
 
-    def hifread(self,addr = '0x00'):
+    def hifread(self, addr='0x00'):
         """ Read register """
         addr = hifread_preproc(addr)
 
@@ -146,11 +148,14 @@ class CpPyverilatorTransport():
         # print(hex(outval))
         return outval
 
+
 def verilator_version():
     """ Return verilator version """
-    result = subprocess.run(['verilator', '--version'], stdout=subprocess.PIPE, check=False)
+    result = subprocess.run(['verilator', '--version'],
+                            stdout=subprocess.PIPE, check=False)
     ver = result.stdout.split()[1]
     return ver.decode("utf-8")
+
 
 def verilator_version_ok():
     """ True if the installed verilator version works as transport for cheap_pie """
@@ -160,24 +165,26 @@ def verilator_version_ok():
     # print(ver)
 
     return (
-            version.parse(ver) < version.parse("4.036") or
-            version.parse(ver) > version.parse("4.102")
-            )
+        version.parse(ver) < version.parse("4.036") or
+        version.parse(ver) > version.parse("4.102")
+    )
 
-def test_cp_pyverilator(args=[]): # pylint: disable=W0102
+
+def test_cp_pyverilator(args=[]):  # pylint: disable=W0102
     """ Test pyverilator transport """
-    if True: # verilator_version_ok(): pylint: disable=W0125
+    if True:  # verilator_version_ok(): pylint: disable=W0125
         prms = cli(args)
         hif = CpPyverilatorTransport(prms.fname)
         val = literal_eval('0x5A5A5A5A')
-        hif.hifwrite(val = val)
-        print( hex(hif.hifread()) )
+        hif.hifwrite(val=val)
+        print(hex(hif.hifread()))
         assert hif.hifread() == val
     else:
         # this was fixed by pyverilator-mm
         print('Warning: pyverilator not working anymore \
               with verilator versions between 4.036 and 4.102.')
         print('https://github.com/chipsalliance/chisel3/issues/1565')
+
 
 if __name__ == '__main__':
     test_cp_pyverilator(sys.argv[1:])

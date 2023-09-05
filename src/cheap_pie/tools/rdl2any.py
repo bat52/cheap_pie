@@ -14,10 +14,11 @@ try:
     # newer version
     from peakrdl_ipxact import IPXACTExporter
     from peakrdl_uvm import UVMExporter
-except ModuleNotFoundError: # not sure what should be put here
+except ModuleNotFoundError:  # not sure what should be put here
     # older version
-    from peakrdl.ipxact import IPXACTExporter # pylint: disable=C0412
+    from peakrdl.ipxact import IPXACTExporter  # pylint: disable=C0412
     from peakrdl.uvm import UVMExporter
+
 
 def cli(args):
     """ Command Line parse to convert .rdl register description into IP-XACT, UVM or verilog """
@@ -25,19 +26,20 @@ def cli(args):
 
     # register format options
     parser.add_argument("-f", "--fname", help="register file description .rdl",
-                        action='store', type = str,
+                        action='store', type=str,
                         default=os.path.join(
-                                    pathlib.Path(__file__).parent.parent.absolute(),
-                                    "devices",
-                                    "rdl",
-                                    "basic.rdl"
-                                    )
+                            pathlib.Path(__file__).parent.parent.absolute(),
+                            "devices",
+                            "rdl",
+                            "basic.rdl"
+                        )
                         )
     parser.add_argument("-ofmt", "--out-format", help="output format",
-                        action='store', type = str, default="ipxact",
-                        choices=["ipxact","uvm","vlog"])
+                        action='store', type=str, default="ipxact",
+                        choices=["ipxact", "uvm", "vlog"])
 
     return parser.parse_args(args)
+
 
 def rdl2any(args):
     """  convert .rdl register description into IP-XACT, UVM or verilog """
@@ -67,22 +69,24 @@ def rdl2any(args):
     print('output file: ' + outfname)
 
     if prms.out_format == 'vlog':
-        exporter.export(root, outfname, signal_overrides = {} )
+        exporter.export(root, outfname, signal_overrides={})
     else:
-        exporter.export(root, outfname )
+        exporter.export(root, outfname)
 
     return outfname
+
 
 def test_rdl2any():
     """ test convert .rdl register description into IP-XACT, UVM or verilog """
     print("# Test rdl2ipxact")
-    rdl2any(['-ofmt','ipxact'])
+    rdl2any(['-ofmt', 'ipxact'])
 
     print("# Test rdl2uvm")
-    rdl2any(['-ofmt','uvm'])
+    rdl2any(['-ofmt', 'uvm'])
 
     print("# Test rdl2verilog")
-    rdl2any(['-ofmt','vlog'])
+    rdl2any(['-ofmt', 'vlog'])
+
 
 if __name__ == '__main__':
     rdl2any(sys.argv[1:])
