@@ -6,6 +6,7 @@
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
+from ast import literal_eval
 from docx import Document
 # from docx.enum.table import WD_TABLE_ALIGNMENT
 INCH2EMU = 914400
@@ -17,6 +18,9 @@ def int2hexstr(num,width): # pylint: disable=W0613
     string = "\"%s\" %% num " % fmt # pylint: disable=C0209
     # print string
     return eval(string) # pylint: disable=W0123
+
+def hexstr2int(hexstr):
+    return literal_eval('0x' + hexstr)
 
 def doc_create_header(template=None):
     """ Create document header """

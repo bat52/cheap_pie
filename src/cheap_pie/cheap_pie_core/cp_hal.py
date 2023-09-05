@@ -8,10 +8,11 @@ Cheap Pie Hardware Abstraction Layer
 ## author: Marco Merlin
 ## email: marcomerli@gmail.com
 
+import os
 import hickle as hkl
 
 import cheap_pie.tools.search # pylint: disable=W0611
-from   cheap_pie.tools.hal2doc import hal2doc
+from   cheap_pie.tools.hal2doc import hal2doc, int2hexstr, hexstr2int
 
 class CpHal():
     """
@@ -97,12 +98,27 @@ class CpHal():
             outdict[reg] = val.getreg()
         return outdict
 
-    def dump(self,fname='dump.hkl'):
+    def dump(self, fname='dump.hkl', regs_dict = None):
         """
         Dump the value of all registers in a .hkl file.
+        Inputs: 
+            - fname: .hkl or .txt output file
+            - regs_dict: specify a dictionary of register values.
+                registers will be read from chip, if not provided.
         """
-        regs_dict = self.regs2dict()
-        hkl.dump(regs_dict, fname, compression='gzip')
+
+        if regs_dict is None:            
+            # read all registers
+            regs_dict = self.regs2dict()
+
+        # detect input file type from extension
+        fname_wo_ext, file_extension = os.path.splitext(fname)
+        assert file_extension in ['.txt','.hkl']
+
+        if file_extension == '.txt':
+            self.dump2text(f1name = fname, field1 = regs_dict)
+        else:
+            hkl.dump(regs_dict, fname, compression='gzip')
 
     def dump_diff(self,f1name='dump.hkl',f2name='dump2.hkl',width = 60):
         """
@@ -134,7 +150,103 @@ class CpHal():
             print('No differences found!!!')
 
         return outstrlist
+    
+    def dump2text(self,f1name='dump.hkl', field1 = None, 
+                  width = 60, save_en=True, print_en = False, header_en = False,
+                  byval = True, nbits_addr = 32, nbits_val = 32
+                  ):
+        """
+        Convert a dumped .hkl file, or a dumped dictionary into a text file representation.
+        Inputs:
+            f1name: .hkl file containing dump dictionary, also defines .txt file output name
+            filed1: input dictionary of dumped values to save. .hkl file specified by f1name must exist, 
+                    if this is not specified
+            width: number of columns reserved for register and bitfield name
+            save_en: save output to text file (default: True)
+            print_en: print output to shell (default: False)
+            byval: dump in hex ascii format. ie ADD43550 C0D3C057 (default: True)
+            nbits_addr: number of address bits for byval dump (default: 32)
+            nbits_val: number of value bits for byval dump (default: 32)
+        """
 
+        if not isinstance(field1,dict):            
+            assert os.path.isfile(f1name)            
+            field1 = hkl.load(f1name)            
+
+        fmtstr = '%%%ds' % width # pylint: disable=C0209
+
+        # generate register description list
+        outstrlist = []
+        for reg,val in field1.items():
+            if byval:
+                f1regstr = '%s %s\n' % (
+                            int2hexstr(self[reg].addr,nbits_addr/4),
+                            int2hexstr(val           ,nbits_val /4)
+                )
+                outstrlist.append(f1regstr)
+            else:
+                f1regstr = self[reg].__repr__(val        ).split('\n') # pylint: disable=C2801
+                for idx in range(len(f1regstr)): # pylint: disable=C0200
+                    outstrlist.append(fmtstr % f1regstr[idx])
+        
+        fname_wo_ext, file_extension = os.path.splitext(f1name)
+
+        if header_en:
+            # create a header with filenames
+            headerstr = f'{f1name}\n'
+            outstrlist.insert(0,headerstr)
+
+        if save_en:
+            outfname = fname_wo_ext + '.txt'
+            fh = open(outfname, "w")
+            print(f'Output file: {outfname}')
+
+        # print output
+        if len(outstrlist) > 0:            
+            for line in outstrlist:
+                if print_en:
+                    print(line)
+                if save_en:
+                    fh.write(line)
+
+        # close file
+        if save_en: 
+            fh.close()               
+
+        # return outstrlist
+
+    def text2dump(self, fname='dump.txt', save_en = True):
+        """
+        Convert a dumped .txt file, in a .hkl file or a dictionary.
+        Inputs:
+            f1name: .txt file containing dump address and value in the form:
+                ADD43550 C0D3C057            
+        """
+
+        assert os.path.isfile(fname)
+
+        regs_dict = {}
+        with open(fname,'r') as fh:
+            for line in fh:
+                line = line.strip()
+                addrstr,valstr = line.split(' ')
+                # print(f'addr: {addrstr}, val: {valstr}')
+                
+                addr = hexstr2int(addrstr)
+                val  = hexstr2int(valstr)
+
+                regname = self.search_address(addr)
+                # print(regname)
+
+                regs_dict[regname] = val
+
+        if save_en:
+            fname_wo_ext, file_extension = os.path.splitext(fname)
+            outfname = fname_wo_ext + '.hkl'
+            self.dump( fname=outfname, regs_dict = regs_dict)
+
+        return regs_dict
+        
 class CpHalSuper(CpHal):
     """ Just a dummy class for test """
     def super_method(self):
@@ -277,6 +389,14 @@ def test_cp_hal(): # pylint: disable=R0914,R0915
     print('# hal regs2dict')
     mydict = hal.regs2dict()
     assert isinstance(mydict,dict)
+
+    print('# hal dump text')
+    dumpname = 'tdump'
+    txt_dump = dumpname + '.txt'
+    hkl_dump = dumpname + '.hkl'
+    hal.dump(txt_dump)
+    hal.text2dump(txt_dump)
+    assert len( hal.dump_diff(hkl_dump,dump2) ) == 0
 
     print('# CpHalSuper inheritance')
     hal_super = CpHalSuper(hal)
