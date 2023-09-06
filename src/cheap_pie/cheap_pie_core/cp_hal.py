@@ -424,10 +424,10 @@ def test_cp_hal():  # pylint: disable=R0914,R0915
     assert len(hal.dump_diff(hkl_dump, dump2)) == 0
 
     print('# hal dump_load hkl')
-    hkldict = hal.dump_load(hkl_dump)
+    _ = hal.dump_load(hkl_dump)
 
     print('# hal dump_load hkl')
-    hkldict = hal.dump_load(txt_dump)
+    _ = hal.dump_load(txt_dump)
 
     print('# CpHalSuper inheritance')
     hal_super = CpHalSuper(hal)
