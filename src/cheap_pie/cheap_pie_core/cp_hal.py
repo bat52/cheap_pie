@@ -121,14 +121,28 @@ class CpHal():
         else:
             hkl.dump(regs_dict, fname, compression='gzip')
 
+    def dump_load(self, fname='dump.hkl'):
+        """ 
+        Load a dumped file and returns a dictionary of registers
+        """
+        _, file_extension = os.path.splitext(fname)
+        assert file_extension in ['.txt', '.hkl']
+
+        if file_extension == 'txt':
+            _, fields = self.text2dump(fname)
+        else:
+            fields = hkl.load(fname)
+
+        return fields
+
     def dump_diff(self, f1name='dump.hkl', f2name='dump2.hkl', width=60):
         """
         Perform a diff on two dumped .hkl files.
         """
         fmtstr = '%%%ds |%%%ds' % (width, width)  # pylint: disable=C0209
 
-        field1 = hkl.load(f1name)
-        field2 = hkl.load(f2name)
+        field1 = self.dump_load(f1name)        
+        field2 = self.dump_load(f2name)
 
         # create a header with filenames
         outstrlist = []
@@ -249,8 +263,10 @@ class CpHal():
             fname_wo_ext, _ = os.path.splitext(fname)
             outfname = fname_wo_ext + '.hkl'
             self.dump(fname=outfname, regs_dict=regs_dict)
+        else:
+            outfname = ''
 
-        return regs_dict
+        return outfname, regs_dict
 
 
 class CpHalSuper(CpHal):
@@ -402,11 +418,9 @@ def test_cp_hal():  # pylint: disable=R0914,R0915
     assert isinstance(mydict, dict)
 
     print('# hal dump text')
-    dumpname = 'tdump'
-    txt_dump = dumpname + '.txt'
-    hkl_dump = dumpname + '.hkl'
+    txt_dump = 'tdump.txt'    
     hal.dump(txt_dump)
-    hal.text2dump(txt_dump)
+    hkl_dump, _ = hal.text2dump(txt_dump)
     assert len(hal.dump_diff(hkl_dump, dump2)) == 0
 
     print('# CpHalSuper inheritance')
