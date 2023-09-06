@@ -141,7 +141,7 @@ class CpHal():
         """
         fmtstr = '%%%ds |%%%ds' % (width, width)  # pylint: disable=C0209
 
-        field1 = self.dump_load(f1name)  
+        field1 = self.dump_load(f1name)
         field2 = self.dump_load(f2name)
 
         # create a header with filenames
