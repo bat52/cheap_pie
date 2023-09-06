@@ -141,7 +141,7 @@ class CpHal():
         """
         fmtstr = '%%%ds |%%%ds' % (width, width)  # pylint: disable=C0209
 
-        field1 = self.dump_load(f1name)        
+        field1 = self.dump_load(f1name)  
         field2 = self.dump_load(f2name)
 
         # create a header with filenames
@@ -418,7 +418,7 @@ def test_cp_hal():  # pylint: disable=R0914,R0915
     assert isinstance(mydict, dict)
 
     print('# hal dump text')
-    txt_dump = 'tdump.txt'    
+    txt_dump = 'tdump.txt'
     hal.dump(txt_dump)
     hkl_dump, _ = hal.text2dump(txt_dump)
     assert len(hal.dump_diff(hkl_dump, dump2)) == 0
