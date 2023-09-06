@@ -128,7 +128,7 @@ class CpHal():
         _, file_extension = os.path.splitext(fname)
         assert file_extension in ['.txt', '.hkl']
 
-        if file_extension == 'txt':
+        if file_extension == '.txt':
             _, fields = self.text2dump(fname)
         else:
             fields = hkl.load(fname)
@@ -422,6 +422,12 @@ def test_cp_hal():  # pylint: disable=R0914,R0915
     hal.dump(txt_dump)
     hkl_dump, _ = hal.text2dump(txt_dump)
     assert len(hal.dump_diff(hkl_dump, dump2)) == 0
+
+    print('# hal dump_load hkl')
+    hkldict = hal.dump_load(hkl_dump)
+
+    print('# hal dump_load hkl')
+    hkldict = hal.dump_load(txt_dump)
 
     print('# CpHalSuper inheritance')
     hal_super = CpHalSuper(hal)
