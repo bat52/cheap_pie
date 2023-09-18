@@ -35,17 +35,16 @@ class CpEsptoolTransport(CpDummyTransport):
             #  ret = esptool.main( ['--port' , self.port , '--after no_reset', 'read_mem', addr]  )
             # dump value on file... horrible hack because no output available
             tmpfile = 'tmpdump'
-            ret = esptool.main(  # pylint: disable=E1101
+            esptool.main(  # pylint: disable=E1101
                 ['--port', self.port, '--after',
                  'no_reset', 'dump_mem', addr, '4', tmpfile]
             )
 
+            ret = 0
             if os.path.isfile(tmpfile):
                 with open(tmpfile, "rb") as tmpfh:
                     ret = '0x' + tmpfh.read().hex()
                 os.remove(tmpfile)
-            else:
-                ret = 0
 
         return ret
 

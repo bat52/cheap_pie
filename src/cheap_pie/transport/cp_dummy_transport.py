@@ -7,6 +7,7 @@
 # email: marcomerli@gmail.com
 
 from ast import literal_eval
+from abc import ABCMeta
 
 
 def hex_bw(val, hex_digits_width=8):
@@ -49,7 +50,7 @@ def hifwrite_preproc(addr, val, mask='0xFFFFFFFF'):
     return numeric_input(addr), numeric_input(val), numeric_input(mask)
 
 
-class CpDummyTransport():
+class CpDummyTransport(metaclass=ABCMeta):
     """ A transport mockup """
     mem = {}
 
