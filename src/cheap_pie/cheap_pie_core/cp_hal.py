@@ -262,7 +262,7 @@ class CpHal():
                         # print(regname)
 
                         regs_dict[regname] = val
-                except:
+                except Exception:
                     print(f"Unable to process line: <{line}>")
 
         if save_en:
