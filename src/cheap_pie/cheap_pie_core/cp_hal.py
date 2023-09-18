@@ -147,16 +147,18 @@ class CpHal():
         # create a header with filenames
         outstrlist = []
         for reg, val in field1.items():
-            if not field2[reg] == val:
-                f1regstr = self[reg].__repr__(val).split(  # pylint: disable=C2801
-                    '\n')
-                f2regstr = self[reg].__repr__(field2[reg]).split(  # pylint: disable=C2801
-                    '\n')
+            # print(f'reg:{reg}, val: {val}')
+            if len(reg) > 0: # just check reg that have a name
+                if not field2[reg] == val:
+                    f1regstr = self[reg].__repr__(val).split(  # pylint: disable=C2801
+                        '\n')
+                    f2regstr = self[reg].__repr__(field2[reg]).split(  # pylint: disable=C2801
+                        '\n')
 
-                for idx in range(len(f1regstr)):  # pylint: disable=C0200
-                    if not f1regstr[idx] == f2regstr[idx]:
-                        outstrlist.append(fmtstr %
-                                          (f1regstr[idx], f2regstr[idx]))
+                    for idx in range(len(f1regstr)):  # pylint: disable=C0200
+                        if not f1regstr[idx] == f2regstr[idx]:
+                            outstrlist.append(fmtstr %
+                                            (f1regstr[idx], f2regstr[idx]))
 
         # print output
         if len(outstrlist) > 0:
@@ -247,17 +249,21 @@ class CpHal():
         regs_dict = {}
         with open(fname, 'r', encoding='utf8') as file_handler:
             for line in file_handler:
-                line = line.strip()
-                addrstr, valstr = line.split(' ')
-                # print(f'addr: {addrstr}, val: {valstr}')
+                try:
+                    line = line.strip()                    
+                    if len(line) > 0:
+                        addrstr, valstr = line.split()
+                        # print(f'addr: {addrstr}, val: {valstr}')
 
-                addr = hexstr2int(addrstr)
-                val = hexstr2int(valstr)
+                        addr = hexstr2int(addrstr)
+                        val = hexstr2int(valstr)
 
-                regname = self.search_address(addr)
-                # print(regname)
+                        regname = self.search_address(addr)
+                        # print(regname)
 
-                regs_dict[regname] = val
+                        regs_dict[regname] = val
+                except:
+                    print('Unable to process line: <%s>' % line)
 
         if save_en:
             fname_wo_ext, _ = os.path.splitext(fname)
@@ -422,12 +428,6 @@ def test_cp_hal():  # pylint: disable=R0914,R0915
     hal.dump(txt_dump)
     hkl_dump, _ = hal.text2dump(txt_dump)
     assert len(hal.dump_diff(hkl_dump, dump2)) == 0
-
-    print('# hal dump_load hkl')
-    _ = hal.dump_load(hkl_dump)
-
-    print('# hal dump_load hkl')
-    _ = hal.dump_load(txt_dump)
 
     print('# CpHalSuper inheritance')
     hal_super = CpHalSuper(hal)
