@@ -250,7 +250,7 @@ class CpHal():
         with open(fname, 'r', encoding='utf8') as file_handler:
             for line in file_handler:
                 try:
-                    line = line.strip()                    
+                    line = line.strip()          
                     if len(line) > 0:
                         addrstr, valstr = line.split()
                         # print(f'addr: {addrstr}, val: {valstr}')
@@ -262,8 +262,8 @@ class CpHal():
                         # print(regname)
 
                         regs_dict[regname] = val
-                except:
-                    print('Unable to process line: <%s>' % line)
+                except Exception as e:
+                    print(f"Error '{e.message}' occured. Arguments {e.args}\nUnable to process line: <{line}>")
 
         if save_en:
             fname_wo_ext, _ = os.path.splitext(fname)
