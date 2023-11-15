@@ -200,10 +200,23 @@ class CpRegister():  # pylint: disable=R0902
                           bit_offset=byte_offset*8, hif=self.hif)
         return byte.setbit(byteval)
 
+    def get_addr(self, mode='hex'):
+        """ Returns the address of the register
+          input:
+            mode: 'hex' return hex string, 'dec' returns decimal number
+        """
+        assert mode in ['hex','dec'], f"Wrong mode {mode}"
+        if mode=='dec':
+            return self.addr
+        if mode=='hex':
+            return hex(self.addr) # return hex string
+        return 0
+
     def help(self, width=25):
         """ function ret = help(self)
         # displays register comments """
         self.print_wavedrom()
+        print(f"Address: {self.get_addr()}")
         print(self.comments)
 
         fmtstr = '%%%ds: %%s' % width  # pylint: disable=C0209
@@ -519,6 +532,12 @@ def test_cp_register():  # pylint: disable=R0914,R0915
     wdfile = reg.save_wavedrom_svg()
     assert os.path.isfile(wdfile)
 
+    print('# get_addr default')
+    assert reg.get_addr()==hex(reg.addr)
+    print('# get_addr hex')
+    assert reg.get_addr(mode='hex')==hex(reg.addr)
+    print('# get_addr dec')
+    assert reg.get_addr(mode='dec')==reg.addr
 
 if __name__ == '__main__':
     test_cp_register()
