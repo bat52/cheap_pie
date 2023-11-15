@@ -122,7 +122,7 @@ class CpHal():
             hkl.dump(regs_dict, fname, compression='gzip')
 
     def dump_load(self, fname='dump.hkl'):
-        """ 
+        """
         Load a dumped file and returns a dictionary of registers
         """
         _, file_extension = os.path.splitext(fname)

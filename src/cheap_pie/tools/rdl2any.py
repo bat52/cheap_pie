@@ -17,7 +17,7 @@ try:
 except ModuleNotFoundError:  # not sure what should be put here
     # older version
     from peakrdl.ipxact import IPXACTExporter  # pylint: disable=C0412
-    from peakrdl.uvm import UVMExporter
+    from peakrdl.uvm import UVMExporter # pylint: disable=C0412
 
 
 def cli(args):
