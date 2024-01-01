@@ -71,13 +71,13 @@ def svd_parse_repo(fname, vendor=None, hif=None, base_address_offset="0x00000000
     # convert output dictionary into structure
     return cpb.out()
 
-def svd_repo_list_vendors():
+def svd_repo_list_vendors() -> list:
     """ List the available vendors for function svd_parse_repo """
     data_path = os.path.join(os.path.dirname(cmsis_svd.__file__),'data')
     assert os.path.isdir(data_path), f'ERROR: directory {data_path} does not exist!'
     return [ f.path.split('/')[-1] for f in os.scandir(data_path) if f.is_dir() ]
 
-def svd_repo_print_vendors():
+def svd_repo_print_vendors() -> list:
     """ Print the available vendors for function svd_parse_repo """
     vendors = svd_repo_list_vendors()
     print('Available vendors:')
@@ -85,13 +85,13 @@ def svd_repo_print_vendors():
         print(v)
     return vendors
 
-def svd_repo_list_vendor_devices(vendor='Freescale'):
+def svd_repo_list_vendor_devices(vendor='Freescale') -> list:
     """ List the available devices for function svd_parse_repo """
     data_path = os.path.join(os.path.dirname(cmsis_svd.__file__),'data',vendor)
     assert os.path.isdir(data_path), f'ERROR: directory {data_path} does not exist!'
     return [ f.path.split('/')[-1] for f in os.scandir(data_path) if f.is_file() ]
 
-def svd_repo_print_vendor_devices(vendor='Freescale'):
+def svd_repo_print_vendor_devices(vendor='Freescale') -> list:
     """ Print the available devices for function svd_parse_repo """
     devices = svd_repo_list_vendor_devices(vendor=vendor)
     print(f'Available devices for vendor {vendor}:')
