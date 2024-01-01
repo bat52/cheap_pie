@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 This file is part of cheap_pie, a python tool for chip validation
  author: Marco Merlin
@@ -12,6 +12,7 @@ if __name__ == '__main__':
     sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 
 from cheap_pie.parsers.cp_parsers_wrapper import cp_parsers_wrapper  # pylint: disable=C0413,E0401
+from cheap_pie.parsers.svd_parse_repo import svd_repo_print_vendors, svd_repo_print_vendor_devices # pylint: disable=C0413,E0401
 from cheap_pie.cheap_pie_core.cp_banner import cp_banner            # pylint: disable=C0413,E0401
 from cheap_pie.cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0413,E0401
 from cheap_pie.transport.cp_dummy_transport import CpDummyTransport  # pylint: disable=C0413,E0401
@@ -33,6 +34,13 @@ def cp_main(argv=[]):  # pylint: disable=W0102
     ## input parameters ###########################################################
     print('Parsing input arguments...')
     prms = cp_cli(argv)
+
+    ## helper functions ###########################################################
+
+    if prms.vendors:
+        return svd_repo_print_vendors()
+    if prms.devices:
+        return svd_repo_print_vendor_devices(vendor=prms.vendor)
 
     # transport hif interface %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     print('Initialising Host Interface...')

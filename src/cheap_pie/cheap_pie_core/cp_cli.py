@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 Cheap Pie Command Line Interface
 """
@@ -49,6 +49,12 @@ def cp_cli(args=[]):  # pylint: disable=W0102
     parser.add_argument("-ve", "--vendor",
                         help="device vendor. if specified parses svd file from github repository.",
                         action='store', type=str, default=None)
+    parser.add_argument("-vendors", "--vendors",
+                        help="Available device vendors from cmsis-svd package.",
+                        action='store_true')
+    parser.add_argument("-devices", "--devices",
+                        help="Available devices for specified vendor from cmsis-svd package.",
+                        action='store_true')
     # transport options
     parser.add_argument("-d", "--device", help="jlink/ocd device name", action='store',
                         type=str, default="CORTEX-M4")

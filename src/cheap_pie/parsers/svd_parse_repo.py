@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """ Cheap Pie parser module for .svd files using SVDParser module """
 # this file is part of cheap_pie, a python tool for chip validation
 # author: Marco Merlin
@@ -18,7 +18,9 @@
 # ADC_BM = cp_bitfield("ADC_BM","0x4000702C",
 #                      "ADC_ANA_CTRL",3,0, "ADC bias current selection." ,hif)
 
+import os
 from ast import literal_eval
+import cmsis_svd
 from cmsis_svd.parser import SVDParser
 
 from cheap_pie.cheap_pie_core.cp_builder import CpHalBuilder  # pylint: disable=C0413,E0401
@@ -69,6 +71,33 @@ def svd_parse_repo(fname, vendor=None, hif=None, base_address_offset="0x00000000
     # convert output dictionary into structure
     return cpb.out()
 
+def svd_repo_list_vendors():
+    """ List the available vendors for function svd_parse_repo """
+    data_path = os.path.join(os.path.dirname(cmsis_svd.__file__),'data')
+    assert os.path.isdir(data_path), f'ERROR: directory {data_path} does not exist!'
+    return [ f.path.split('/')[-1] for f in os.scandir(data_path) if f.is_dir() ]
+
+def svd_repo_print_vendors():
+    """ Print the available vendors for function svd_parse_repo """
+    vendors = svd_repo_list_vendors()
+    print('Available vendors:')
+    for v in vendors:
+        print(v)
+    return vendors
+
+def svd_repo_list_vendor_devices(vendor='Freescale'):
+    """ List the available devices for function svd_parse_repo """
+    data_path = os.path.join(os.path.dirname(cmsis_svd.__file__),'data',vendor)
+    assert os.path.isdir(data_path), f'ERROR: directory {data_path} does not exist!'
+    return [ f.path.split('/')[-1] for f in os.scandir(data_path) if f.is_file() ]
+
+def svd_repo_print_vendor_devices(vendor='Freescale'):
+    """ Print the available devices for function svd_parse_repo """
+    devices = svd_repo_list_vendor_devices(vendor=vendor)
+    print(f'Available devices for vendor {vendor}:')
+    for d in devices:
+        print(d)
+    return devices
 
 def test_svd_parse_repo():
     """ Test Function for .svd parser based of SVDParser module """
@@ -82,6 +111,25 @@ def test_svd_parse_repo():
     hal = svd_parse_repo(fname='MK20D7.svd', vendor='Freescale')
     assert len(hal) > 0
 
+    print('Testing svd_repo_list_vendors...')
+    vendors = svd_repo_list_vendors()
+    print(vendors)
+    assert len(vendors) > 0
+
+    print('Testing svd_repo_print_vendors...')
+    vendors = svd_repo_list_vendors()
+    print(vendors)
+    assert len(vendors) > 0
+
+    print('Testing svd_repo_list_vendor_devices...')
+    devices = svd_repo_list_vendor_devices()
+    print(devices)
+    assert len(devices) > 0
+
+    print('Testing svd_repo_print_vendor_devices...')
+    devices = svd_repo_print_vendor_devices()
+    print(devices)
+    assert len(devices) > 0
 
 if __name__ == '__main__':
     test_svd_parse_repo()
