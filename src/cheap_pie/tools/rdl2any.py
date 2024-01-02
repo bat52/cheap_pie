@@ -6,7 +6,6 @@ import sys
 import os
 import argparse
 import pathlib
-import time
 
 from systemrdl import RDLCompiler, RDLCompileError
 from peakrdl.verilog import VerilogExporter
