@@ -6,6 +6,7 @@ import sys
 import os
 import argparse
 import pathlib
+import time
 
 from systemrdl import RDLCompiler, RDLCompileError
 from peakrdl.verilog import VerilogExporter
@@ -28,7 +29,7 @@ def cli(args):
     parser.add_argument("-f", "--fname", help="register file description .rdl",
                         action='store', type=str,
                         default=os.path.join(
-                            pathlib.Path(__file__).parent.parent.absolute(),
+                            pathlib.Path(__file__).parent.parent.absolute().resolve(),
                             "devices",
                             "rdl",
                             "basic.rdl"
@@ -60,33 +61,37 @@ def rdl2any(args):
         ext = '.uvm'
     elif prms.out_format == 'vlog':
         exporter = VerilogExporter()
-        ext = '.v'
+        ext = '_rf.sv'
     else:
         assert False, f'Unsupported output format {prms.out_format} !'
 
     base = os.path.splitext(prms.fname)[0]
-    outfname = base + ext
-    print('output file: ' + outfname)
 
     if prms.out_format == 'vlog':
-        exporter.export(root, outfname, signal_overrides={})
+        prebase,fname = os.path.split(base)
+        exporter.export(root, prebase, signal_overrides={})
+        outfname = os.path.join(prebase,fname + ext)
     else:
+        outfname = base + ext
         exporter.export(root, outfname)
 
+    print(f'output file: {outfname}')
+    assert os.path.isfile(outfname), f'ERROR: file {outfname} does not exist!'
     return outfname
-
 
 def test_rdl2any():
     """ test convert .rdl register description into IP-XACT, UVM or verilog """
     print("# Test rdl2ipxact")
-    rdl2any(['-ofmt', 'ipxact'])
+    outfname = rdl2any(['-ofmt', 'ipxact'])
+    assert os.path.isfile(outfname), f'ERROR: file {outfname} does not exist!'
 
     print("# Test rdl2uvm")
-    rdl2any(['-ofmt', 'uvm'])
+    outfname = rdl2any(['-ofmt', 'uvm'])
+    assert os.path.isfile(outfname), f'ERROR: file {outfname} does not exist!'
 
     print("# Test rdl2verilog")
-    rdl2any(['-ofmt', 'vlog'])
-
+    outfname = rdl2any(['-ofmt', 'vlog'])
+    assert os.path.isfile(outfname), f'ERROR: file {outfname} does not exist!'
 
 if __name__ == '__main__':
     rdl2any(sys.argv[1:])
