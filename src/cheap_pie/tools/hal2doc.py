@@ -6,6 +6,7 @@
 # author: Marco Merlin
 # email: marcomerli@gmail.com
 
+import os
 from ast import literal_eval
 from docx import Document
 # from docx.enum.table import WD_TABLE_ALIGNMENT
@@ -127,6 +128,9 @@ def hal2doc(hal, fname='hal.docx', template=None, tablestyle=None, nbits_addr=32
 
     # save document
     doc.save(fname)
+
+    # check file was actually saved
+    assert os.path.isfile(fname), f"ERROR: file {fname} does not exist!"
 
 
 def test_hal2doc():
