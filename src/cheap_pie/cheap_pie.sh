@@ -1,5 +1,5 @@
 
-#!/bin/bash
+#!/usr/bin/env bash
 # create ipython default start with cheap_pie initialization
 START=start.ipy 
 rm $START
