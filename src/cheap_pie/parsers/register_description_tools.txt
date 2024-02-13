@@ -36,3 +36,7 @@ opentitan regtool
 https://docs.opentitan.org/doc/rm/register_tool/
 https://github.com/lowRISC/opentitan/tree/master/util
 
+hdl-registers
+inputs: toml, json, yaml
+outputs: vhdl, c++, c header, hdml
+https://github.com/hdl-registers/hdl-registers
