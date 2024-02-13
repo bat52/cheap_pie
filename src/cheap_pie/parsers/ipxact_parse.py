@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """ Cheap Pie native module parser for IP-XACT """
 # this file is part of cheap_pie, a python tool for chip validation
 # author: Marco Merlin

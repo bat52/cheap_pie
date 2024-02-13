@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """ Cheap Pie module to convert .rdl register description into IP-XACT, UVM or verilog """
 

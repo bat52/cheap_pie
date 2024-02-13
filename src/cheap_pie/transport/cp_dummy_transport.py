@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """ A dummy mockup transport module for Cheap Pie """
 
 # -*- coding: utf-8 -*-

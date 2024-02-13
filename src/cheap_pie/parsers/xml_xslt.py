@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """ Convert between different .xml formats using .xslt rules
 Examples of conversion between different IP-XACT versions

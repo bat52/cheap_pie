@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """ Cheap Pie Module to export register descriptio into .docx file """
 

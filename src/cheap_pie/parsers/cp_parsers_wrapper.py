@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """ Cheap Pie module wrapper around all parsers """
 # -*- coding: utf-8 -*-
 # this file is part of cheap_pie, a python tool for chip validation

@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 """ Module including functions to search registers and bitifield in a
 Cheap Pie register description

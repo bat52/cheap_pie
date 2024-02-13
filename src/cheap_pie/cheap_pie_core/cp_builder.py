@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 Namedtuple HAL builder for Cheap Pie
 """
