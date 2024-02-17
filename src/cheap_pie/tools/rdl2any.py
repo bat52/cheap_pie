@@ -9,6 +9,7 @@ import pathlib
 
 from systemrdl import RDLCompiler, RDLCompileError
 from peakrdl.verilog import VerilogExporter
+from peakrdl_cheader.exporter import CHeaderExporter
 
 try:
     # newer version
@@ -36,7 +37,7 @@ def cli(args):
                         )
     parser.add_argument("-ofmt", "--out-format", help="output format",
                         action='store', type=str, default="ipxact",
-                        choices=["ipxact", "uvm", "vlog"])
+                        choices=["ipxact", "uvm", "vlog","ch"])
 
     return parser.parse_args(args)
 
@@ -61,6 +62,9 @@ def rdl2any(args):
     elif prms.out_format == 'vlog':
         exporter = VerilogExporter()
         ext = '_rf.sv'
+    elif prms.out_format == 'ch':
+        exporter = CHeaderExporter()
+        ext = '.h'
     else:
         assert False, f'Unsupported output format {prms.out_format} !'
 
@@ -70,6 +74,9 @@ def rdl2any(args):
         prebase,fname = os.path.split(base)
         exporter.export(root, prebase, signal_overrides={})
         outfname = os.path.join(prebase,fname + ext)
+    elif prms.out_format == 'ch':
+        outfname = base + ext
+        exporter.export(root, outfname, reuse_typedefs=False)
     else:
         outfname = base + ext
         exporter.export(root, outfname)
@@ -90,6 +97,10 @@ def test_rdl2any():
 
     print("# Test rdl2verilog")
     outfname = rdl2any(['-ofmt', 'vlog'])
+    assert os.path.isfile(outfname), f'ERROR: file {outfname} does not exist!'
+
+    print("# Test rdl2cheader")
+    outfname = rdl2any(['-ofmt', 'ch'])
     assert os.path.isfile(outfname), f'ERROR: file {outfname} does not exist!'
 
 if __name__ == '__main__':

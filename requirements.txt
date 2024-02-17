@@ -7,8 +7,9 @@ wavedrom-ascii
 cmsis-svd
 ipyxact
 peakrdl-ipxact
-peakrdl-verilog #only install from github
+peakrdl-verilog
 peakrdl-uvm
+peakrdl-cheader
 # transport layers
 # pylink-square
 # pyocd # requires cargo and rust toolchain
