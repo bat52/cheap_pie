@@ -74,7 +74,7 @@ class CpHalBuilder():
             if self.struct_register.regname == regname:
                 return True
 
-        for key in self.outdict.keys():
+        for key,_ in self.outdict.items():
             if key==regname:
                 return True
 
