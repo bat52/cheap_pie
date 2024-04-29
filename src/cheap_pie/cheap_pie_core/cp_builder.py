@@ -25,6 +25,7 @@ def name_subs(regname=None):
     regname = regname.replace('[', '')
     regname = regname.replace(']', '')
     regname = regname.replace('%', '')
+    regname = regname.replace(' ', '_')
     if regname[0].isdigit():
         regname = 'M' + regname
     return regname
@@ -60,6 +61,20 @@ class CpHalBuilder():
             comments=comments,
             hif=self.hif)
 
+    def nregs(self):
+        """ Return the number of registers already created """
+        retval=len(self.outdict)
+        if not self.struct_register is None:
+            retval += 1
+        return retval
+
+    def reg_exists(self,regname):
+        """ Returns true if a register with the specified name already exists """
+        if not self.struct_register is None:
+            if self.struct_register.regname == regname:
+                return True
+        return regname in self.outdict.keys()
+
     def newfield(self, regfield, width, offset, comments):
         """ add a new field to current register """
         assert isinstance(self.struct_register, CpRegBuilder)
@@ -80,11 +95,16 @@ def test_cp_builder():
     """ test cp_builder """
     cpb = CpHalBuilder()
 
-    cpb.reg_open('reg1', 1, 'comment1')
+    assert(cpb.nregs()==0)
+    assert(cpb.regs_exists('reg1')==False)
+    cpb.reg_open('reg1', 1, 'comment1')    
     cpb.newfield('reg1_field1', offset=0, width=1, comments='reg1_field1')
     cpb.newfield('reg1_field2', offset=1, width=2, comments='reg1_field2')
+    assert(cpb.nregs()==1)
+    assert(cpb.regs_exists('reg1')==True)
 
     cpb.reg_open('reg2', 2, 'comment2')
+    assert(cpb.nregs()==2)
     cpb.newfield('reg2_field1', offset=0, width=4, comments='reg2_field1')
     cpb.newfield('reg2_field2', offset=5, width=2, comments='reg2_field2')
     cpb.newfield('reg2_field3', offset=8, width=2, comments='reg2_field3')
