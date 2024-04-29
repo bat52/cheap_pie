@@ -96,12 +96,12 @@ def test_cp_builder():
     cpb = CpHalBuilder()
 
     assert(cpb.nregs()==0)
-    assert(cpb.regs_exists('reg1')==False)
+    assert(cpb.reg_exists('reg1')==False)
     cpb.reg_open('reg1', 1, 'comment1')    
     cpb.newfield('reg1_field1', offset=0, width=1, comments='reg1_field1')
     cpb.newfield('reg1_field2', offset=1, width=2, comments='reg1_field2')
     assert(cpb.nregs()==1)
-    assert(cpb.regs_exists('reg1')==True)
+    assert(cpb.reg_exists('reg1')==True)
 
     cpb.reg_open('reg2', 2, 'comment2')
     assert(cpb.nregs()==2)
