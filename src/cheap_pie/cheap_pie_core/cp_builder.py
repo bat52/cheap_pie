@@ -73,11 +73,11 @@ class CpHalBuilder():
         if not self.struct_register is None:
             if self.struct_register.regname == regname:
                 return True
-                
-        for key,val in self.outdict.items():
+
+        for key in self.outdict.keys():
             if key==regname:
                 return True
-                
+
         return False
 
     def newfield(self, regfield, width, offset, comments):
