@@ -25,7 +25,9 @@ def name_subs(regname=None):
     regname = regname.replace('[', '')
     regname = regname.replace(']', '')
     regname = regname.replace('%', '')
-    regname = regname.replace(' ', '_')
+    regname = regname.replace('/', '')
+    regname = regname.replace('\', '')
+    regname = regname.replace(' ', '_')    
     if regname[0].isdigit():
         regname = 'M' + regname
     return regname
