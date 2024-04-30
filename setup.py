@@ -30,6 +30,7 @@ setup(
           'peakrdl-ipxact',
           'peakrdl-uvm',
           'peakrdl-verilog',
+          'peakrdl-cheader',
           # 'lxml', # for xlst ipxact conversions
           # transport layers
           #'pylink-square',
