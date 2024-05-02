@@ -21,6 +21,7 @@ def name_subs(regname=None):
 
     # print(regname)
     # regname=strrep(regname,'"','')
+    regname = regname.strip()
     regname = regname.replace('"', '')
     regname = regname.replace('[', '')
     regname = regname.replace(']', '')
