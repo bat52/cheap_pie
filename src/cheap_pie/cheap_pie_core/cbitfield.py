@@ -176,7 +176,7 @@ class CpBitfield():  # pylint: disable=R0902
 
         # check new value in range
         if (shiftval & self.mask) < shiftval:
-            raise ValueError(f'Bitifield value f{fieldval} out of range!')
+            raise ValueError(f'Bitfield {self.fieldname}: value {fieldval} out of range!')
         #
         ## write back new register value ###############################################
         if writeback:
