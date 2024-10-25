@@ -126,7 +126,7 @@ class CpBitfield():  # pylint: disable=R0902
             if self.hif is None:
                 regval = 0
             else:
-                regval = self.hif.hifread(self.addr)  # ,*args,**kwargs)
+                regval = self.hif.hifread(self.addr)
 
         # compute field value from register value
         if isinstance(regval, str):
@@ -144,8 +144,8 @@ class CpBitfield():  # pylint: disable=R0902
         #
         return fieldval
 
-    def setbit(self, fieldval=0, echo=False, writeback=True,
-               regval=None, verify=True):  # pylint: disable=W1113, R0913
+    def setbit(self, fieldval=0, echo=False, writeback=True,  # pylint: disable=R0913
+               regval=None, verify=True):                     # pylint: disable=W1113
         """ function display(self,regval)
         # displays value of a bitfield from a register value
         # input : regval value of the full register either in decimal or
