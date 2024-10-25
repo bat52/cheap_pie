@@ -4,11 +4,11 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04 # ubuntu-latest
     strategy:
       matrix:
-        # https://github.com/actions/setup-python/issues/853
-        python-version: ["3.8", "3.8.5", "3.8.10", "3.9", "3.10"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        os: [ubuntu-latest, ubuntu-24.04, ubuntu-22.04, ubuntu-20.04]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: install verilator
       run: | 
