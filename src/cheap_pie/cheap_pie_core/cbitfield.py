@@ -144,7 +144,7 @@ class CpBitfield():  # pylint: disable=R0902
         #
         return fieldval
 
-    def setbit(self, fieldval=0, echo=False, writeback=True, 
+    def setbit(self, fieldval=0, echo=False, writeback=True,
                regval=None, verify=True):  # pylint: disable=W1113, R0913
         """ function display(self,regval)
         # displays value of a bitfield from a register value
