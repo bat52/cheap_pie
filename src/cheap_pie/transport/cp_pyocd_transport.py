@@ -39,15 +39,18 @@ class CpPyocdTransport(CpDummyTransport):
 
         return ret
 
-    def hifwrite(self, addr="0x40000888", val="0x00000352"):
+    def hifwrite(self, addr="0x40000888", val="0x00000352", verify=True):
         """ rwrite register through pyocd """
-        addr, val, _ = hifwrite_preproc(addr, val)
+        waddr, wval, _ = hifwrite_preproc(addr, val)
 
         if self.ocd is None:
-            CpDummyTransport.hifwrite(self, addr, val)
+            CpDummyTransport.hifwrite(self, waddr, wval)
         else:
             # ret = self.ocd.board.target.dp.write_reg(addr,val)
-            self.ocd.board.target.write32(addr, val)
+            self.ocd.board.target.write32(waddr, wval)
+
+        if verify:
+            assert int(self.hifread(addr))==int(wval)
 
         return int(val)
 

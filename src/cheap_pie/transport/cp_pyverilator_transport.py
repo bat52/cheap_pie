@@ -97,7 +97,7 @@ class CpPyverilatorTransport():
         # curr_out = sim.io.out
         # print('sim.io.out = ' + str(curr_out))
 
-    def hifwrite(self, addr='0x00', val='0xB16B00B5', mask='0xFFFFFFFF'):
+    def hifwrite(self, addr='0x00', val='0xB16B00B5', mask='0xFFFFFFFF', verify=True):
         """ Write register """
 
         addr, val, mask = hifwrite_preproc(addr, val, mask)
@@ -125,6 +125,9 @@ class CpPyverilatorTransport():
         # sim.clock.tick()
         # sim.io.basicreg_basicfield_we = 1
         # sim.clock.tick()
+
+        if verify:
+            assert int(self.hifread(addr))==int(val)
 
     def hifread(self, addr='0x00'):
         """ Read register """

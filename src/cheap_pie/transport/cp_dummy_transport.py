@@ -68,14 +68,17 @@ class CpDummyTransport(metaclass=ABCMeta):
 
         return self.mem[addrstr]
 
-    def hifwrite(self, addr="0x40000888", val="0x00000352"):
+    def hifwrite(self, addr="0x40000888", val="0x00000352", verify=True):
         """ Mockup for write a register """
 
-        addr, val, _ = hifwrite_preproc(addr, val)
+        waddr, wval, _ = hifwrite_preproc(addr, val)
 
-        self.mem[hex_bw(addr)] = val
+        self.mem[hex_bw(waddr)] = wval
 
-        return int(val)
+        if verify:
+            assert int(self.hifread(addr))==int(wval)
+
+        return int(wval)
 
 
 def test_cp_dummy(transport=CpDummyTransport()):

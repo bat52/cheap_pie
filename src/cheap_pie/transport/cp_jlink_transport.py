@@ -43,17 +43,20 @@ class CpJlinkTransport(CpDummyTransport):
 
         return ret
 
-    def hifwrite(self, addr="0x40000888", val="0x00000352"):
+    def hifwrite(self, addr="0x40000888", val="0x00000352", verify=True):
         """ write register through JLink """
 
-        addr, val, _ = hifwrite_preproc(addr, val)
+        waddr, wval, _ = hifwrite_preproc(addr, val)
 
         if self.jl is None:
-            CpDummyTransport.hifwrite(self, addr, val)
+            CpDummyTransport.hifwrite(self, waddr, wval)
         else:
-            self.jl.memory_write32(addr, [val])
+            self.jl.memory_write32(waddr, [wval])
 
-        return int(val)
+        if verify:
+            assert int(self.hifread(addr))==int(wval)
+
+        return int(wval)
 
 
 def test_cp_jlink():

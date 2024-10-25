@@ -48,7 +48,7 @@ class CpEsptoolTransport(CpDummyTransport):
 
         return ret
 
-    def hifwrite(self, addr='0x3ff00014', val="0x00000352"):
+    def hifwrite(self, addr='0x3ff00014', val="0x00000352", verify=True):
         """ write register through esptool """
 
         if isinstance(addr, int):
@@ -65,6 +65,9 @@ class CpEsptoolTransport(CpDummyTransport):
                 ['--port', self.port, '--after', 'no_reset',
                     'write_mem', addr, val, '0x0']
             )
+
+        if verify:
+            assert self.hifread(addr)==literal_eval(val)
 
         return literal_eval(val)
 
