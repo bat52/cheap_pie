@@ -54,7 +54,7 @@ class CpDummyTransport(metaclass=ABCMeta):
     """ A transport mockup """
     mem = {}
 
-    def hifread(self, addr="0x40000888"):
+    def hifread(self, addr="0x40000888", **kwargs):
         """ Mockup for read a register """
 
         # make sure string format is always the same
@@ -68,7 +68,8 @@ class CpDummyTransport(metaclass=ABCMeta):
 
         return self.mem[addrstr]
 
-    def hifwrite(self, addr="0x40000888", val="0x00000352", verify=True):
+    def hifwrite(self, addr="0x40000888", val="0x00000352", verify=True,
+                 **kwargs):
         """ Mockup for write a register """
 
         waddr, wval, _ = hifwrite_preproc(addr, val)

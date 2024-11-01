@@ -116,7 +116,7 @@ class CpBitfield():  # pylint: disable=R0902
         fieldstr = self.__str__(fieldval=fieldval)  # pylint: disable=C2801
         print(fieldstr)
 
-    def getbit(self, regval=None, echo=False, as_signed=False):
+    def getbit(self, regval=None, echo=False, as_signed=False, **kwargs):
         """ function display(self,regval=None,echo=False,as_signed=False)
         # displays value of a bitfield from a register value
         # input : regval value of the full register either in decimal or
@@ -126,7 +126,7 @@ class CpBitfield():  # pylint: disable=R0902
             if self.hif is None:
                 regval = 0
             else:
-                regval = self.hif.hifread(self.addr)
+                regval = self.hif.hifread(self.addr, **kwargs)
 
         # compute field value from register value
         if isinstance(regval, str):
@@ -145,7 +145,7 @@ class CpBitfield():  # pylint: disable=R0902
         return fieldval
 
     def setbit(self, fieldval=0, echo=False, writeback=True,  # pylint: disable=R0913
-               regval=None, verify=True):                     # pylint: disable=W1113
+               regval=None, verify=True, **kwargs):           # pylint: disable=W1113
         """ function display(self,regval)
         # displays value of a bitfield from a register value
         # input : regval value of the full register either in decimal or
@@ -153,7 +153,7 @@ class CpBitfield():  # pylint: disable=R0902
 
         ## read input register value ###################################################
         if not (self.hif is None) and regval is None:
-            hexval = self.hif.hifread(self.addr)
+            hexval = self.hif.hifread(self.addr, **kwargs)
             if isinstance(hexval, str):
                 regval = literal_eval(hexval)
             else:
@@ -180,7 +180,7 @@ class CpBitfield():  # pylint: disable=R0902
         #
         ## write back new register value ###############################################
         if writeback:
-            self.hif.hifwrite(self.addr, outregval, verify=verify)
+            self.hif.hifwrite(self.addr, outregval, verify=verify, **kwargs)
         #
         if echo:
             self.display(regval=regval)
@@ -220,6 +220,11 @@ def test_cp_bitfield():
     val = 3
     field.setbit(val)
     assert field.getbit() == val
+
+    print('# setbit, getbit with custom args')
+    val = 1
+    field.setbit(val, custom_arg = True)
+    assert field.getbit(custom_arg = True) == val
 
     print('# display')
     field.display(4)

@@ -111,7 +111,7 @@ class CpRegister():  # pylint: disable=R0902
         # address base
         self.addr_base = addr_base
 
-    def getreg(self, asdict=False, as_signed=False):
+    def getreg(self, asdict=False, as_signed=False, **kwargs):
         """ function getreg(self,regval)
         %
         % Displays value of a register from a register value
@@ -120,7 +120,7 @@ class CpRegister():  # pylint: disable=R0902
         % hexadecimal """
 
         if not self.hif is None:
-            regval = self.hif.hifread(self.addr)
+            regval = self.hif.hifread(self.addr, **kwargs)
         else:
             regval = 0
 
@@ -139,7 +139,7 @@ class CpRegister():  # pylint: disable=R0902
 
         return retval
 
-    def setreg(self, regval=0, echo=False, verify=True):  # pylint: disable=W1113
+    def setreg(self, regval=0, echo=False, verify=True, **kwargs):  # pylint: disable=W1113
         """ function setreg(self,regval)
         %
         % Displays value of a register from a register value
@@ -166,7 +166,7 @@ class CpRegister():  # pylint: disable=R0902
         # % write %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         if not self.hif is None:
-            ret = self.hif.hifwrite(self.addr, regval, verify=verify)
+            ret = self.hif.hifwrite(self.addr, regval, verify=verify, **kwargs)
         else:
             ret = regval
 
@@ -176,29 +176,32 @@ class CpRegister():  # pylint: disable=R0902
 
         return ret
 
-    def getbit(self, bit_offset=0, width=1):
+    def getbit(self, bit_offset=0, width=1, **kwargs):
         """ Get a custom bitfield within a register """
         bitfield = CpBitfield(regaddr=self.addr, width=width,
-                              bit_offset=bit_offset, hif=self.hif)
+                              bit_offset=bit_offset, hif=self.hif,
+                              **kwargs)
         return bitfield.getbit()
 
-    def setbit(self, bitval=0, bit_offset=0, width=1, verify=True):
+    def setbit(self, bitval=0, bit_offset=0, width=1, verify=True,
+               **kwargs):
         """ Set a custom bitfield within a register """
         bitfield = CpBitfield(regaddr=self.addr, width=width,
                               bit_offset=bit_offset, hif=self.hif)
-        return bitfield.setbit(bitval, verify=verify)
+        return bitfield.setbit(bitval, verify=verify, **kwargs)
 
-    def getbyte(self, byte_offset=0):
+    def getbyte(self, byte_offset=0, **kwargs):
         """ Get a custom byte within a register """
         byte = CpBitfield(regaddr=self.addr, width=8,
                           bit_offset=byte_offset*8, hif=self.hif)
-        return byte.getbit()
+        return byte.getbit(**kwargs)
 
-    def setbyte(self, byteval=0, byte_offset=0, verify=True):
+    def setbyte(self, byteval=0, byte_offset=0, verify=True,
+                **kwargs):
         """ Set a custom byte within a register """
         byte = CpBitfield(regaddr=self.addr, width=8,
                           bit_offset=byte_offset*8, hif=self.hif)
-        return byte.setbit(byteval, verify=verify)
+        return byte.setbit(byteval, verify=verify, **kwargs)
 
     def get_addr(self, mode='hex'):
         """ Returns the address of the register
@@ -474,6 +477,16 @@ def test_cp_register():  # pylint: disable=R0914,R0915
     reg.display()
     print('# reg help with bitfields')
     reg.help()
+
+    print('# reg basic access')
+    val = 52
+    reg.setreg(val)
+    assert reg.getreg() == val
+
+    print('# reg basic access with custom args')
+    val += 10
+    reg.setreg(val, custom_arg = True)
+    assert reg.getreg(custom_arg = True) == val
 
     print('# reg item access')
     reg[0]        # pylint: disable=W0104
