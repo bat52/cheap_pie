@@ -70,11 +70,11 @@ fi
 if [[ "$INSTALL_TEST" -gt 0 ]];
 then
     echo "Installing package from testpypi... "
-    $PIP install --index-url https://test.pypi.org/simple/ ${PACKAGE}
+    $PIP install --index-url https://test.pypi.org/simple/ ${PACKAGE} --no-build-isolation
 fi
 
 if [[ "$INSTALL" -gt 0 ]];
 then
     echo "Installing package from pypi... "
-    $PIP install ${PACKAGE}
+    $PIP install ${PACKAGE} --no-build-isolation
 fi
