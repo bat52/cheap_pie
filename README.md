@@ -155,40 +155,22 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         http://gtkwave.sourceforge.net/
 
 # Register description formats
-regtool from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
-https://docs.opentitan.org/doc/rm/register_tool/
+* [regtool](https://docs.opentitan.org/doc/rm/register_tool/): from opentitan project seems similar, using JSON to represent chip/IP structure, and I2C transport
+* [rggen](https://github.com/rggen/rggen): custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
+* [ipxact2systemverilog](https://github.com/oddball/ipxact2systemverilog): convert ipxact register file description into verilog register bank
 
-custom input, output: verilog, VHDL, YAML, JSON, TOML, Spreadsheet (XLSX, XLS, OSD, CSV)
-https://github.com/rggen/rggen
+# Others
+* [pigweed](https://pigweed.dev/): embedded development toolkit, includes a [pw_console](https://pigweed.dev/pw_console/#module-pw-console), a python shell to interact with embedded devices, based on [ptpython](https://github.com/prompt-toolkit/ptpython/)
+* [pyVISA](https://pyvisa.readthedocs.io/en/master/): instrument control
+* [wavedrom](https://github.com/wavedrom/bitfield8): includes a graphical render of bitfield structures
+* [regbits](https://github.com/thanks4opensource/regbits): C++ register/bitfields access (including generation from svd)
+** [STM C++ regbits implementation](https://github.com/thanks4opensource/regbits_stm)
+* [modm.io](https://modm.io/): a barebone embedded library generator
+** [hardware descriptions for AVR and STM32 devices](https://github.com/modm-io/modm-devices)
+* [STM32 Peripheral Access Crates (from svd)](https://github.com/stm32-rs/stm32-rs)
 
-convert ipxact register file description into verilog register bank
-https://github.com/oddball/ipxact2systemverilog
+* [pyfiglet](https://www.devdungeon.com/content/create-ascii-art-text-banners-python#install_pyfiglet): Banner creation
 
-# Others	
-In conjunction with pyVISA (https://pyvisa.readthedocs.io/en/master/), used for 
-instument control, it provides a simple and fully python-contained environment
-for silicon validation.
-
-Graphical Render of bitfield structures
-https://github.com/wavedrom/bitfield
-
-C++ register/bitfields access (including generation from svd)
-https://github.com/thanks4opensource/regbits
-
-STM C++ regbits implementation
-https://github.com/thanks4opensource/regbits_stm
-
-a barebone embedded library generator
-https://modm.io/
-
-hardware descriptions for AVR and STM32 devices
-https://github.com/modm-io/modm-devices
-
-STM32 Peripheral Access Crates (from svd)
-https://github.com/stm32-rs/stm32-rs
-
-Banner created with pyfiglet
-https://www.devdungeon.com/content/create-ascii-art-text-banners-python#install_pyfiglet
 
 Cheap Pie is modeled after an original Octave/Matlab implementation that cannot
 be shared due to licensing reasons. The original code was converted to python
