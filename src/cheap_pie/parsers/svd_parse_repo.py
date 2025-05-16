@@ -21,7 +21,6 @@
 import os
 from ast import literal_eval
 from cmsis_svd.parser import SVDParser
-from importlib.resources import files
 
 from cheap_pie.cheap_pie_core.cp_builder import CpHalBuilder  # pylint: disable=C0413,E0401
 from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname  # pylint: disable=C0413,E0401
