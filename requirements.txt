@@ -18,3 +18,4 @@ peakrdl-cheader
 # pyverilator-mm
 # other
 # packaging # for verilator version check
+requests

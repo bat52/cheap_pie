@@ -37,6 +37,7 @@ setup(
           #'pyocd',
           #'esptool',
           #'packaging' # for verilator version check
+          'requests'
       ],
 )
 
