@@ -187,11 +187,24 @@ class CpBitfield():  # pylint: disable=R0902
         #
         return outregval
 
+    def get_reset(self, mode='hex'):
+        """ Returns the reset value of the register
+          input:
+            mode: 'hex' return hex string, 'dec' returns decimal number
+        """
+        assert mode in ['hex','dec'], f"Wrong mode {mode}"
+        if mode=='dec':
+            return self.reset
+        if mode=='hex':
+            return hex(self.reset) # return hex string
+        return 0
+
     # @function
     def help(self):
         """ function ret = help(self)
         # displays register comments """
         print(self.comments)
+        print(f'Reset Value: {self.get_reset()}')
 
     def __index__(self):
         return int(self.getbit())

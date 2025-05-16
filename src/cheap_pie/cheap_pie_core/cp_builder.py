@@ -55,13 +55,14 @@ class CpHalBuilder():
             )
             self.struct_register = None
 
-    def reg_open(self, regname, regaddr, comments=''):
+    def reg_open(self, regname, regaddr, comments='', reset = 0):
         """ start a register instance declaration """
         self.reg_close()
         self.struct_register = CpRegBuilder(
             regname=name_subs(regname),
             regaddr=regaddr,
             comments=comments,
+            reset=reset,
             hif=self.hif)
 
     def nregs(self):
@@ -83,7 +84,7 @@ class CpHalBuilder():
 
         return False
 
-    def newfield(self, regfield, width, offset, comments):
+    def newfield(self, regfield, width, offset, comments, reset=0):
         """ add a new field to current register """
         assert isinstance(self.struct_register, CpRegBuilder)
         self.struct_register.addfield(
@@ -91,6 +92,7 @@ class CpHalBuilder():
             width=width,
             offset=offset,
             comments=comments,
+            reset=reset
         )
 
     def out(self):

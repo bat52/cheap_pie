@@ -86,9 +86,19 @@ class CpRegister():  # pylint: disable=R0902
     hif = None
     addr_offset = 0
     addr_base = 0
+    reset = 0 
     #
 
-    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0, bitfields=None):  # pylint: disable=R0913
+    def __init__(self, 
+                 regname, 
+                 regaddr, 
+                 comments, 
+                 hif, 
+                 addr_offset=0, 
+                 addr_base=0, 
+                 bitfields=None,
+                 reset=0
+                 ):  # pylint: disable=R0913
         # address
         self.addr = regaddr
 
@@ -110,6 +120,9 @@ class CpRegister():  # pylint: disable=R0902
 
         # address base
         self.addr_base = addr_base
+
+        # reset value
+        self.reset = reset
 
     def getreg(self, asdict=False, as_signed=False, **kwargs):
         """ function getreg(self,regval)
@@ -215,11 +228,23 @@ class CpRegister():  # pylint: disable=R0902
             return hex(self.addr) # return hex string
         return 0
 
+    def get_reset(self, mode='hex'):
+        """ Returns the reset value of the register
+          input:
+            mode: 'hex' return hex string, 'dec' returns decimal number
+        """
+        assert mode in ['hex','dec'], f"Wrong mode {mode}"
+        if mode=='dec':
+            return self.reset
+        if mode=='hex':
+            return hex(self.reset) # return hex string
+        return 0
+
     def help(self, width=25):
         """ function ret = help(self)
         # displays register comments """
         self.print_wavedrom()
-        print(f"Address: {self.get_addr()}")
+        print(f"Address: {self.get_addr()}, Reset: {self.get_reset()}")
         print(self.comments)
 
         fmtstr = '%%%ds: %%s' % width  # pylint: disable=C0209
@@ -228,6 +253,8 @@ class CpRegister():  # pylint: disable=R0902
 
             for line in textwrap.wrap(field.comments):
                 print(fmtstr % ('', line))
+
+            print(fmtstr % ('', f'Reset: {field.get_reset()}'))
 
     def __repr__(self, regval=None):
         if len(self.bitfields) > 0:
@@ -365,8 +392,9 @@ class CpRegBuilder():
     hif = None
     addr_offset = 0
     addr_base = 0
+    reset = 0
 
-    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0):  # pylint: disable=R0913
+    def __init__(self, regname, regaddr, comments, hif, addr_offset=0, addr_base=0, reset=0):  # pylint: disable=R0913
         # address
         self.addr = regaddr
 
@@ -388,7 +416,10 @@ class CpRegBuilder():
         # for some reason need to reset this
         self.dictfields = {}
 
-    def addfield(self, regfield, width, offset, comments=''):
+        # reset value
+        self.reset = reset
+
+    def addfield(self, regfield, width, offset, comments='', reset=0):
         """ Add a field to a register dictionary of fields """
         self.dictfields[regfield] = CpBitfield(
             regfield=regfield,
@@ -397,6 +428,7 @@ class CpRegBuilder():
             comments=comments,
             regaddr=self.addr,
             regname=self.regname,
+            reset=reset,
             hif=self.hif)
 
     def dictfield2struct(self):
@@ -407,7 +439,9 @@ class CpRegBuilder():
                           hif=self.hif,
                           addr_offset=self.addr_offset,
                           addr_base=self.addr_base,
-                          bitfields=self.dictfields)
+                          bitfields=self.dictfields,
+                          reset=self.reset
+                          )
 
 
 def test_cp_register():  # pylint: disable=R0914,R0915

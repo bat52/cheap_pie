@@ -42,12 +42,18 @@ def ipyxact_parse(fname, hif=None, base_address_offset="0x00000000"):
                     if hasattr(reg, 'field'):
                         for field in reg.field:
                             if not field is None:
+                                # extract reset, if available
+                                reset=0
+                                if hasattr(field,'resets'):
+                                    if hasattr(field.resets,'reset'):
+                                        reset=field.resets.reset
                                 # Create new field class
                                 cpb.newfield(
                                     regfield=field.name,
                                     width=field.bitWidth,
                                     offset=field.bitOffset,
-                                    comments=field.description
+                                    comments=field.description,
+                                    reset=reset
                                 )
 
     # convert output dictionary into structure

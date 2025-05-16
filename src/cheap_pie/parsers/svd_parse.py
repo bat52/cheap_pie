@@ -49,10 +49,16 @@ def svd_parse(fname, vendor=None, hif=None, base_address_offset="0x00000000"):  
                         literal_eval(base_address_offset)
                     )
 
+                    if hasattr(reg.resetValue, 'cdata'):
+                        reset=literal_eval(reg.resetValue.cdata)
+                    else:
+                        reset=0
+
                     cpb.reg_open(
                         regname=f'{periph.name.cdata}_{reg.name.cdata}',
                         regaddr=regaddr,
                         comments=reg.description.cdata,
+                        reset=reset
                     )
 
                     if hasattr(reg, 'fields'):

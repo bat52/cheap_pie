@@ -61,6 +61,11 @@ def ipxact_parse(fname, hif=None, base_address_offset="0x00000000"):
                 if hasattr(reg, 'field'):
                     for field in reg.field:
                         if not field is None:
+                            # extract reset, if available
+                            reset=0
+                            if hasattr(field,'resets'):
+                                if hasattr(field.resets,'reset'):
+                                    reset=field.resets.reset.cdata
                             # Create new field
                             cpb.newfield(
                                 regfield=field.name.cdata,

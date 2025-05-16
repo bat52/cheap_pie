@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+untangle = "*"
+hickle = "*"
+python-docx = "*"
+wavedrom = "*"
+wavedrom-ascii = "*"
+cmsis-svd = "*"
+ipyxact = "*"
+peakrdl-ipxact = "*"
+peakrdl-verilog = "*"
+peakrdl-uvm = "*"
+peakrdl-cheader = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
