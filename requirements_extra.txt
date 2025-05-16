@@ -6,3 +6,7 @@ pyverilator-mm
 # other
 packaging # for verilator version check
 lxml # for xlst ipxact conversions
+# for pyproject.toml
+build
+setuptools
+wheel

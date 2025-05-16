@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools<70", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cheap_pie"
+version = "1.2.1"
+description = "A python tool for silicon validation."
+readme = "README.md"
+requires-python = ">=3.8"
+
+authors = [
+  { name = "Marco Merlin", email = "marcomerli@gmail.com" }
+]
+
+keywords = ["python", "silicon", "validation"]
+
+dependencies = [
+  "untangle",
+  "hickle",
+  "cmsis-svd",
+  "ipyxact",
+  "python-docx",
+  "wavedrom",
+  "wavedrom-ascii",
+  "pyverilator-mm",
+  "peakrdl-ipxact",
+  "peakrdl-uvm",
+  "peakrdl-verilog",
+  "peakrdl-cheader",
+  "requests"
+]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent"
+]
+
+[project.urls]
+Homepage = "https://github.com/bat52/cheap_pie"
+Source = "https://github.com/bat52/cheap_pie"
+Tracker = "https://github.com/bat52/cheap_pie/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.package-data]
+"cheap_pie" = ["*.svd", "*.xml", "*.rdl", "*.txt"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

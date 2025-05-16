@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 DIST=dist
+BUILD=build
 PACKAGE=cheap_pie
 PIP=pip3
 
@@ -26,12 +27,14 @@ fi
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -h|--help)       HELP=1;         shift ;;
+        -cln|--clean)    CLEAN=1;       shift ;;
         -c|--create)     CREATE=1;       shift ;;
         -u)              UPLOAD_TEST=1;  shift ;;
         --upload)        UPLOAD=1;       shift ;;
         -i)              INSTALL_TEST=1; shift ;;
         --install)       INSTALL=1;      shift ;;
-        -un|--uninstall) UNINSTALL=1           ;;
+        -un|--uninstall) UNINSTALL=1     shift ;;
+        -m)              METADATA=1            ;;
         *) echo "Unknown parameter passed: $1"; exit 1 ;;
     esac
     shift
@@ -42,13 +45,25 @@ then
     show_usage
 fi
 
-if [[ "$CREATE" -gt 0 || "$UPLOAD" -gt 0 || "$UPLOAD_TEST" -gt 0 ]];
+if [[ "$CLEAN" -gt 0 || "$CREATE" -gt 0 || "$UPLOAD" -gt 0 || "$UPLOAD_TEST" -gt 0 || "$METADATA" -gt 0 ]];
 then
-    echo "Creating new package... "
-    rm -rf $DIST # remove old package folder
-    python3 setup.py sdist # create package
+    echo "Clean... "
+    rm -rf $DIST $BUILD ./src/$PACKAGE.egg-info # remove old package folder
 fi
 
+if [[ "$CREATE" -gt 0 || "$UPLOAD" -gt 0 || "$UPLOAD_TEST" -gt 0 || "$METADATA" -gt 0 ]];
+then
+    echo "Creating new package... "
+    # python3 setup.py sdist # create package
+    python3 -m build -s -w
+fi
+
+if [[ "$METADATA" -gt 0 ]];
+then
+    echo "Checking METADATA... "
+    twine check $DIST/*
+fi
+    
 if [[ "$UPLOAD_TEST" -gt 0 ]];
 then
     echo "Uploading package to testpypi... "
@@ -78,3 +93,5 @@ then
     echo "Installing package from pypi... "
     $PIP install ${PACKAGE} --no-build-isolation
 fi
+
+
