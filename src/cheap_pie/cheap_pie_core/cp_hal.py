@@ -79,11 +79,11 @@ class CpHal():
         """
         return cheap_pie.tools.search.address(self.regs, address, mask=mask)
 
-    def to_docx(self, *args):
+    def to_docx(self, **kwargs):
         """
         Generate a .docx document describing an Hardware Abstraction Layer
         """
-        hal2doc(self.regs, *args)
+        hal2doc(self.regs, **kwargs)
 
 ## dump methods #############################################################
     def regs2dict(self):
@@ -290,7 +290,10 @@ def test_cp_hal_to_docx():
     from parsers.cp_parsers_wrapper import cp_parsers_wrapper  # pylint: disable=C0415,C0413,E0401
     from cheap_pie_core.cp_cli import cp_cli                   # pylint: disable=C0415,C0413,E0401
 
-    prms = cp_cli(['-t', 'dummy', '-rf', 'my_subblock.xml', '-fmt', 'ipxact'])
+    prms = cp_cli()
+    prms.transport = 'dummy'
+    prms.regfname = 'my_subblock.xml'
+    prms.format = 'ipxact'
     hal = cp_parsers_wrapper(prms)
     hal.to_docx()
 
@@ -305,7 +308,8 @@ def test_cp_hal():  # pylint: disable=R0914,R0915
     from cheap_pie_core.cp_cli import cp_cli                  # pylint: disable=C0415,E0401
 
     print('# hal initialize')
-    prms = cp_cli(['-t', 'dummy'])
+    prms = cp_cli()
+    prms.transport = 'dummy'
     hal = cp_parsers_wrapper(prms, hif=CpDummyTransport())
 
     print('# hal test register methods...')

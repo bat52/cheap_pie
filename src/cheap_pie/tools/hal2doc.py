@@ -128,6 +128,7 @@ def hal2doc(hal, fname='hal.docx', template=None, tablestyle=None, nbits_addr=32
 
     # save document
     doc.save(fname)
+    print(f"File {fname} saved!")
 
     # check file was actually saved
     assert os.path.isfile(fname), f"ERROR: file {fname} does not exist!"

@@ -31,7 +31,7 @@ def cp_devices_fname(fname):
     )
 
 
-def cp_cli(args=[]):  # pylint: disable=W0102
+def cp_cli():  # pylint: disable=W0102
     """
     Cheap Pie Command Line Interface
     """
@@ -66,15 +66,15 @@ def cp_cli(args=[]):  # pylint: disable=W0102
                         help="top verilog file (when simulating with verilator)",
                         action='store', type=str, default="./devices/rdl/basic/basic_rf.sv")
 
-    return parser.parse_args(args)
+    return parser.parse_args()
 
 
-def test_cli(argv):
+def test_cli():
     """
     Test function for Cheap Pie Command Line Interface
     """
-    return cp_cli(argv)
+    return cp_cli()
 
 
 if __name__ == '__main__':
-    print(test_cli(sys.argv[1:]))
+    print(test_cli())

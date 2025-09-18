@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cheap_pie"
-version = "1.2.2"
+version = "1.2.4"
 description = "A python tool for silicon validation."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -49,3 +49,6 @@ package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[project.scripts]
+cp_hal2doc = "cheap_pie.tools.cp_hal2doc:cp_hal2doc"

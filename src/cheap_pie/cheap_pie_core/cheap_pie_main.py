@@ -24,7 +24,7 @@ from cheap_pie.transport.cp_dummy_transport import CpDummyTransport  # pylint: d
 # %run cheap_pie
 
 
-def cp_main(argv=[]):  # pylint: disable=W0102
+def cp_main():  # pylint: disable=W0102
     """
     Main cheap_pie function
     """
@@ -33,7 +33,7 @@ def cp_main(argv=[]):  # pylint: disable=W0102
     #
     ## input parameters ###########################################################
     print('Parsing input arguments...')
-    prms = cp_cli(argv)
+    prms = cp_cli()
 
     ## helper functions ###########################################################
 
@@ -71,8 +71,8 @@ def cp_main(argv=[]):  # pylint: disable=W0102
     ## welcome ####################################################################
     print('Cheap Pie is ready! Type hal.<TAB> to start browsing...')
 
-    return lhal
+    return lhal, prms
 
 
 if __name__ == '__main__':
-    hal = cp_main(sys.argv[1:])
+    hal, prms = cp_main()
