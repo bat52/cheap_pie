@@ -1,6 +1,5 @@
 setuptools; python_version == '3.12'
 untangle
-hickle
 python-docx
 wavedrom
 wavedrom-ascii

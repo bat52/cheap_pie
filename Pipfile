@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 untangle = "*"
-hickle = "*"
 python-docx = "*"
 wavedrom = "*"
 wavedrom-ascii = "*"

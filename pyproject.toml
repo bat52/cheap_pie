@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cheap_pie"
-version = "1.2.5"
+version = "1.2.6"
 description = "A python tool for silicon validation."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -17,7 +17,6 @@ keywords = ["python", "silicon", "validation"]
 
 dependencies = [
   "untangle",
-  "hickle",
   "cmsis-svd",
   "ipyxact",
   "python-docx",
@@ -30,6 +29,13 @@ dependencies = [
   "peakrdl-cheader",
   "requests"
 ]
+
+[project.optional-dependencies]
+hkl = ["hickle"]
+transport = ["pylink-square", "pyocd", "esptool", "pyverilator-mm"]
+other = ["packaging", "lxml"]
+build = ["build", "setuptools", "wheel"]
+all = ["hickle", "pylink-square", "pyocd", "esptool", "pyverilator-mm", "packaging", "lxml", "build", "setuptools", "wheel"]
 
 classifiers = [
   "Programming Language :: Python :: 3",

@@ -9,7 +9,12 @@ Cheap Pie Hardware Abstraction Layer
 # email: marcomerli@gmail.com
 
 import os
-import hickle as hkl
+
+try:
+    import hickle as hkl
+    HAS_HICKLE = True
+except ImportError:
+    HAS_HICKLE = False
 
 import cheap_pie.tools.search  # pylint: disable=W0611
 from cheap_pie.tools.hal2doc import hal2doc, int2hexstr, hexstr2int
@@ -119,6 +124,8 @@ class CpHal():
         if file_extension == '.txt':
             self.dump2text(f1name=fname, field1=regs_dict)
         else:
+            if not HAS_HICKLE:
+                raise ImportError("hickle is required for .hkl file format. Install it with: pip install hickle")
             hkl.dump(regs_dict, fname, compression='gzip')
 
     def dump_load(self, fname='dump.hkl'):
@@ -131,6 +138,8 @@ class CpHal():
         if file_extension == '.txt':
             _, fields = self.text2dump(fname)
         else:
+            if not HAS_HICKLE:
+                raise ImportError("hickle is required for .hkl file format. Install it with: pip install hickle")
             fields = hkl.load(fname)
 
         return fields
@@ -191,6 +200,8 @@ class CpHal():
 
         if not isinstance(field1, dict):
             assert os.path.isfile(f1name)
+            if not HAS_HICKLE:
+                raise ImportError("hickle is required for .hkl file format. Install it with: pip install hickle")
             field1 = hkl.load(f1name)
 
         fmtstr = '%%%ds' % width  # pylint: disable=C0209
