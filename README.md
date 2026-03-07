@@ -160,28 +160,28 @@ pip install cheap_pie[all]
 
 The sections below list individual packages for reference.
 
-# Legacy reference
+
 # for XML parsing (used by legacy svd parser and IP-XACT parser)
-# pip3 install untangle
+        pip3 install untangle
 # for exporting XML info into a human-readable document
-# pip3 install python-docx
+        pip3 install python-docx
 # for dumping registers
-# pip3 install hickle
+        pip3 install hickle
 # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
-# pip3 install cmsis-svd
+        pip3 install cmsis-svd
 # SPIRIT IP-XACT parser through ipyxact https://github.com/olofk/ipyxact
-# pip3 install ipyxact                
+        pip3 install ipyxact                
 # SystemRDL to register-file verilog
 # https://github.com/hughjackson/PeakRDL-verilog
 # SystemRDL to IP-XACT
 # https://github.com/SystemRDL/PeakRDL-ipxact
 # Dependencies for validation/transport layers (optional):        
 # for JLINK
-# pip3 install pylink-square
+        pip3 install pylink-square
 # pyOCD for CMSIS-DAP and JLINK support (only tested in python-venv)
-# pip3 install pyocd
+        pip3 install pyocd
 # esptool for Espressif devices (not yet functional)
-# pip3 install esptool        
+        pip3 install esptool        
 # Dependencies for verification (optional AND experimental):
         # verilator
         https://www.veripool.org/verilator/
