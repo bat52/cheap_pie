@@ -1,5 +1,16 @@
 h5py
-# transport layers
+untangle                # parsers
+python-docx           # documentation export
+wavedrom              # visualization
+wavedrom-ascii        # visualization
+cmsis-svd             # parsers
+ipyxact               # parsers
+peakrdl-ipxact        # parsers
+peakrdl-verilog       # parsers
+peakrdl-uvm           # parsers
+peakrdl-cheader       # parsers
+requests              # HTTP utilities
+transport layers
 pylink-square
 pyocd # requires cargo and rust toolchain
 esptool
