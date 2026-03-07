@@ -25,5 +25,5 @@ jobs:
         run: python -m build
 
       - name: Publish package distributions to PyPI
-        if: github.repository == 'bat52/cheap_pie' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        if: github.repository == 'bat52/cheap_pie' && github.event_name == 'push' # && startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@release/v1
