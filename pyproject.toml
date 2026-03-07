@@ -17,6 +17,11 @@ keywords = ["python", "silicon", "validation"]
 
 dependencies = []
 
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent"
+]
+
 # core modules are all optional; users can install extras as needed
 # the individual dependencies are defined under [project.optional-dependencies]
 
@@ -56,11 +61,6 @@ all = [
   # transports & helpers
   "hickle","pylink-square","pyocd","esptool",
   "packaging","lxml","build","setuptools","wheel"
-]
-
-classifiers = [
-  "Programming Language :: Python :: 3",
-  "Operating System :: OS Independent"
 ]
 
 [project.urls]
