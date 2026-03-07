@@ -1,5 +1,5 @@
-h5py
-untangle                # parsers
+h5py                  # dump
+untangle              # parsers
 python-docx           # documentation export
 wavedrom              # visualization
 wavedrom-ascii        # visualization
@@ -10,7 +10,7 @@ peakrdl-verilog       # parsers
 peakrdl-uvm           # parsers
 peakrdl-cheader       # parsers
 requests              # HTTP utilities
-transport layers
+# transport layers
 pylink-square
 pyocd # requires cargo and rust toolchain
 esptool
