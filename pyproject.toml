@@ -15,27 +15,48 @@ authors = [
 
 keywords = ["python", "silicon", "validation"]
 
-dependencies = [
+dependencies = []
+
+# core modules are all optional; users can install extras as needed
+# the individual dependencies are defined under [project.optional-dependencies]
+
+[project.optional-dependencies]
+# basic parsing and utility libraries
+parsers = [
   "untangle",
   "cmsis-svd",
   "ipyxact",
-  "python-docx",
-  "wavedrom",
-  "wavedrom-ascii",
-  "pyverilator-mm",
   "peakrdl-ipxact",
   "peakrdl-uvm",
   "peakrdl-verilog",
   "peakrdl-cheader",
   "requests"
 ]
+# document export
+doc = ["python-docx", "lxml"]
+# visualization
+wavedrom = ["wavedrom", "wavedrom-ascii"]
+# hardware simulation
+sim = ["pyverilator-mm"]
 
-[project.optional-dependencies]
 hkl = ["hickle"]
 transport = ["pylink-square", "pyocd", "esptool", "pyverilator-mm"]
 other = ["packaging", "lxml"]
 build = ["build", "setuptools", "wheel"]
-all = ["hickle", "pylink-square", "pyocd", "esptool", "pyverilator-mm", "packaging", "lxml", "build", "setuptools", "wheel"]
+
+# aggregated extras
+all = [
+  # parsing & utils
+  "untangle","cmsis-svd","ipyxact","peakrdl-ipxact","peakrdl-uvm",
+  "peakrdl-verilog","peakrdl-cheader","requests",
+  # docs & visualization
+  "python-docx","lxml","wavedrom","wavedrom-ascii",
+  # simulation
+  "pyverilator-mm",
+  # transports & helpers
+  "hickle","pylink-square","pyocd","esptool",
+  "packaging","lxml","build","setuptools","wheel"
+]
 
 classifiers = [
   "Programming Language :: Python :: 3",

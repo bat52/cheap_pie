@@ -424,25 +424,27 @@ def test_cp_hal():  # pylint: disable=R0914,R0915
     reg = hal.search_address(searchaddr)
     assert reg == ''
 
-    print('# hal dump')
-    dump1 = 'dump1.hkl'
-    dump2 = 'dump2.hkl'
-    hal.dump(dump1)
-    hal['ADC_ANA_CTRL']['ADC_BM'] = 3
-    hal.dump(dump2)
-    diff = hal.dump_diff(dump1, dump2)
-    print(diff)
-    assert len(diff) == 2
+    if HAS_HICKLE:
+        print('# hal dump')
+        dump1 = 'dump1.hkl'
+        dump2 = 'dump2.hkl'
+        hal.dump(dump1)
+        hal['ADC_ANA_CTRL']['ADC_BM'] = 3
+        hal.dump(dump2)
+        diff = hal.dump_diff(dump1, dump2)
+        print(diff)
+        assert len(diff) == 2
 
     print('# hal regs2dict')
     mydict = hal.regs2dict()
     assert isinstance(mydict, dict)
 
-    print('# hal dump text')
-    txt_dump = 'tdump.txt'
-    hal.dump(txt_dump)
-    hkl_dump, _ = hal.text2dump(txt_dump)
-    assert len(hal.dump_diff(hkl_dump, dump2)) == 0
+    if HAS_HICKLE:
+        print('# hal dump text')
+        txt_dump = 'tdump.txt'
+        hal.dump(txt_dump)
+        hkl_dump, _ = hal.text2dump(txt_dump)
+        assert len(hal.dump_diff(hkl_dump, dump2)) == 0
 
     print('# CpHalSuper inheritance')
     hal_super = CpHalSuper(hal)

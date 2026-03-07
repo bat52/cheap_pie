@@ -124,28 +124,64 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 ## From github
         pip3 install git+https://github.com/bat52/cheap_pie.git@master
 
-# Dependencies for core (required):        
-        # for XML parsing (used by legacy svd parser and IP-XACT parser)
-        pip3 install untangle
-        # for exporting XML info into a human-readable document
-        pip3 install python-docx
-        # for dumping registers
-        pip3 install hickle
-        # CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
-        pip3 install cmsis-svd
-        # SPIRIT IP-XACT parser through ipyxact https://github.com/olofk/ipyxact
-        pip3 install ipyxact                
-        # SystemRDL to register-file verilog
-        https://github.com/hughjackson/PeakRDL-verilog
-        # SystemRDL to IP-XACT
-        https://github.com/SystemRDL/PeakRDL-ipxact
+# Dependencies
+The core `cheap_pie` package has no hard requirements; all of the libraries listed below are **optional** and are pulled in through extras.  Users can install the flavour they need, e.g.:
+
+```sh
+pip install cheap_pie[parsers]
+pip install cheap_pie[doc]
+pip install cheap_pie[transport]
+pip install cheap_pie[all]
+```
+
+Below are the common extras and some of the individual packages they include.
+
+## Extras and common packages
+
+* **parsers** – `untangle`, `cmsis-svd`, `ipyxact`, `peakrdl-ipxact`, `peakrdl-uvm`, `peakrdl-verilog`, `peakrdl-cheader`, `requests`
+* **doc** – `python-docx`, `lxml`
+* **wavedrom** – `wavedrom`, `wavedrom-ascii`
+* **sim** – `pyverilator-mm`
+* **hkl** – `hickle`
+* **transport** – `pylink-square`, `pyocd`, `esptool`, `pyverilator-mm`
+* **other** – `packaging`, `lxml`
+* **build** – `build`, `setuptools`, `wheel`
+* **all** – every package listed above
+
+### Examples
+
+```bash
+# parsing support only
+pip install cheap_pie[parsers]
+
+# full installation with every optional dependency
+pip install cheap_pie[all]
+```
+
+The sections below list individual packages for reference.
+
+# Legacy reference
+# for XML parsing (used by legacy svd parser and IP-XACT parser)
+# pip3 install untangle
+# for exporting XML info into a human-readable document
+# pip3 install python-docx
+# for dumping registers
+# pip3 install hickle
+# CMSIS-SVD python parser including many svd files https://github.com/posborne/cmsis-svd
+# pip3 install cmsis-svd
+# SPIRIT IP-XACT parser through ipyxact https://github.com/olofk/ipyxact
+# pip3 install ipyxact                
+# SystemRDL to register-file verilog
+# https://github.com/hughjackson/PeakRDL-verilog
+# SystemRDL to IP-XACT
+# https://github.com/SystemRDL/PeakRDL-ipxact
 # Dependencies for validation/transport layers (optional):        
-        # for JLINK
-        pip3 install pylink-square
-        # pyOCD for CMSIS-DAP and JLINK support (only tested in python-venv)
-        pip3 install pyocd
-        # esptool for Espressif devices (not yet functional)
-        pip3 install esptool        
+# for JLINK
+# pip3 install pylink-square
+# pyOCD for CMSIS-DAP and JLINK support (only tested in python-venv)
+# pip3 install pyocd
+# esptool for Espressif devices (not yet functional)
+# pip3 install esptool        
 # Dependencies for verification (optional AND experimental):
         # verilator
         https://www.veripool.org/verilator/

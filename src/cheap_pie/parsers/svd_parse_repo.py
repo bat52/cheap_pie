@@ -20,13 +20,23 @@
 
 import os
 from ast import literal_eval
-from cmsis_svd.parser import SVDParser
+
+# optional dependencies for SVD repository parsing
+try:
+    from cmsis_svd.parser import SVDParser
+except ImportError:  # pragma: no cover - optional
+    SVDParser = None
 
 from cheap_pie.cheap_pie_core.cp_builder import CpHalBuilder  # pylint: disable=C0413,E0401
 from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname  # pylint: disable=C0413,E0401
 
 import os
-import requests
+
+try:
+    import requests
+except ImportError:  # pragma: no cover - optional
+    requests = None
+
 import zipfile
 from urllib.parse import urlparse
 
@@ -57,6 +67,8 @@ def download_github_repo(repo_url, output_dir="."):
         zip_url = f"https://github.com/{owner}/{repo}/archive/refs/heads/main.zip"
         print(f"Downloading {zip_url}...")
         
+        if requests is None:  # pragma: no cover - optional
+            raise ImportError('requests package required to download repository; install via "pip install requests"')
         response = requests.get(zip_url, stream=True)
         response.raise_for_status()
         
@@ -93,6 +105,8 @@ def svd_parse_repo(fname, vendor=None, hif=None, base_address_offset="0x00000000
     """ Cheap Pie parser function for .svd files using SVDParser module """
     ## read input file ########################################################
     if vendor is None:
+        if SVDParser is None:  # pragma: no cover - optional
+            raise ImportError('cmsis-svd is required for this parser; install via "pip install cmsis-svd"')
         svd = SVDParser.for_xml_file(fname)
     else:
         svd_root = svd_root=get_cmsis_svd_data_dir()

@@ -5,7 +5,12 @@
 # email: marcomerli@gmail.com
 
 from ast import literal_eval
-import untangle  # for parsing xml
+
+# optional dependency for IP-XACT parsing
+try:
+    import untangle  # for parsing xml
+except ImportError:  # pragma: no cover - optional
+    untangle = None
 
 # import sys     # pylint: disable=C0411
 # import os.path # pylint: disable=C0411
@@ -34,6 +39,8 @@ def ipxact_remove_prefix(ipx):
 def ipxact_parse(fname, hif=None, base_address_offset="0x00000000"):
     """ Cheap Pie native module parser for IP-XACT """
     ## read input file ########################################################
+    if untangle is None:  # pragma: no cover - optional
+        raise ImportError('untangle is required for IP-XACT parsing; install via "pip install untangle"')
     csv = untangle.parse(fname)
 
     ## remove ipxact/spirit prefixes ##########################################

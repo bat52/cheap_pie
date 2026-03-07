@@ -1,20 +1,26 @@
+# core package install has no required dependencies by default;
+# users may install extras as needed (e.g. pip install cheap_pie[parsers])
+
 setuptools; python_version == '3.12'
-untangle
-python-docx
-wavedrom
-wavedrom-ascii
-# parsers
-cmsis-svd
-ipyxact
-peakrdl-ipxact
-peakrdl-verilog
-peakrdl-uvm
-peakrdl-cheader
-# transport layers
+
+# optional extras (uncomment to install during development)
+# untangle              # parsers
+# python-docx           # documentation export
+# wavedrom              # visualization
+# wavedrom-ascii        # visualization
+# cmsis-svd             # parsers
+# ipyxact               # parsers
+# peakrdl-ipxact        # parsers
+# peakrdl-verilog       # parsers
+# peakrdl-uvm           # parsers
+# peakrdl-cheader       # parsers
+# requests              # HTTP utilities
+
+# transport layers (preferred via extras)
 # pylink-square
 # pyocd # requires cargo and rust toolchain
 # esptool
 # pyverilator-mm
-# other
+
+# other helpers
 # packaging # for verilator version check
-requests

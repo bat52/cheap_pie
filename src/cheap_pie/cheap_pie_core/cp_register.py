@@ -14,8 +14,16 @@ from ast import literal_eval
 from operator import attrgetter
 import json
 
-import wavedrom
-from wavedrom_ascii import BitfieldASCII
+# optional visualization dependencies
+try:
+    import wavedrom
+    from wavedrom_ascii import BitfieldASCII
+    HAS_WAVEDROM = True
+except ImportError:  # pragma: no cover - optional
+    wavedrom = None
+    BitfieldASCII = None
+    HAS_WAVEDROM = False
+
 from cheap_pie.cheap_pie_core.cbitfield import CpBitfield
 
 
@@ -243,7 +251,8 @@ class CpRegister():  # pylint: disable=R0902
     def help(self, width=25):
         """ function ret = help(self)
         # displays register comments """
-        self.print_wavedrom()
+        if HAS_WAVEDROM:
+            self.print_wavedrom()
         print(f"Address: {self.get_addr()}, Reset: {self.get_reset()}")
         print(self.comments)
 
@@ -301,6 +310,8 @@ class CpRegister():  # pylint: disable=R0902
 
     def gen_wavedrom(self, vspace=200):
         """ generate wavedrom representation of register """
+        if not HAS_WAVEDROM:  # pragma: no cover - optional
+            raise ImportError("wavedrom and wavedrom-ascii are required for this feature")
         wdfields = []
 
         for field in reversed(self.get_ordered_bitfields(fieldname="")):
@@ -322,6 +333,8 @@ class CpRegister():  # pylint: disable=R0902
 
     def save_wavedrom_json(self):
         """ Export wavedrom .svg representation of register """
+        if not HAS_WAVEDROM:  # pragma: no cover - optional
+            raise ImportError("wavedrom and wavedrom-ascii are required for this feature")
         jfname = f'{self.regname}.json'
 
         wdlines = json.dumps(self.gen_wavedrom(), indent=2)
@@ -334,6 +347,8 @@ class CpRegister():  # pylint: disable=R0902
 
     def save_wavedrom_svg(self):
         """ Export wavedrom .svg representation of register """
+        if not HAS_WAVEDROM:  # pragma: no cover - optional
+            raise ImportError("wavedrom and wavedrom-ascii are required for this feature")
         svgfname = f'{self.regname}.svg'
         jfname = self.save_wavedrom_json()
         wavedrom.render_file(jfname, svgfname)
@@ -341,6 +356,8 @@ class CpRegister():  # pylint: disable=R0902
 
     def print_wavedrom(self):
         """ Display wavedrom representation of register in the terminal """
+        if not HAS_WAVEDROM:  # pragma: no cover - optional
+            raise ImportError("wavedrom and wavedrom-ascii are required for this feature")
         field = BitfieldASCII.from_dict(self.gen_wavedrom())
         print('')
         print(field)
@@ -569,15 +586,16 @@ def test_cp_register():  # pylint: disable=R0914,R0915
         print(field)
     assert len(bitfields) == 4
 
-    print('# reg gen wavedrom')
-    wd_dict = reg.gen_wavedrom()
-    assert isinstance(wd_dict, dict)
-    print('# reg save wavedrom json')
-    wdfile = reg.save_wavedrom_json()
-    assert os.path.isfile(wdfile)
-    print('# reg save wavedrom svg')
-    wdfile = reg.save_wavedrom_svg()
-    assert os.path.isfile(wdfile)
+    if HAS_WAVEDROM:
+        print('# reg gen wavedrom')
+        wd_dict = reg.gen_wavedrom()
+        assert isinstance(wd_dict, dict)
+        print('# reg save wavedrom json')
+        wdfile = reg.save_wavedrom_json()
+        assert os.path.isfile(wdfile)
+        print('# reg save wavedrom svg')
+        wdfile = reg.save_wavedrom_svg()
+        assert os.path.isfile(wdfile)
 
     print('# get_addr default')
     assert reg.get_addr()==hex(reg.addr)

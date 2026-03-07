@@ -8,7 +8,11 @@
 
 import os
 from ast import literal_eval
-from docx import Document
+# optional document export dependency
+try:
+    from docx import Document
+except ImportError:  # pragma: no cover - optional
+    Document = None
 # from docx.enum.table import WD_TABLE_ALIGNMENT
 INCH2EMU = 914400
 
@@ -29,6 +33,8 @@ def hexstr2int(hexstr):
 
 def doc_create_header(template=None):
     """ Create document header """
+    if Document is None:  # pragma: no cover - optional
+        raise ImportError('python-docx is required for document export; install via extras')
     if template is None:
         document = Document()
     else:

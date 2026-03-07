@@ -7,7 +7,12 @@
 # author: Marco Merlin
 # email: marcomerli@gmail.com
 
-from pyocd.core.helpers import ConnectHelper
+# optional pyocd dependency
+try:
+    from pyocd.core.helpers import ConnectHelper
+except ImportError:  # pragma: no cover - optional
+    ConnectHelper = None
+
 from cheap_pie.transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy, \
     hifread_preproc, hifwrite_preproc  # pylint: disable=E0401
 
@@ -18,6 +23,8 @@ class CpPyocdTransport(CpDummyTransport):
 
     def __init__(self, device=None):
         if not device is None:
+            if ConnectHelper is None:  # pragma: no cover - optional
+                raise ImportError('pyocd is required for PyOCD transport; install via extras')
             print('Connecting to pyocd probe... ')
             self.ocd = ConnectHelper.session_with_chosen_probe(
                 target_override=device)

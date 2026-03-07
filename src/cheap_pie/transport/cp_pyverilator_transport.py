@@ -8,9 +8,18 @@ import sys
 from ast import literal_eval
 from shutil import copyfile
 import subprocess
-from packaging import version
 
-import pyverilator
+# optional helpers
+try:
+    from packaging import version
+except ImportError:  # pragma: no cover - optional
+    version = None
+
+# optional pyverilator dependency
+try:
+    import pyverilator
+except ImportError:  # pragma: no cover - optional
+    pyverilator = None
 
 from cheap_pie.transport.cp_dummy_transport import hifread_preproc, hifwrite_preproc  # pylint: disable=E0401
 
@@ -36,6 +45,9 @@ class CpPyverilatorTransport():
         # rename to .v, if .sv
         if not os.path.isfile(fname):
             assert False, f'File {fname} does not exist!'
+
+        if pyverilator is None:  # pragma: no cover - optional
+            raise ImportError('pyverilator is required for this transport; install via extras')
 
         base, ext = os.path.splitext(fname)
         # print(ext)
@@ -154,6 +166,8 @@ class CpPyverilatorTransport():
 
 def verilator_version():
     """ Return verilator version """
+    if version is None:  # pragma: no cover - optional
+        raise ImportError('packaging module is required for version parsing; install via extras')
     result = subprocess.run(['verilator', '--version'],
                             stdout=subprocess.PIPE, check=False)
     ver = result.stdout.split()[1]

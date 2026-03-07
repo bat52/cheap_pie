@@ -1,3 +1,4 @@
+h5py
 # transport layers
 pylink-square
 pyocd # requires cargo and rust toolchain

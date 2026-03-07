@@ -7,7 +7,12 @@
 # author: Marco Merlin
 # email: marcomerli@gmail.com
 
-import pylink
+# optional JLink dependency
+try:
+    import pylink
+except ImportError:  # pragma: no cover - optional
+    pylink = None
+
 from cheap_pie.transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy, \
     hifread_preproc, hifwrite_preproc  # pylint: disable=E0401
 
@@ -18,6 +23,8 @@ class CpJlinkTransport(CpDummyTransport):
 
     def __init__(self, device=None):
         if not device is None:
+            if pylink is None:  # pragma: no cover - optional
+                raise ImportError('pylink is required for JLink transport; install pylink-square extra or package')
             self.jl = pylink.JLink()  # pylint: disable=C0103
             self.jl.exec_command('ProjectFile = JLinkSettings.ini')
             self.jl.open()

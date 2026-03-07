@@ -9,7 +9,12 @@
 
 import os
 from ast import literal_eval
-import esptool
+
+# optional esptool dependency
+try:
+    import esptool
+except ImportError:  # pragma: no cover - optional
+    esptool = None
 
 from cheap_pie.transport.cp_dummy_transport import CpDummyTransport, test_cp_dummy  # pylint: disable=E0401
 
@@ -32,6 +37,8 @@ class CpEsptoolTransport(CpDummyTransport):
             # fallback to dummy transport
             ret = CpDummyTransport.hifread(self, addr)
         else:
+            if esptool is None:  # pragma: no cover - optional
+                raise ImportError('esptool is required for ESP transport; install via extras')
             #  ret = esptool.main( ['--port' , self.port , '--after no_reset', 'read_mem', addr]  )
             # dump value on file... horrible hack because no output available
             tmpfile = 'tmpdump'
@@ -61,6 +68,8 @@ class CpEsptoolTransport(CpDummyTransport):
             # fallback to dummy transport
             CpDummyTransport.hifwrite(self, addr, val)
         else:
+            if esptool is None:  # pragma: no cover - optional
+                raise ImportError('esptool is required for ESP transport; install via extras')
             esptool.main(  # pylint: disable=E1101
                 ['--port', self.port, '--after', 'no_reset',
                     'write_mem', addr, val, '0x0']

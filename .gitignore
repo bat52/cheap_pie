@@ -31,3 +31,6 @@ src/cheap_pie/dump1.txt
 src/cheap_pie/tdump.txt
 src/cheap_pie/cmsis-svd-data-main/*
 src/cheap_pie/devices/rdl/basic.h
+src/cheap_pie/cheap_pie_core/cmsis-svd-data-main/*
+src/cheap_pie/cheap_pie_core/regname.json
+src/cheap_pie/cheap_pie_core/tdump.txt

@@ -7,7 +7,12 @@
 
 import sys
 from ast import literal_eval
-from ipyxact.ipyxact import Component              # pylint: disable=E0611
+
+# optional library for IP-XACT parsing via ipyxact
+try:
+    from ipyxact.ipyxact import Component              # pylint: disable=E0611
+except ImportError:  # pragma: no cover - optional
+    Component = None
 
 from cheap_pie.cheap_pie_core.cp_builder import CpHalBuilder  # pylint: disable=C0413,E0401
 from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname  # pylint: disable=C0413,E0401
@@ -16,6 +21,8 @@ from cheap_pie.cheap_pie_core.cp_cli import cp_devices_fname  # pylint: disable=
 def ipyxact_parse(fname, hif=None, base_address_offset="0x00000000"):
     """ Cheap Pie parser for IP-XACT structure with ipyxact """
     ## read input file ########################################################
+    if Component is None:  # pragma: no cover - optional
+        raise ImportError('ipyxact is required for this parser; install via "pip install ipyxact"')
     xml = Component()
     xml.load(fname)
 
