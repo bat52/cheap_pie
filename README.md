@@ -123,6 +123,8 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
         pip3 install cheap_pie
 ## From github
         pip3 install git+https://github.com/bat52/cheap_pie.git@master
+## From github with newer syntax
+        pip install "cheap_pie[core] @ git+https://github.com/bat52/cheap_pie.git"
 
 # Dependencies
 The core `cheap_pie` package has no hard requirements; all of the libraries listed below are **optional** and are pulled in through extras.  Users can install the flavour they need, e.g.:
