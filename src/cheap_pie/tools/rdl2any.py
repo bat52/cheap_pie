@@ -7,9 +7,13 @@ import os
 import argparse
 import pathlib
 
-from systemrdl import RDLCompiler, RDLCompileError
-from peakrdl.verilog import VerilogExporter
-from peakrdl_cheader.exporter import CHeaderExporter
+try:
+    from systemrdl import RDLCompiler, RDLCompileError
+    from peakrdl.verilog import VerilogExporter
+    from peakrdl_cheader.exporter import CHeaderExporter
+    HAS_RDL = True
+except ModuleNotFoundError:
+    HAS_RDL = False
 
 try:
     # newer version
@@ -47,6 +51,9 @@ def rdl2any(args):
     prms = cli(args)
     rdlc = RDLCompiler()
 
+    if not HAS_RDL:
+        return f'ERROR: systemrdl package is not installed! Please install it using "pip install systemrdl" command.'
+    
     try:
         rdlc.compile_file(prms.fname)
         root = rdlc.elaborate()
