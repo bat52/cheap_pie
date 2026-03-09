@@ -11,19 +11,19 @@ try:
     from systemrdl import RDLCompiler, RDLCompileError
     from peakrdl.verilog import VerilogExporter
     from peakrdl_cheader.exporter import CHeaderExporter
+
+    try:
+        # newer version
+        from peakrdl_ipxact import IPXACTExporter
+        from peakrdl_uvm import UVMExporter
+    except ModuleNotFoundError:  # not sure what should be put here
+        # older version
+        from peakrdl.ipxact import IPXACTExporter  # pylint: disable=C0412
+        from peakrdl.uvm import UVMExporter # pylint: disable=C0412
+
     HAS_RDL = True
 except ModuleNotFoundError:
     HAS_RDL = False
-
-try:
-    # newer version
-    from peakrdl_ipxact import IPXACTExporter
-    from peakrdl_uvm import UVMExporter
-except ModuleNotFoundError:  # not sure what should be put here
-    # older version
-    from peakrdl.ipxact import IPXACTExporter  # pylint: disable=C0412
-    from peakrdl.uvm import UVMExporter # pylint: disable=C0412
-
 
 def cli(args):
     """ Command Line parse to convert .rdl register description into IP-XACT, UVM or verilog """
