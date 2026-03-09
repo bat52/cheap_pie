@@ -26,28 +26,33 @@ classifiers = [
 # the individual dependencies are defined under [project.optional-dependencies]
 
 [project.optional-dependencies]
-# basic parsing and utility libraries
-parsers = [
+# core tools
+core = [
   "untangle",
-  "cmsis-svd",
-  "ipyxact",
+  "wavedrom",
+  "wavedrom-ascii",
+  "requests"
+]
+# dump
+dump = ["hickle","h5py"]
+# svd parser
+svd = ["cmsis-svd"]
+# rdl parsing and utility libraries
+rdl = [
   "peakrdl-ipxact",
   "peakrdl-uvm",
   "peakrdl-verilog",
   "peakrdl-cheader",
-  "requests"
 ]
+# ipxact parser
+ipxact = ["ipyxact"]
 # document export
 doc = ["python-docx", "lxml"]
-# visualization
-wavedrom = ["wavedrom", "wavedrom-ascii"]
 # hardware simulation
 sim = ["pyverilator-mm"]
 
-hkl = ["hickle"]
-transport = ["pylink-square", "pyocd", "esptool", "pyverilator-mm"]
-other = ["packaging", "lxml"]
-build = ["build", "setuptools", "wheel"]
+transport = ["pylink-square", "pyocd", "esptool"]
+build = ["packaging","build", "setuptools", "wheel"]
 
 # aggregated extras
 all = [

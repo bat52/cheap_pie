@@ -128,7 +128,7 @@ Tested on ipython3 (python 3.8.5) on ubuntu 20.04
 The core `cheap_pie` package has no hard requirements; all of the libraries listed below are **optional** and are pulled in through extras.  Users can install the flavour they need, e.g.:
 
 ```sh
-pip install cheap_pie[parsers]
+pip install cheap_pie[core]
 pip install cheap_pie[doc]
 pip install cheap_pie[transport]
 pip install cheap_pie[all]
@@ -138,14 +138,15 @@ Below are the common extras and some of the individual packages they include.
 
 ## Extras and common packages
 
-* **parsers** – `untangle`, `cmsis-svd`, `ipyxact`, `peakrdl-ipxact`, `peakrdl-uvm`, `peakrdl-verilog`, `peakrdl-cheader`, `requests`
+* **core** – `untangle`, `wavedrom`, `wavedrom-ascii`, `requests`
+* **dump** – `hickle`, `h5py`
+* **svd** – `cmsis-svd`
+* **rdl** – `peakrdl-ipxact`, `peakrdl-uvm`, `peakrdl-verilog`, `peakrdl-cheader`
+* **ipxact** – `ipyxact`
 * **doc** – `python-docx`, `lxml`
-* **wavedrom** – `wavedrom`, `wavedrom-ascii`
 * **sim** – `pyverilator-mm`
-* **hkl** – `hickle`
-* **transport** – `pylink-square`, `pyocd`, `esptool`, `pyverilator-mm`
-* **other** – `packaging`, `lxml`
-* **build** – `build`, `setuptools`, `wheel`
+* **transport** – `pylink-square`, `pyocd`, `esptool`
+* **build** – `packaging`, `build`, `setuptools`, `wheel`
 * **all** – every package listed above
 
 ### Examples
