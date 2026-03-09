@@ -77,7 +77,7 @@ Tracker = "https://github.com/bat52/cheap_pie/issues"
 package-dir = { "" = "src" }
 
 [tool.setuptools.package-data]
-"cheap_pie" = ["*.svd", "*.xml", "*.rdl", "*.txt"]
+"cheap_pie" = ["**/*.svd", "**/*.xml", "**/*.rdl", "**/*.txt"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
