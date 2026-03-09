@@ -104,13 +104,16 @@ def get_cmsis_svd_data_dir():
 def svd_parse_repo(fname, vendor=None, hif=None, base_address_offset="0x00000000"):
     """ Cheap Pie parser function for .svd files using SVDParser module """
     ## read input file ########################################################
-    if vendor is None:
-        if SVDParser is None:  # pragma: no cover - optional
-            raise ImportError('cmsis-svd is required for this parser; install via "pip install cmsis-svd"')
-        svd = SVDParser.for_xml_file(fname)
-    else:
-        svd_root = svd_root=get_cmsis_svd_data_dir()
-        svd = SVDParser.for_packaged_svd(package_root=svd_root, vendor=vendor, filename=fname)
+    if SVDParser is None:  # pragma: no cover - optional
+        cpb = CpHalBuilder(hif)
+        print(f'WARNING: SVDParser module is not available! Please install it using "pip install cmsis-svd" command.')
+        return cpb.out()
+    else:    
+        if vendor is None:
+            svd = SVDParser.for_xml_file(fname)
+        else:
+            svd_root = svd_root=get_cmsis_svd_data_dir()
+            svd = SVDParser.for_packaged_svd(package_root=svd_root, vendor=vendor, filename=fname)
 
     ## loop over lines ########################################################
     cpb = CpHalBuilder(hif)
